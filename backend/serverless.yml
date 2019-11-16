@@ -1,0 +1,33 @@
+service: xadrez
+
+frameworkVersion: '>=1.28.0 <2.0.0'
+
+provider:
+  name: aws
+  runtime: go1.x
+
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+
+  tracing:
+    lambda: true
+    apiGateway: true
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+
+functions:
+  connect:
+    handler: bin/lambda/websocket/connect
+    events:
+      - websocket:
+          route: $connect
+
+  disconnect:
+    handler: bin/lambda/websocket/disconnect
+    events:
+      - websocket:
+          route: $disconnect

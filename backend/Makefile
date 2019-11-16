@@ -14,3 +14,6 @@ clean: ## Cleanup temporary resources
 
 deploy: clean build ## Deploy project to AWS Lambda
 	sls deploy --verbose
+
+remove: ## Remove project from AWS Lambda
+	sls remove --verbose
