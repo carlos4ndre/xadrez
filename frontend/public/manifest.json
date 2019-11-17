@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Xadrez",
+  "name": "Simple chess application",
   "icons": [
     {
       "src": "favicon.ico",

@@ -7,8 +7,11 @@ help: ## List all Makefile targets
 clean: ## Cleanup temporary resources
 	rm -rf node_modules/
 
-build: clean ## Build frontend
+build: ## Build frontend
 	yarn install && npm run build
+
+dev: ## Run frontend locally
+	npm run start
 
 deploy: ## Deploy frontend to S3
 	sls client deploy --verbose
