@@ -1,0 +1,16 @@
+service: xadrez-frontend
+
+frameworkVersion: '>=1.28.0 <2.0.0'
+
+plugins:
+  - serverless-finch
+
+provider:
+  stage: ${opt:stage, 'dev'}
+  environment:
+    WEBSITE_S3_BUCKET: xadrez-website-${self:provider.stage}
+
+custom:
+  client:
+    bucketName: ${self:provider.environment.WEBSITE_S3_BUCKET}
+    distributionFolder: public

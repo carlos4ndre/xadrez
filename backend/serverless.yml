@@ -1,9 +1,6 @@
-service: xadrez
+service: xadrez-backend
 
 frameworkVersion: '>=1.28.0 <2.0.0'
-
-plugins:
-  - serverless-finch
 
 provider:
   name: aws
@@ -15,9 +12,6 @@ provider:
   tracing:
     lambda: true
     apiGateway: true
-
-  environment:
-    WEBSITE_S3_BUCKET: xadrez-website-${self:provider.stage}
 
 package:
   exclude:
@@ -37,8 +31,3 @@ functions:
     events:
       - websocket:
           route: $disconnect
-
-custom:
-  client:
-    bucketName: ${self:provider.environment.WEBSITE_S3_BUCKET}
-    distributionFolder: frontend/public
