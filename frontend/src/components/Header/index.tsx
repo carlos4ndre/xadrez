@@ -1,40 +1,21 @@
 import React, { Component } from 'react'
 import { Button, Menu } from 'semantic-ui-react'
 import Logo from 'components/Logo'
-import Auth from 'auth/Auth'
-
-export interface AppProps {
-  auth: Auth
-}
-
-export interface AppState {}
+import { AppState } from 'types/state'
+import { HeaderProps as AppProps } from 'types/props'
 
 class Header extends Component<AppProps, AppState> {
-  constructor(props: AppProps) {
-    super(props)
-
-    this.handleLogin = this.handleLogin.bind(this)
-    this.handleLogout = this.handleLogout.bind(this)
-  }
-
-  handleLogin() {
-    this.props.auth.login()
-  }
-
-  handleLogout() {
-    this.props.auth.logout()
-  }
 
   logInLogOutButton() {
-    if (this.props.auth.isAuthenticated()) {
+    if (this.props.isLoggedIn) {
       return (
-        <Menu.Item name="logout" onClick={this.handleLogout}>
+        <Menu.Item name="logout" onClick={this.props.onLogout}>
           <Button primary>Logout</Button>
         </Menu.Item>
       )
     } else {
       return (
-        <Menu.Item name="login" onClick={this.handleLogin}>
+        <Menu.Item name="login" onClick={this.props.onLogin}>
           <Button primary>Login</Button>
         </Menu.Item>
       )

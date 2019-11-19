@@ -2,7 +2,7 @@ import { WebAuth, Auth0DecodedHash } from 'auth0-js'
 import { History } from 'history'
 import { authConfig } from '../config/app'
 
-export default class Auth {
+export default class Auth0 {
   accessToken!: string
   idToken!: string
   expiresAt!: number
