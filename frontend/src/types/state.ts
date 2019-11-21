@@ -1,10 +1,12 @@
-import Auth0 from 'auth/Auth0'
+import { Auth0UserProfile } from 'auth0-js'
 
-export interface AppState {
-  auth: AuthState
+export interface UserState {
+  authenticated: boolean,
+  idToken: string,
+  expiresAt: string,
+  profile: Auth0UserProfile
 }
 
-export interface AuthState {
-  isLoggedIn: boolean,
-  auth0: Auth0
+export interface AppState {
+  user: UserState
 }

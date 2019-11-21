@@ -1,21 +1,36 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Button, Menu } from 'semantic-ui-react'
 import Logo from 'components/Logo'
 import { AppState } from 'types/state'
-import { HeaderProps as AppProps } from 'types/props'
+import { HeaderProps } from 'types/props'
+import { loginUser, logoutUser } from 'actions'
 
-class Header extends Component<AppProps, AppState> {
+class Header extends Component<HeaderProps, AppState> {
+
+  componentWillMount() {
+    this.handleLoginUser = this.handleLoginUser.bind(this)
+    this.handleLogoutUser = this.handleLogoutUser.bind(this)
+  }
+
+  handleLoginUser() {
+    this.props.loginUser()
+  }
+
+  handleLogoutUser() {
+    this.props.logoutUser()
+  }
 
   logInLogOutButton() {
-    if (this.props.isLoggedIn) {
+    if (this.props.user.authenticated) {
       return (
-        <Menu.Item name="logout" onClick={this.props.onLogout}>
+        <Menu.Item name="logout" onClick={this.handleLogoutUser}>
           <Button primary>Logout</Button>
         </Menu.Item>
       )
     } else {
       return (
-        <Menu.Item name="login" onClick={this.props.onLogin}>
+        <Menu.Item name="login" onClick={this.handleLoginUser}>
           <Button primary>Login</Button>
         </Menu.Item>
       )
@@ -34,4 +49,20 @@ class Header extends Component<AppProps, AppState> {
   }
 }
 
-export default Header
+const mapStateToProps = (originalState: any, originalOwnProps: any) => {
+  return (state: any, ownProps: any) => {
+    return {
+      user: state.user
+    }
+  }
+}
+
+const mapDispatchToProps = (dispatch: any) => ({
+  loginUser: () => dispatch(loginUser()),
+  logoutUser: () => dispatch(logoutUser())
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Header)

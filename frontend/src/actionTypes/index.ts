@@ -1,6 +1,6 @@
-import Auth0 from 'auth/Auth0'
+import { UserState } from 'types/state'
 
-// Auth
+// User
 export const LOGIN_USER_REQUEST  = 'LOGIN_USER_REQUEST'
 export const LOGIN_USER_CALLBACK = 'LOGIN_USER_CALLBACK'
 export const LOGIN_USER_SUCCESS  = 'LOGIN_USER_SUCCESS'
@@ -11,17 +11,16 @@ export const LOGOUT_USER_SUCCESS = 'LOGOUT_USER_SUCCESS'
 export const LOGOUT_USER_FAILURE = 'LOGOUT_USER_FAILURE'
 
 export interface LoginUserRequest {
-  type: typeof LOGIN_USER_REQUEST,
-  auth0: Auth0
+  type: typeof LOGIN_USER_REQUEST
 }
 
 export interface LoginUserCallback {
-  type: typeof LOGIN_USER_CALLBACK,
-  auth0: Auth0
+  type: typeof LOGIN_USER_CALLBACK
 }
 
 export interface LoginUserSuccess {
-  type: typeof LOGIN_USER_SUCCESS
+  type: typeof LOGIN_USER_SUCCESS,
+  user: UserState
 }
 
 export interface LoginUserFailure {
@@ -29,8 +28,7 @@ export interface LoginUserFailure {
 }
 
 export interface LogoutUserRequest {
-  type: typeof LOGOUT_USER_REQUEST,
-  auth0: Auth0
+  type: typeof LOGOUT_USER_REQUEST
 }
 
 export interface LogoutUserSuccess {
@@ -41,4 +39,4 @@ export interface LogoutUserFailure {
   type: typeof LOGOUT_USER_FAILURE
 }
 
-export type AuthActionTypes = LoginUserRequest | LoginUserCallback | LoginUserSuccess | LoginUserFailure | LogoutUserRequest | LogoutUserSuccess | LogoutUserFailure
+export type UserActionTypes = LoginUserRequest | LoginUserCallback | LoginUserSuccess | LoginUserFailure | LogoutUserRequest | LogoutUserSuccess | LogoutUserFailure

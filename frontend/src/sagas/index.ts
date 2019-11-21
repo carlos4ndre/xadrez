@@ -1,5 +1,5 @@
-import AuthSagas from 'sagas/auth'
+import UserSagas from 'sagas/user'
 
 export default [
-  AuthSagas()
+  UserSagas()
 ]
