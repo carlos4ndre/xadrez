@@ -26,16 +26,8 @@ const loginUserCallback = function*(action: types.LoginUserCallback) {
 
 const logoutUser = function*(action: types.LogoutUserRequest) {
   try {
-    const response = yield call(action.auth0.logout)
-    const error = "Failed to logout user"
-    console.log(response)
-
-    if (error) {
-      yield put(actions.logoutUserFailure(error))
-    } else {
-      console.log(error)
-      yield put(actions.logoutUserSuccess())
-    }
+    yield call(action.auth0.logout)
+    yield put(actions.logoutUserSuccess())
   } catch(e) {
     yield put(actions.logoutUserFailure("Failed to logout user"))
   }

@@ -43,7 +43,9 @@ class App extends Component<AppProps, AppState> {
           <Switch>
             <Route path='/callback'
               render={props => {
-                this.handleLoginUserCallback()
+                if (!this.props.isLoggedIn) {
+                  this.handleLoginUserCallback()
+                }
                 return <Callback />
               }}
             />
