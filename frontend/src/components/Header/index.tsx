@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Menu } from 'semantic-ui-react'
+import { Button, Label, Dropdown, Menu } from 'semantic-ui-react'
 import Logo from 'components/Logo'
 import { AppState } from 'types/state'
 import { HeaderProps } from 'types/props'
@@ -21,16 +21,31 @@ class Header extends Component<HeaderProps, AppState> {
     this.props.logoutUser()
   }
 
+  handleProfileUser() {
+  }
+
   logInLogOutButton() {
+    const profileMenuItem = (
+      <Label as='a' color='blue' image>
+        <img alt='profile' src={this.props.user.profile.picture} />
+        {this.props.user.profile.name}
+      </Label>
+    )
+
     if (this.props.user.authenticated) {
       return (
-        <Menu.Item name="logout" onClick={this.handleLogoutUser}>
-          <Button primary>Logout</Button>
+        <Menu.Item name='logout'>
+          <Dropdown icon={null} trigger={profileMenuItem}>
+            <Dropdown.Menu>
+              <Dropdown.Item icon='user' text='Profile' onClick={this.handleProfileUser}/>
+              <Dropdown.Item icon='logout' text='Logout' onClick={this.handleLogoutUser}/>
+            </Dropdown.Menu>
+          </Dropdown>
         </Menu.Item>
       )
     } else {
       return (
-        <Menu.Item name="login" onClick={this.handleLoginUser}>
+        <Menu.Item name='login' onClick={this.handleLoginUser}>
           <Button primary>Login</Button>
         </Menu.Item>
       )

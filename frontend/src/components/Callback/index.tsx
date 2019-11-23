@@ -10,7 +10,6 @@ class Callback extends Component<CallbackProps, AppState> {
 
   render() {
     const { user, loginUserCallback } = this.props
-    console.log(user)
     if (user && user.authenticated) {
       return <Redirect to="/" />
     }
