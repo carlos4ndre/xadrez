@@ -34,18 +34,18 @@ class Header extends Component<HeaderProps, AppState> {
 
     if (this.props.user.authenticated) {
       return (
-        <Menu.Item name='logout'>
+        <Menu.Item>
           <Dropdown icon={null} trigger={profileMenuItem}>
             <Dropdown.Menu>
               <Dropdown.Item icon='user' text='Profile' onClick={this.handleProfileUser}/>
-              <Dropdown.Item icon='logout' text='Logout' onClick={this.handleLogoutUser}/>
+              <Dropdown.Item icon='log out' text='Logout' onClick={this.handleLogoutUser}/>
             </Dropdown.Menu>
           </Dropdown>
         </Menu.Item>
       )
     } else {
       return (
-        <Menu.Item name='login' onClick={this.handleLoginUser}>
+        <Menu.Item onClick={this.handleLoginUser}>
           <Button primary>Login</Button>
         </Menu.Item>
       )

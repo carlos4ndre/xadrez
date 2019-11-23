@@ -31,7 +31,7 @@ const logoutUser = function*() {
   }
 }
 
-function* authSagas() {
+function* userSagas() {
   yield all([
     yield takeLatest(types.LOGIN_USER_REQUEST, loginUser),
     yield takeLatest(types.LOGIN_USER_CALLBACK, loginUserCallback),
@@ -39,4 +39,4 @@ function* authSagas() {
   ])
 }
 
-export default authSagas
+export default userSagas
