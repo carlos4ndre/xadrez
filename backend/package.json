@@ -1,0 +1,10 @@
+{
+  "name": "backend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "serverless-offline": "^5.12.0",
+    "serverless-python-requirements": "^5.0.1"
+  }
+}

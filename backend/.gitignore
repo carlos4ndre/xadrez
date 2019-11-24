@@ -1,21 +1,55 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Django stuff
+*.log
+
+# Node package
+node_modules
+
 # Serverless directories
 .serverless
+.requirements
 
-# golang output binary directory
-bin
+# Ignore local database file
+db.sqlite3
 
-# golang vendor (dependencies) directory
-vendor
+# Ignore vagrant build files
+.vagrant/
 
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
+# PyBuilder
+target/
 
-# Test binary, build with `go test -c`
-*.test
+# Testing Tools
+.coverage
+.tox/
 
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
+# Temp Files
+.*.sw*
+
+# Other Files
+.DS_Store
+.idea
+todo.txt
+notes/

@@ -4,7 +4,7 @@ frameworkVersion: '>=1.28.0 <2.0.0'
 
 provider:
   name: aws
-  runtime: go1.x
+  runtime: python3.7
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
@@ -13,21 +13,32 @@ provider:
     lambda: true
     apiGateway: true
 
-package:
-  exclude:
-    - ./**
-  include:
-    - ./bin/**
+plugins:
+  - serverless-python-requirements
+  - serverless-offline
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    noDeploy: []
+  serverless-offline:
+    port: 5000
 
 functions:
   connect:
-    handler: bin/lambda/websocket/connect
+    handler: lambda/websocket/connect.handler
     events:
       - websocket:
           route: $connect
 
   disconnect:
-    handler: bin/lambda/websocket/disconnect
+    handler: lambda/websocket/disconnect.handler
     events:
       - websocket:
           route: $disconnect
+
+  default:
+    handler: lambda/websocket/default.handler
+    events:
+      - websocket:
+          route: $default
