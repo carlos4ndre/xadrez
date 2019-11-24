@@ -3,21 +3,11 @@ import * as actions from 'actions'
 import * as types from 'actionTypes'
 
 const wsConnect = function*() {
-  try {
-    yield put(actions.wsConnectSuccess())
-  } catch(e) {
-    console.log(e)
-    yield put(actions.wsConnectFailure('Failed to open ws connection'))
-  }
+  yield put(actions.wsConnect())
 }
 
 const wsDisconnect = function*() {
-  try {
-    yield put(actions.wsDisconnectSuccess())
-  } catch(e) {
-    console.log(e)
-    yield put(actions.wsDisconnectFailure('Failed to close ws connection'))
-  }
+  yield put(actions.wsDisconnect())
 }
 
 function* wsSagas() {

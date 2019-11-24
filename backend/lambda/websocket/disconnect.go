@@ -9,7 +9,7 @@ import (
 
 func Handler(request events.APIGatewayWebsocketProxyRequest) (events.APIGatewayProxyResponse, error) {
   ctx := request.RequestContext
-  fmt.Printf("Connect client: connectionID=%s", ctx.ConnectionID)
+  fmt.Printf("Disconnect ws client: connectionID=%s", ctx.ConnectionID)
 
   return events.APIGatewayProxyResponse{StatusCode: http.StatusOK}, nil
 }
