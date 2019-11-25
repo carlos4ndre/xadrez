@@ -1,4 +1,4 @@
-const apiId = 'ec6kyts2qg'
+const apiId = '7798pmmh48'
 const domain = 'dev-embzl7vs.auth0.com'
 const clientId = 'brSV94G2uZANc2lmTtZYXUmci2pTdx1H'
 const apiHostname = `${apiId}.execute-api.us-east-1.amazonaws.com`

@@ -1,7 +1,8 @@
 import * as types from 'actionTypes'
 
-export const wsConnect = () => ({
-  type: types.WS_CONNECT_REQUEST
+export const wsConnect = (jwtToken: string) => ({
+  type: types.WS_CONNECT_REQUEST,
+  jwtToken
 })
 
 export const wsConnectSuccess = () => ({

@@ -7,7 +7,8 @@ export const WS_DISCONNECT_SUCCESS = 'WS_DISCONNECT_SUCCESS'
 export const WS_DISCONNECT_FAILURE = 'WS_DISCONNECT_FAILURE'
 
 export interface WsConnectRequest {
-  type: typeof WS_CONNECT_REQUEST
+  type: typeof WS_CONNECT_REQUEST,
+  jwtToken: string
 }
 
 export interface WsConnectSuccess {

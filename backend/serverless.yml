@@ -13,6 +13,11 @@ provider:
     lambda: true
     apiGateway: true
 
+  environment:
+    AUTH0_DOMAIN: dev-embzl7vs.auth0.com
+    AUTH0_CLIENT_ID: brSV94G2uZANc2lmTtZYXUmci2pTdx1H
+    AUTH0_JWKS_URL: https://${self:provider.environment.AUTH0_DOMAIN}/.well-known/jwks.json
+
 plugins:
   - serverless-python-requirements
   - serverless-offline

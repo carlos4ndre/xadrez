@@ -33,7 +33,7 @@ const socketMiddleware = () => {
         }
 
         // connect to the remote host
-        const wsUrl = wsEndpoint + '/?name=carlos'
+        const wsUrl = `${wsEndpoint}/?token=${action.jwtToken}`
         socket = new WebSocket(wsUrl)
         console.log('Connected to ', wsEndpoint)
 
