@@ -17,6 +17,14 @@ provider:
     AUTH0_DOMAIN: dev-embzl7vs.auth0.com
     AUTH0_CLIENT_ID: brSV94G2uZANc2lmTtZYXUmci2pTdx1H
     AUTH0_JWKS_URL: https://${self:provider.environment.AUTH0_DOMAIN}/.well-known/jwks.json
+    CONNECTIONS_TABLE: Connections-${self:provider.stage}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:DeleteItem
+      Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}
 
 plugins:
   - serverless-python-requirements
@@ -47,3 +55,17 @@ functions:
     events:
       - websocket:
           route: $default
+
+resources:
+  Resources:
+    WebSocketConnectionsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.CONNECTIONS_TABLE}

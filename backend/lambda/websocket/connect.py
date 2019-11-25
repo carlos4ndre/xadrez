@@ -1,17 +1,20 @@
 import os
 import logging
+import boto3
 import jwt
 import json
 import requests
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+
+dynamodb = boto3.resource("dynamodb")
 
 
 def handler(event, context):
-    # check connectionID and token are set
-    logger.info("Validate connectionID")
     connectionID = event["requestContext"].get("connectionId")
+    logger.info("Connect request from connectionID {})".format(connectionID))
+
+    logger.info("Validate connectionID")
     if not connectionID:
         return {"statusCode": 500, "body": "ConnectionId is missing"}
 
@@ -20,9 +23,8 @@ def handler(event, context):
     if not token:
         return {"statusCode": 400, "body": "Token query parameter is missing"}
 
-    # Verify the jwt token
+    logger.info("Verify the jwt token")
     try:
-        logger.info("Verify the jwt token")
         payload = jwt.decode(token,
                              key=get_jwt_public_key(token),
                              audience=os.environ["AUTH0_CLIENT_ID"],
@@ -32,7 +34,19 @@ def handler(event, context):
     except Exception as e:
         logger.error(e)
         return {"statusCode": 400, "body": "Failed to validate token"}
-    return {"statusCode": 200, "body": ""}
+
+    try:
+        logger.info("Add connectID to the database")
+        item = {
+            "id": connectionID,
+            "userId": payload["sub"]
+        }
+        table = dynamodb.Table(os.environ["CONNECTIONS_TABLE"])
+        table.put_item(Item=item)
+        return {"statusCode": 200, "body": "Connect successful"}
+    except Exception as e:
+        logger.error(e)
+        return {"statusCode": 500, "body": "Connect failed"}
 
 
 def get_jwt_public_key(token):
