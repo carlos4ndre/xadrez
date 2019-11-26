@@ -1,10 +1,10 @@
 import React from 'react'
 import { Switch, BrowserRouter, Route } from 'react-router-dom'
 import { Divider } from 'semantic-ui-react'
-import Header from 'components/Header'
-import Callback from 'components/Callback'
-import NotFound from 'components/NotFound'
+import Header from 'containers/Header'
+import Callback from 'containers/Callback'
 import HomePage from 'containers/HomePage'
+import NotFound from 'components/NotFound'
 
 const App = () => (
   <BrowserRouter>
