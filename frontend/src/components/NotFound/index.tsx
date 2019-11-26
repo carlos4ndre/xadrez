@@ -14,7 +14,7 @@ const NotFound = () => (
         <Image
           centered
           rounded
-          boardered
+          bordered
           size='medium'
           src={require('./images/board-defeated.jpg')}
         />

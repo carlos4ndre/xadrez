@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { Button, Label, Dropdown, Menu } from 'semantic-ui-react'
 import Logo from 'components/Logo'
@@ -11,6 +12,7 @@ class Header extends Component<HeaderProps, AppState> {
   componentWillMount() {
     this.handleLoginUser = this.handleLoginUser.bind(this)
     this.handleLogoutUser = this.handleLogoutUser.bind(this)
+    this.handleProfileUser = this.handleProfileUser.bind(this)
   }
 
   handleLoginUser() {
@@ -22,6 +24,7 @@ class Header extends Component<HeaderProps, AppState> {
   }
 
   handleProfileUser() {
+    this.props.history.push('/profile')
   }
 
   logInLogOutButton() {
@@ -67,7 +70,8 @@ class Header extends Component<HeaderProps, AppState> {
 const mapStateToProps = (originalState: any, originalOwnProps: any) => {
   return (state: any, ownProps: any) => {
     return {
-      user: state.user
+      user: state.user,
+      history: ownProps.history
     }
   }
 }
@@ -77,7 +81,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   logoutUser: () => dispatch(logoutUser())
 })
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Header)
+)(Header))
