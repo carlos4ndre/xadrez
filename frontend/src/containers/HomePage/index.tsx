@@ -1,10 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import Players from 'components/Players'
 
 class HomePage extends Component {
   render() {
+    const players = [
+      {'name': 'toze', 'nickname': 'tomatos', 'picture': ''},
+      {'name': 'batman', 'nickname': 'bruce', 'picture': ''},
+      {'name': 'luffy', 'nickname': 'muggywara', 'picture': ''}
+    ]
+
     return (
-      <div>Home Page</div>
+      <Players players={players}/>
     )
   }
 }

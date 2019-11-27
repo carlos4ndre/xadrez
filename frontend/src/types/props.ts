@@ -1,5 +1,6 @@
 import { UserState } from 'types/state'
-import { History } from 'history';
+import { History } from 'history'
+import { Player } from 'types/player'
 
 export interface HeaderProps {
   user: UserState,
@@ -15,4 +16,8 @@ export interface ProfileProps {
 export interface CallbackProps {
   user: UserState,
   loginUserCallback: () => void
+}
+
+export interface PlayersProps {
+  players: Player[]
 }
