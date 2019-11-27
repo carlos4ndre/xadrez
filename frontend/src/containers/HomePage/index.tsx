@@ -1,28 +1,36 @@
 import React, { Component } from 'react'
+import * as selectors from 'selectors'
 import { connect } from 'react-redux'
+import { UserState } from 'types/state'
+import { getPlayers } from 'actions'
+import { AppState } from 'types/state'
+import { HomeProps } from 'types/props'
 import Players from 'components/Players'
 
-class HomePage extends Component {
-  render() {
-    const players = [
-      {'name': 'toze', 'nickname': 'tomatos', 'picture': ''},
-      {'name': 'batman', 'nickname': 'bruce', 'picture': ''},
-      {'name': 'luffy', 'nickname': 'muggywara', 'picture': ''}
-    ]
+class HomePage extends Component<HomeProps, AppState> {
+  componentDidMount() {
+    this.props.getPlayers(this.props.user)
+  }
 
+  render() {
     return (
-      <Players players={players}/>
+      <Players players={this.props.players}/>
     )
   }
 }
 
 const mapStateToProps = (originalState: any, originalOwnProps: any) => {
   return (state: any, ownProps: any) => {
-    return {}
+    return {
+      user: state.user,
+      players: selectors.getPlayers(state)
+    }
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => ({})
+const mapDispatchToProps = (dispatch: any) => ({
+  getPlayers: (user: UserState) => dispatch(getPlayers(user))
+})
 
 export default connect(
   mapStateToProps,

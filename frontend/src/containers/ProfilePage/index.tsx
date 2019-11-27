@@ -20,7 +20,7 @@ class ProfilePage extends Component<ProfileProps, AppState> {
           </Grid.Column>
         </Grid.Row>
         <Grid.Row centered columns={3}>
-          <Grid.Column centered>
+          <Grid.Column>
             <Card centered>
               <Image alt='' src={this.props.user.profile.picture} wrapped ui={false} />
               <Card.Content>

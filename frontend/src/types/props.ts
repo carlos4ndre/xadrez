@@ -9,6 +9,12 @@ export interface HeaderProps {
   logoutUser: () => void
 }
 
+export interface HomeProps {
+  user: UserState,
+  players: Player[],
+  getPlayers: (user: UserState) => void
+}
+
 export interface ProfileProps {
   user: UserState
 }

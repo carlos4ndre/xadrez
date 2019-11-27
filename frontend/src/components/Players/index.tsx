@@ -11,7 +11,7 @@ const Players = (props: PlayersProps) => (
       <List>
         {
           props.players.map(player => (
-            <List.Item>
+            <List.Item key={player.id}>
               <Image avatar src={player.picture} />
               <List.Content>
                 <List.Header>{player.name}</List.Header>

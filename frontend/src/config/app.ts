@@ -1,12 +1,15 @@
-const apiId = '122w70fjlb'
+// AWS
+const env = 'dev'
+const apiHostname = '6c3q3t08w7.execute-api.us-east-1.amazonaws.com'
+const wsHostname = 'hl3rw57z7d.execute-api.us-east-1.amazonaws.com'
+const websiteHostname = 'localhost:3000'
+export const apiEndpoint = `https://${apiHostname}/${env}`
+export const wsEndpoint = `wss://${wsHostname}/${env}`
+
+
+// Auth0
 const domain = 'dev-embzl7vs.auth0.com'
 const clientId = 'brSV94G2uZANc2lmTtZYXUmci2pTdx1H'
-const apiHostname = `${apiId}.execute-api.us-east-1.amazonaws.com`
-const apiEnvironment = 'dev'
-const websiteHostname = 'localhost:3000'
-
-export const apiEndpoint = `https://${apiHostname}/${apiEnvironment}`
-export const wsEndpoint = `wss://${apiHostname}/${apiEnvironment}`
 export const authConfig: any = {
   domain,
   clientId,

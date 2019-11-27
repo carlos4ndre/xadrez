@@ -39,22 +39,30 @@ custom:
 
 functions:
   connect:
-    handler: lambda/websocket/connect.handler
+    handler: src/lambda/websocket/connect.handler
     events:
       - websocket:
           route: $connect
 
   disconnect:
-    handler: lambda/websocket/disconnect.handler
+    handler: src/lambda/websocket/disconnect.handler
     events:
       - websocket:
           route: $disconnect
 
   default:
-    handler: lambda/websocket/default.handler
+    handler: src/lambda/websocket/default.handler
     events:
       - websocket:
           route: $default
+
+  GetPlayers:
+    handler: src/lambda/http/getPlayers.handler
+    events:
+      - http:
+          method: get
+          path: players
+          cors: true
 
 resources:
   Resources:
