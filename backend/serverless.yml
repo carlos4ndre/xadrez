@@ -23,6 +23,7 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
+        - dynamodb:DescribeTable
         - dynamodb:Scan
         - dynamodb:PutItem
         - dynamodb:DeleteItem
@@ -30,6 +31,7 @@ provider:
 
     - Effect: Allow
       Action:
+        - dynamodb:DescribeTable
         - dynamodb:Scan
         - dynamodb:PutItem
         - dynamodb:UpdateItem

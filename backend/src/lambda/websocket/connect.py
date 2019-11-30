@@ -1,11 +1,10 @@
 import os
-import datetime
-import pytz
 import logging
 import boto3
 import jwt
 import json
 import requests
+from src.models.player import Player
 
 logger = logging.getLogger(__name__)
 
@@ -50,28 +49,13 @@ def handler(event, context):
         return {"statusCode": 500, "body": "Connect failed"}
 
     try:
-        logger.info("Update player profile")
-        profile_attribute_names = {
-            "#name": "name",
-            "#nickname": "nickname",
-            "#email": "email",
-            "#picture": "picture",
-            "#updated_at": "updated_at"
-        }
-        profile_attribute_values = {
-            ":name": payload["name"],
-            ":nickname": payload["nickname"],
-            ":email": payload["email"],
-            ":picture": payload["picture"],
-            ":updated_at": pytz.utc.localize(datetime.datetime.utcnow()).strftime('%Y-%m-%d %H:%M:%S %Z%z')
-        }
-        table = dynamodb.Table(os.environ["PLAYERS_TABLE"])
-        table.update_item(
-            Key={"id": payload["sub"]},
-            UpdateExpression="set #name=:name, #nickname=:nickname, #picture=:picture, #email=:email, #updated_at=:updated_at",
-            ExpressionAttributeNames=profile_attribute_names,
-            ExpressionAttributeValues=profile_attribute_values
-        )
+        Player(
+            id=payload["sub"],
+            name=payload["name"],
+            nickname=payload["nickname"],
+            email=payload["email"],
+            picture=payload["picture"]
+        ).save()
     except Exception as e:
         logger.error(e)
         return {"statusCode": 500, "body": "Failed to update profile"}
