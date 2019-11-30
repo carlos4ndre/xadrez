@@ -22,6 +22,7 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
+        - dynamodb:Scan
         - dynamodb:PutItem
         - dynamodb:DeleteItem
       Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}
@@ -56,7 +57,7 @@ functions:
       - websocket:
           route: $default
 
-  GetPlayers:
+  getPlayers:
     handler: src/lambda/http/getPlayers.handler
     events:
       - http:
