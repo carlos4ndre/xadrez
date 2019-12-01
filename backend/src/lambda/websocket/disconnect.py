@@ -1,10 +1,7 @@
 import logging
-import os
-import boto3
+from src.models import Connection
 
 logger = logging.getLogger(__name__)
-
-dynamodb = boto3.resource("dynamodb")
 
 
 def handler(event, context):
@@ -13,8 +10,7 @@ def handler(event, context):
 
     try:
         logger.info("Remove connectID from the database")
-        table = dynamodb.Table(os.environ["CONNECTIONS_TABLE"])
-        table.delete_item(Key={"id": connectionID})
+        Connection(id=connectionID).delete()
         return {"statusCode": 200, "body": "Disconnect successful"}
     except Exception as e:
         logger.error(e)

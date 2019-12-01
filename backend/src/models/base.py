@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 
 from pynamodb.models import Model
-from pynamodb.attributes import MapAttribute
+from pynamodb.attributes import MapAttribute, UTCDateTimeAttribute
 
 
 class BaseModel(Model):
@@ -30,3 +30,6 @@ class BaseModel(Model):
             return attr.isoformat()
         else:
             return attr
+
+    created_at = UTCDateTimeAttribute(default=datetime.utcnow)
+    updated_at = UTCDateTimeAttribute(default=datetime.utcnow)

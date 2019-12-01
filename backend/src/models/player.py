@@ -13,4 +13,3 @@ class Player(BaseModel):
     nickname = UnicodeAttribute()
     email = UnicodeAttribute()
     picture = UnicodeAttribute()
-    updated_at = UTCDateTimeAttribute(default=datetime.utcnow)

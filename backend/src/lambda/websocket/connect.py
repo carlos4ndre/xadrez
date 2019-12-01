@@ -1,14 +1,11 @@
 import os
 import logging
-import boto3
 import jwt
 import json
 import requests
-from src.models.player import Player
+from src.models import Player, Connection
 
 logger = logging.getLogger(__name__)
-
-dynamodb = boto3.resource("dynamodb")
 
 
 def handler(event, context):
@@ -38,12 +35,10 @@ def handler(event, context):
 
     try:
         logger.info("Add connectID to the database")
-        item = {
-            "id": connectionID,
-            "userId": payload["sub"]
-        }
-        table = dynamodb.Table(os.environ["CONNECTIONS_TABLE"])
-        table.put_item(Item=item)
+        Connection(
+            id=connectionID,
+            userId=payload["sub"]
+        ).save()
     except Exception as e:
         logger.error(e)
         return {"statusCode": 500, "body": "Connect failed"}
