@@ -1,6 +1,14 @@
 import React from 'react'
-import { Grid, Image, List, Header } from 'semantic-ui-react'
+import { Grid, Image, List, Header, Icon } from 'semantic-ui-react'
 import { PlayersProps } from 'types/props'
+import { PlayerStatus } from 'types/player'
+
+const colorStatus = (color: number) => {
+  switch (color) {
+    case PlayerStatus.ONLINE: return 'green'
+    default: return 'grey'
+  }
+}
 
 const Players = (props: PlayersProps) => (
   <Grid textAlign='center' columns={3}>
@@ -12,11 +20,18 @@ const Players = (props: PlayersProps) => (
         {
           props.players.map(player => (
             <List.Item key={player.id}>
-              <Image avatar src={player.picture} />
-              <List.Content>
-                <List.Header>{player.name}</List.Header>
-                {player.nickname}
-              </List.Content>
+              <List horizontal>
+                <List.Item>
+                  <Image avatar src={player.picture} />
+                  <List.Content>
+                    <List.Header>{player.name}</List.Header>
+                    {player.nickname}
+                  </List.Content>
+                </List.Item>
+                <List.Item>
+                  <Icon color={colorStatus(player.status)} name='circle' />
+                </List.Item>
+              </List>
             </List.Item>
           ))
         }
