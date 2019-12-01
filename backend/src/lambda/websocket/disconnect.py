@@ -1,16 +1,22 @@
 import logging
-from src.models import Connection
+from datetime import datetime
+from src.models import Player
+from src.constants import PlayerStatus
 
 logger = logging.getLogger(__name__)
 
 
 def handler(event, context):
-    connectionID = event["requestContext"].get("connectionId")
-    logger.info("Disconnect request from connectionID {})".format(connectionID))
+    connection_id = event["requestContext"].get("connectionId")
+    logger.info("Disconnect request from connectionId {})".format(connection_id))
 
     try:
-        logger.info("Remove connectID from the database")
-        Connection(id=connectionID).delete()
+        logger.info("Update player status")
+        for player in Player.connection_id_index.query(connection_id):
+            player.update(actions=[
+                Player.status.set(PlayerStatus.OFFLINE),
+                Player.updated_at.set(datetime.now())
+            ])
         return {"statusCode": 200, "body": "Disconnect successful"}
     except Exception as e:
         logger.error(e)
