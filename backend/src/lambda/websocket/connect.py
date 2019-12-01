@@ -1,9 +1,6 @@
-import os
 import logging
-import jwt
-import json
-import requests
 from src.models import Player, Connection
+from src.auth.auth0 import decode_jwt_token
 
 logger = logging.getLogger(__name__)
 
@@ -23,12 +20,7 @@ def handler(event, context):
 
     logger.info("Verify the jwt token")
     try:
-        payload = jwt.decode(token,
-                             key=get_jwt_public_key(token),
-                             audience=os.environ["AUTH0_CLIENT_ID"],
-                             algorithms=['RS256'])
-        logger.info("JWT token is valid")
-        logger.debug(payload)
+        payload = decode_jwt_token(token)
     except Exception as e:
         logger.error(e)
         return {"statusCode": 400, "body": "Failed to validate token"}
@@ -56,14 +48,3 @@ def handler(event, context):
         return {"statusCode": 500, "body": "Failed to update profile"}
 
     return {"statusCode": 200, "body": "Connect successful"}
-
-
-def get_jwt_public_key(token):
-    jwks_url = os.environ["AUTH0_JWKS_URL"]
-    jwks = requests.get(jwks_url).json()
-    public_keys = {}
-    for jwk_key in jwks['keys']:
-        kid = jwk_key['kid']
-        public_keys[kid] = jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk_key))
-    kid = jwt.get_unverified_header(token)['kid']
-    return public_keys[kid]
