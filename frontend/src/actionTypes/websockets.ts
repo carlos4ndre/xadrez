@@ -30,3 +30,5 @@ export interface WsDisconnectSuccess {
 export interface WsDisconnectFailure {
   type: typeof WS_DISCONNECT_FAILURE
 }
+
+export type WsActionTypes = WsConnectRequest | WsConnectSuccess | WsConnectFailure | WsDisconnectRequest | WsDisconnectSuccess | WsDisconnectFailure

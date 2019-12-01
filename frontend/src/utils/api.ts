@@ -3,7 +3,7 @@ import { apiEndpoint } from 'config/app'
 export const getPlayers = (token: string) => {
   const headers = {
     'Accept': 'application/json',
-    'Authorization': token
+    'Authorization': `Bearer ${token}`
   }
 
   return fetch(`${apiEndpoint}/players`, { headers })

@@ -18,12 +18,12 @@ def handler(event, context):
     if not token:
         return {"statusCode": 400, "body": "Token query parameter is missing"}
 
-    logger.info("Verify the jwt token")
+    logger.info("Decode jwt token")
     try:
         payload = decode_jwt_token(token)
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 400, "body": "Failed to validate token"}
+        return {"statusCode": 400, "body": "Failed to decode token"}
 
     try:
         logger.info("Add connectID to the database")
