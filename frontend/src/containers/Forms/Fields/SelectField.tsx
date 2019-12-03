@@ -1,10 +1,13 @@
 import React from 'react'
 import { Form, Select } from 'semantic-ui-react'
+import { WrappedFieldProps, EventWithDataHandler } from 'redux-form'
+import { ChangeEvent } from 'react'
+
 import ValidationMessage from 'containers/Forms/Fields/ValidationMessage'
 
-const SelectField = (props: any) => {
+const SelectField = (props: WrappedFieldProps) => {
   const { input, meta, ...options } = props
-  const handleChange = (event: any, data: any) => input.onChange(data.value)
+  const handleChange: EventWithDataHandler<ChangeEvent<any>> = (event, data={}) => input.onChange(data.value)
 
   return (
     <div>
