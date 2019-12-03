@@ -3,18 +3,17 @@ import { connect } from 'react-redux'
 import { Field, reduxForm, InjectedFormProps, getFormSubmitErrors } from 'redux-form'
 import { Header, Label, Button, Divider, Modal } from 'semantic-ui-react'
 import { CREATE_GAME_FORM } from 'containers/Forms/names'
+import { createGame } from 'actions'
 import { Player } from 'types/player'
+import { UserState } from 'types/state'
+import { GameOptions } from 'types/game'
 import { required } from 'containers/Forms/Fields/validators'
 import SubmitErrorMessage from 'containers/Forms/SubmitErrorMessage'
 import SelectField from 'containers/Forms/Fields/SelectField'
+import { CreateGameFormProps } from 'types/props'
 
-interface CustomProps {
-  player: Player,
-  submitErrors: object,
-  children: object
-}
 
-class CreateGameForm extends React.Component<CustomProps & InjectedFormProps<{}, CustomProps>> {
+class CreateGameForm extends React.Component<CreateGameFormProps & InjectedFormProps<{}, CreateGameFormProps>> {
 
   state = {
     modalOpen: false
@@ -27,7 +26,14 @@ class CreateGameForm extends React.Component<CustomProps & InjectedFormProps<{},
     this.props.reset()
   }
 
-  submit = (values: object) => {
+  submit = (values: any) => {
+    const { user, player } = this.props
+    const gameOptions = {
+      mode: values.mode,
+      time: values.time,
+      color: values.color
+    }
+    this.props.createGame(user, player, gameOptions)
     this.setState({ modalOpen: false })
   }
 
@@ -109,15 +115,23 @@ class CreateGameForm extends React.Component<CustomProps & InjectedFormProps<{},
   }
 }
 
-const mapStateToProps = (state: any) => ({
-  submitErrors: getFormSubmitErrors(CREATE_GAME_FORM)(state)
+const mapStateToProps = (originalState: any, originalOwnProps: any) => {
+  return (state: any, ownProps: any) => {
+    return {
+      user: state.user,
+      submitErrors: getFormSubmitErrors(CREATE_GAME_FORM)(state)
+    }
+  }
+}
+
+const mapDispatchToProps = (dispatch: any) => ({
+  createGame: (user: UserState, challengee: Player, gameOptions: GameOptions) => dispatch(createGame(user, challengee, gameOptions))
 })
-const mapDispatchToProps = (dispatch: object) => ({})
 
 const formConfiguration = {
   form: CREATE_GAME_FORM
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  reduxForm<{}, CustomProps>(formConfiguration)(CreateGameForm)
+  reduxForm<{}, CreateGameFormProps>(formConfiguration)(CreateGameForm)
 )

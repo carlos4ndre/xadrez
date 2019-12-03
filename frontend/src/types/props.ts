@@ -1,4 +1,5 @@
 import { UserState } from 'types/state'
+import { GameOptions } from 'types/game'
 import { History } from 'history'
 import { Player } from 'types/player'
 
@@ -26,4 +27,12 @@ export interface CallbackProps {
 
 export interface PlayersProps {
   players: Player[]
+}
+
+export interface CreateGameFormProps {
+  user: UserState,
+  player: Player,
+  submitErrors: object,
+  children: object,
+  createGame: (user: UserState, challengee: Player, gameOptions: GameOptions) => void
 }
