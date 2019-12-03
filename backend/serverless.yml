@@ -18,6 +18,7 @@ provider:
     AUTH0_CLIENT_ID: brSV94G2uZANc2lmTtZYXUmci2pTdx1H
     AUTH0_JWKS_URL: https://${self:provider.environment.AUTH0_DOMAIN}/.well-known/jwks.json
     PLAYERS_TABLE: Players-${self:provider.stage}
+    GAMES_TABLE: Games-${self:provider.stage}
     CONNECTION_ID_INDEX: ConnectionIdIndex
 
   iamRoleStatements:
@@ -30,10 +31,21 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PLAYERS_TABLE}
+
     - Effect: Allow
       Action:
         - dynamodb:Query
       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PLAYERS_TABLE}/index/${self:provider.environment.CONNECTION_ID_INDEX}
+
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.GAMES_TABLE}
 
 plugins:
   - serverless-python-requirements
@@ -83,6 +95,15 @@ functions:
           authorizer: auth
           cors: true
 
+  createGame:
+    handler: src/lambda/http/createGame.handler
+    events:
+      - http:
+          method: post
+          path: games
+          authorizer: auth
+          cors: true
+
 resources:
   Resources:
     GatewayResponseDefault4XX:
@@ -116,3 +137,15 @@ resources:
               KeyType: HASH
             Projection:
               ProjectionType: ALL
+
+    GamesDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.GAMES_TABLE}
