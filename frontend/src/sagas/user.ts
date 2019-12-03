@@ -2,6 +2,7 @@ import { all, takeLatest, call, put } from 'redux-saga/effects'
 import * as actions from 'actions'
 import * as types from 'actionTypes'
 import { login, logout, handleAuthentication } from '../auth/Auth'
+import { toast } from "react-toastify";
 
 const loginUser = function*() {
   try {
@@ -10,6 +11,10 @@ const loginUser = function*() {
     console.log(e)
     yield put(actions.loginUserFailure('Failed to redirect user'))
   }
+}
+
+const loginUserSuccess = function*() {
+  yield call(toast.success, 'Login successful')
 }
 
 const loginUserCallback = function*() {
@@ -22,6 +27,10 @@ const loginUserCallback = function*() {
   }
 }
 
+const loginUserFailure = function*() {
+  yield call(toast.error, 'Login failed')
+}
+
 const logoutUser = function*() {
   try {
     yield call(logout)
@@ -31,11 +40,23 @@ const logoutUser = function*() {
   }
 }
 
+const logoutUserSuccess = function*() {
+  yield call(toast.success, 'Logout successful')
+}
+
+const logoutUserFailure = function*() {
+  yield call(toast.error, 'Logout failed')
+}
+
 function* userSagas() {
   yield all([
     yield takeLatest(types.LOGIN_USER_REQUEST, loginUser),
     yield takeLatest(types.LOGIN_USER_CALLBACK, loginUserCallback),
+    yield takeLatest(types.LOGIN_USER_SUCCESS, loginUserSuccess),
+    yield takeLatest(types.LOGIN_USER_FAILURE, loginUserFailure),
     yield takeLatest(types.LOGOUT_USER_REQUEST, logoutUser),
+    yield takeLatest(types.LOGOUT_USER_SUCCESS, logoutUserSuccess),
+    yield takeLatest(types.LOGOUT_USER_FAILURE, logoutUserFailure)
   ])
 }
 

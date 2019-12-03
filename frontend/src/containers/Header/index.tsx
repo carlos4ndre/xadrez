@@ -7,6 +7,7 @@ import { AppState } from 'types/state'
 import { HeaderProps } from 'types/props'
 import { loginUser, logoutUser } from 'actions'
 
+
 class Header extends Component<HeaderProps, AppState> {
 
   componentWillMount() {

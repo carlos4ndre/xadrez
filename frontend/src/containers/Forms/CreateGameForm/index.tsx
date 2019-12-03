@@ -11,7 +11,7 @@ import { required } from 'containers/Forms/Fields/validators'
 import SubmitErrorMessage from 'containers/Forms/SubmitErrorMessage'
 import SelectField from 'containers/Forms/Fields/SelectField'
 import { CreateGameFormProps } from 'types/props'
-
+import { toast } from 'react-toastify'
 
 class CreateGameForm extends React.Component<CreateGameFormProps & InjectedFormProps<{}, CreateGameFormProps>> {
 
@@ -34,6 +34,7 @@ class CreateGameForm extends React.Component<CreateGameFormProps & InjectedFormP
       color: values.color
     }
     this.props.createGame(user, player, gameOptions)
+    toast.success('Create game sent!')
     this.setState({ modalOpen: false })
   }
 
