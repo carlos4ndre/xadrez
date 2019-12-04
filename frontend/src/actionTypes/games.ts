@@ -1,6 +1,6 @@
 import { Player } from 'types/player'
 import { UserState } from 'types/state'
-import { GameOptions } from 'types/game'
+import { Game, GameOptions } from 'types/game'
 
 export const CREATE_GAME_REQUEST  = 'CREATE_GAME_REQUEST'
 export const CREATE_GAME_SUCCESS  = 'CREATE_GAME_SUCCESS'
@@ -14,7 +14,8 @@ export interface CreateGameRequest {
 }
 
 export interface CreateGameSuccess {
-  type: typeof CREATE_GAME_SUCCESS
+  type: typeof CREATE_GAME_SUCCESS,
+  game: Game
 }
 
 export interface CreateGameFailure {

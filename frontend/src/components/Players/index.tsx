@@ -24,8 +24,8 @@ class Players extends Component<PlayersProps> {
           <List>
             {
               this.props.players.map(player => (
-              <CreateGameForm player={player}>
-                <List.Item key={player.id}>
+              <CreateGameForm player={player}  key={player.id}>
+                <List.Item>
                   <List horizontal>
                     <List.Item>
                       <Image avatar src={player.picture} />

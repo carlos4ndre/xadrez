@@ -1,6 +1,6 @@
 import { wsConnectSuccess, wsDisconnectSuccess } from 'actions'
 import { wsEndpoint } from '../config/app'
-import { WS_CONNECT_REQUEST, WS_DISCONNECT_REQUEST } from 'actionTypes'
+import { WS_CONNECT_REQUEST, WS_DISCONNECT_REQUEST, CREATE_GAME_REQUEST } from 'actionTypes'
 
 const socketMiddleware = () => {
   let socket: (WebSocket|undefined) = undefined
@@ -47,6 +47,18 @@ const socketMiddleware = () => {
           socket.close()
         }
         console.log('websocket closed')
+        break
+      case CREATE_GAME_REQUEST:
+        if (socket) {
+          const data = {
+            "action": "createGame",
+            "content": {
+              "challengee_id": action.challengee.id,
+              "gameOptions": action.gameOptions
+            }
+          }
+          socket.send(JSON.stringify(data));
+        }
         break
       default:
         console.log('the next action:', action)

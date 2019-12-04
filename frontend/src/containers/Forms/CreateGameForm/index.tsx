@@ -62,8 +62,7 @@ class CreateGameForm extends React.Component<CreateGameFormProps & InjectedFormP
         open={this.state.modalOpen}
         onOpen={this.handleOpen}
         onClose={this.handleClose}
-        closeOnEscape={false}
-        closeOnRootNodeClick={false}>
+        closeOnEscape={false}>
         <Header icon='chess' content='Create new game' />
         <Modal.Content image>
           <Modal.Description>

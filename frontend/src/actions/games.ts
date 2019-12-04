@@ -1,7 +1,7 @@
 import * as types from 'actionTypes'
 import { Player } from 'types/player'
 import { UserState } from 'types/state'
-import { GameOptions } from 'types/game'
+import { Game, GameOptions } from 'types/game'
 
 export const createGame = (user: UserState, challengee: Player, gameOptions: GameOptions) => ({
   type: types.CREATE_GAME_REQUEST,
@@ -10,8 +10,9 @@ export const createGame = (user: UserState, challengee: Player, gameOptions: Gam
   gameOptions
 })
 
-export const createGameSuccess = () => ({
-  type: types.CREATE_GAME_SUCCESS
+export const createGameSuccess = (game: Game) => ({
+  type: types.CREATE_GAME_SUCCESS,
+  game
 })
 
 export const createGameFailure = (error: string) => ({
