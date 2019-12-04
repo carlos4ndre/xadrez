@@ -60,11 +60,11 @@ custom:
 
 functions:
   auth:
-    handler: src/lambda/auth/auth0.handler
+    handler: src/lambdas/auth/auth0.handler
     cors: true
 
   connect:
-    handler: src/lambda/websocket/connect.handler
+    handler: src/lambdas/websocket/connect.handler
     events:
       - websocket:
           authorizer:
@@ -75,25 +75,25 @@ functions:
           route: $connect
 
   disconnect:
-    handler: src/lambda/websocket/disconnect.handler
+    handler: src/lambdas/websocket/disconnect.handler
     events:
       - websocket:
           route: $disconnect
 
   default:
-    handler: src/lambda/websocket/default.handler
+    handler: src/lambdas/websocket/default.handler
     events:
       - websocket:
           route: $default
 
   createGame:
-    handler: src/lambda/websocket/createGame.handler
+    handler: src/lambdas/websocket/createGame.handler
     events:
       - websocket:
           route: createGame
 
   getPlayers:
-    handler: src/lambda/http/getPlayers.handler
+    handler: src/lambdas/http/getPlayers.handler
     events:
       - http:
           method: get

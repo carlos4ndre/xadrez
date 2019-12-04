@@ -2,8 +2,9 @@ import logging
 import json
 import uuid
 from random import sample
-from src.models import Game
+from src.models import Game, Player
 from src.constants import GameMode
+from src.lambdas.websocket.utils import send_to_connection
 
 logger = logging.getLogger(__name__)
 
@@ -40,5 +41,15 @@ def handler(event, context):
     except Exception as e:
         logger.error(e)
         return {"statusCode": 500, "body": "Game create failed"}
+
+    logger.info("Send invite to player")
+    try:
+        player = Player.get(challengee_id)
+        connection_id = player.connection_id
+        data = {'challenger_id': challenger_id, 'content': 'this is a test!'}
+        send_to_connection(connection_id, data, event)
+    except Exception as e:
+        logger.error(e)
+        return {"statusCode": 500, "body": "Failed to send new game invitation to player"}
 
     return {"statusCode": 200, "body": "Game create successful"}
