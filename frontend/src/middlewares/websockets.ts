@@ -21,6 +21,9 @@ const socketMiddleware = () => {
       case 'createGame':
         store.dispatch(actions.createGameQuestion(content.challenger, content.game))
         break
+      case 'endGame':
+        store.dispatch(actions.endGame(content.game))
+        break
       default:
         break
     }

@@ -18,11 +18,22 @@ const rejectGame = function*(action: types.RejectGame) {
   yield call(toast.error, 'No problem, maybe next time')
 }
 
+const endGame = function*(action: types.EndGame) {
+  switch(action.game.status) {
+    case 'rejected':
+      yield call(toast.error, 'Game request was rejected')
+      break
+    default:
+      yield call(toast.error, 'Game ended due to unknown error')
+  }
+}
+
 function* gamesSagas() {
   yield all([
     yield takeLatest(types.CREATE_GAME_QUESTION, createGameQuestion),
     yield takeLatest(types.ACCEPT_GAME, acceptGame),
     yield takeLatest(types.REJECT_GAME, rejectGame),
+    yield takeLatest(types.END_GAME, endGame)
   ])
 }
 
