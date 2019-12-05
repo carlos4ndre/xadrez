@@ -1,24 +1,26 @@
-import { wsConnectSuccess, wsDisconnectSuccess } from 'actions'
 import { wsEndpoint } from '../config/app'
-import { WS_CONNECT_REQUEST, WS_DISCONNECT_REQUEST, CREATE_GAME_REQUEST } from 'actionTypes'
+import * as actions from 'actions'
+import * as types from 'actionTypes'
 
 const socketMiddleware = () => {
   let socket: (WebSocket|undefined) = undefined
 
   const onOpen = (store: any) => (event: any) => {
     console.log('websocket open', event.target.url)
-    store.dispatch(wsConnectSuccess())
+    store.dispatch(actions.wsConnectSuccess())
   }
 
   const onClose = (store: any) => () => {
-    store.dispatch(wsDisconnectSuccess())
+    store.dispatch(actions.wsDisconnectSuccess())
   }
 
   const onMessage = (store: any) => (event: any) => {
-    const payload = JSON.parse(event.data)
     console.log('receiving server message')
-
-    switch (payload.type) {
+    const { action, content } = JSON.parse(event.data)
+    switch (action) {
+      case 'createGame':
+        store.dispatch(actions.createGameQuestion(content.challenger, content.game))
+        break
       default:
         break
     }
@@ -27,7 +29,7 @@ const socketMiddleware = () => {
   // the middleware part of this function
   return (store: any) => (next: any) => (action: any) => {
     switch (action.type) {
-      case WS_CONNECT_REQUEST:
+      case types.WS_CONNECT_REQUEST:
         if (socket) {
           socket.close()
         }
@@ -42,13 +44,13 @@ const socketMiddleware = () => {
         socket.onclose = onClose(store)
         socket.onopen = onOpen(store)
         break
-      case WS_DISCONNECT_REQUEST:
+      case types.WS_DISCONNECT_REQUEST:
         if (socket) {
           socket.close()
         }
         console.log('websocket closed')
         break
-      case CREATE_GAME_REQUEST:
+      case types.CREATE_GAME_REQUEST:
         if (socket) {
           const data = {
             "action": "createGame",
@@ -56,6 +58,24 @@ const socketMiddleware = () => {
               "challengee_id": action.challengee.id,
               "gameOptions": action.gameOptions
             }
+          }
+          socket.send(JSON.stringify(data));
+        }
+        break
+      case types.ACCEPT_GAME:
+        if (socket) {
+          const data = {
+            "action": "acceptGame",
+            "content": {"game": action.game}
+          }
+          socket.send(JSON.stringify(data));
+        }
+        break
+      case types.REJECT_GAME:
+        if (socket) {
+          const data = {
+            "action": "rejectGame",
+            "content": {"game": action.game}
           }
           socket.send(JSON.stringify(data));
         }

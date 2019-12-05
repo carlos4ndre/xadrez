@@ -1,5 +1,5 @@
 import { UserState } from 'types/state'
-import { GameOptions } from 'types/game'
+import { Game, GameOptions } from 'types/game'
 import { History } from 'history'
 import { Player } from 'types/player'
 
@@ -35,4 +35,12 @@ export interface CreateGameFormProps {
   submitErrors: object,
   children: object,
   createGame: (user: UserState, challengee: Player, gameOptions: GameOptions) => void
+}
+
+export interface CreateGameQuestionProps {
+  game: Game,
+  challenger: Player,
+  closeToast?: () => void,
+  acceptGame: (game: Game) => void,
+  rejectGame: (game: Game) => void
 }

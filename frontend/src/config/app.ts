@@ -1,7 +1,7 @@
 // AWS
 const env = 'dev'
-const apiHostname = '20k0gk2v1h.execute-api.us-east-1.amazonaws.com'
-const wsHostname = '52gfyx2n03.execute-api.us-east-1.amazonaws.com'
+const apiHostname = 'zty80itpck.execute-api.us-east-1.amazonaws.com'
+const wsHostname = '9eebvjoqvc.execute-api.us-east-1.amazonaws.com'
 const websiteHostname = 'localhost:3000'
 export const apiEndpoint = `https://${apiHostname}/${env}`
 export const wsEndpoint = `wss://${wsHostname}/${env}`

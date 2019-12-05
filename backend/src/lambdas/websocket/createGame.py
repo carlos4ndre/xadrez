@@ -44,9 +44,21 @@ def handler(event, context):
 
     logger.info("Send invite to player")
     try:
-        player = Player.get(challengee_id)
-        connection_id = player.connection_id
-        data = {'challenger_id': challenger_id, 'content': 'this is a test!'}
+        challengee = Player.get(challengee_id)
+        challenger = Player.get(challenger_id)
+        connection_id = challengee.connection_id
+        data = {
+            "action": "createGame",
+            "content": {
+                "challenger": {
+                    "id": challenger.id,
+                    "name": challenger.name,
+                    "nickname": challenger.nickname,
+                    "picture": challenger.picture
+                },
+                "game": game.to_dict()
+            }
+        }
         send_to_connection(connection_id, data, event)
     except Exception as e:
         logger.error(e)

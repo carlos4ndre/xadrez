@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 import json
 
 from pynamodb.models import Model
@@ -26,6 +27,8 @@ class BaseModel(Model):
             for k, v in attr.attribute_values.items():
                 _dict[k] = self._attr2obj(v)
             return _dict
+        elif isinstance(attr, Enum):
+            return attr.name.lower()
         elif isinstance(attr, datetime):
             return attr.isoformat()
         else:
