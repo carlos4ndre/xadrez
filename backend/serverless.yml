@@ -92,6 +92,18 @@ functions:
       - websocket:
           route: createGame
 
+  acceptGame:
+    handler: src/lambdas/websocket/acceptGame.handler
+    events:
+      - websocket:
+          route: acceptGame
+
+  rejectGame:
+    handler: src/lambdas/websocket/rejectGame.handler
+    events:
+      - websocket:
+          route: rejectGame
+
   getPlayers:
     handler: src/lambdas/http/getPlayers.handler
     events:

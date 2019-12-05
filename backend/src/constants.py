@@ -9,11 +9,12 @@ class PlayerStatus:
 class GameStatus(Enum):
     NOT_STARTED = 1
     STARTED = 2
-    ABORTED = 3
-    STALEMATE = 4
-    RESIGN = 5
-    DRAW = 6
-    WINNER = 7
+    REJECTED = 3
+    ABORTED = 4
+    STALEMATE = 5
+    RESIGN = 6
+    DRAW = 7
+    WINNER = 8
 
 
 class GameMode(Enum):

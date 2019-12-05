@@ -16,6 +16,7 @@ class EnumAttribute(Attribute):
         return str(value.value)
 
     def deserialize(self, value):
+        value = int(value)
         if value not in self.enum_values:
             raise AttributeError(f"Invalid value for enum: {value}. Expected: {self.enum_values}")
         return self.enum(value)
