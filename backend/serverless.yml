@@ -27,6 +27,7 @@ provider:
         - dynamodb:DescribeTable
         - dynamodb:Scan
         - dynamodb:GetItem
+        - dynamodb:BatchGetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
@@ -42,6 +43,7 @@ provider:
         - dynamodb:DescribeTable
         - dynamodb:Scan
         - dynamodb:GetItem
+        - dynamodb:BatchGetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem

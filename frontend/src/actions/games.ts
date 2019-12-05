@@ -36,6 +36,11 @@ export const rejectGame = (game: Game) => ({
   game
 })
 
+export const startGame = (game: Game) => ({
+  type: types.START_GAME,
+  game
+})
+
 export const endGame = (game: Game) => ({
   type: types.END_GAME,
   game

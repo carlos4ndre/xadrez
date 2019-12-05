@@ -18,6 +18,10 @@ const rejectGame = function*(action: types.RejectGame) {
   yield call(toast.error, 'No problem, maybe next time')
 }
 
+const startGame = function*(action: types.StartGame) {
+  yield call(toast.success, 'Game has started!')
+}
+
 const endGame = function*(action: types.EndGame) {
   switch(action.game.status) {
     case 'rejected':
@@ -33,6 +37,7 @@ function* gamesSagas() {
     yield takeLatest(types.CREATE_GAME_QUESTION, createGameQuestion),
     yield takeLatest(types.ACCEPT_GAME, acceptGame),
     yield takeLatest(types.REJECT_GAME, rejectGame),
+    yield takeLatest(types.START_GAME, startGame),
     yield takeLatest(types.END_GAME, endGame)
   ])
 }

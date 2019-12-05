@@ -9,6 +9,7 @@ export const CREATE_GAME_FAILURE  = 'CREATE_GAME_FAILURE'
 
 export const ACCEPT_GAME  = 'ACCEPT_GAME'
 export const REJECT_GAME  = 'REJECT_GAME'
+export const START_GAME  = 'START_GAME'
 export const END_GAME  = 'END_GAME'
 
 export interface CreateGameRequest {
@@ -43,6 +44,11 @@ export interface RejectGame {
   game: Game
 }
 
+export interface StartGame {
+  type: typeof START_GAME,
+  game: Game
+}
+
 export interface EndGame {
   type: typeof END_GAME,
   game: Game
@@ -55,4 +61,6 @@ export type GamesActionTypes =
   CreateGameQuestion |
   AcceptGame |
   RejectGame |
+  RejectGame |
+  StartGame |
   EndGame
