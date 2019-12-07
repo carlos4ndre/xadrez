@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, InjectedFormProps, getFormSubmitErrors } from 'redux-form'
-import { Header, Label, Button, Divider, Modal } from 'semantic-ui-react'
+import { Header, Button, Divider, Modal } from 'semantic-ui-react'
 import { CREATE_GAME_FORM } from 'containers/Forms/names'
 import { createGame } from 'actions'
 import { Player } from 'types/player'
@@ -11,6 +11,7 @@ import { required } from 'containers/Forms/Fields/validators'
 import SubmitErrorMessage from 'containers/Forms/SubmitErrorMessage'
 import SelectField from 'containers/Forms/Fields/SelectField'
 import { CreateGameFormProps } from 'types/props'
+import PlayerIcon from 'components/PlayerIcon'
 import { toast } from 'react-toastify'
 
 class CreateGameForm extends React.Component<CreateGameFormProps & InjectedFormProps<{}, CreateGameFormProps>> {
@@ -68,11 +69,7 @@ class CreateGameForm extends React.Component<CreateGameFormProps & InjectedFormP
           <Modal.Description>
             <form onSubmit={handleSubmit(this.submit.bind(this))}>
               <Header as='h2'>Opponent</Header>
-              <Label as='a' image>
-                <img alt='' src={player.picture}/>
-                {player.name}
-              </Label>
-
+              <PlayerIcon player={player} />
               <Header as='h2'>Mode</Header>
               <Field
                 name='mode'

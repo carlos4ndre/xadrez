@@ -15,6 +15,7 @@ export interface GameOptions {
 export interface Game {
   id: string;
   mode: GameModes;
+  time: number;
   player_turn: string;
   whitePlayer: Player;
   blackPlayer: Player;

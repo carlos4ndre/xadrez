@@ -1,5 +1,5 @@
 import os
-from pynamodb.attributes import UnicodeAttribute, UnicodeSetAttribute
+from pynamodb.attributes import UnicodeAttribute, UnicodeSetAttribute, NumberAttribute
 from src.models.attributes import EnumAttribute
 from src.models.base import BaseModel
 from src.constants import GameMode, GameColor, GameStatus, GameResult
@@ -11,6 +11,7 @@ class Game(BaseModel):
 
     id = UnicodeAttribute(hash_key=True)
     mode = EnumAttribute(enum_cls=GameMode)
+    time = NumberAttribute(default=0)
     white_player_id = UnicodeAttribute()
     black_player_id = UnicodeAttribute()
     moves = UnicodeSetAttribute(default=[])

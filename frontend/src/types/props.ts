@@ -16,6 +16,11 @@ export interface HomeProps {
   getPlayers: (user: UserState) => void
 }
 
+export interface GameChallengeInfoProps {
+  game: Game,
+  player: Player
+}
+
 export interface GameProps {
 }
 
@@ -26,6 +31,10 @@ export interface ProfileProps {
 export interface CallbackProps {
   user: UserState,
   loginUserCallback: () => void
+}
+
+export interface PlayerIconProps {
+  player: Player
 }
 
 export interface PlayersProps {
