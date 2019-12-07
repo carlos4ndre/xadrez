@@ -86,6 +86,18 @@ const socketMiddleware = () => {
           socket.send(JSON.stringify(data));
         }
         break
+      case types.MOVE_PIECE_REQUEST:
+        if (socket) {
+          const data = {
+            "action": "movePiece",
+            "content": {
+              "move": action.move,
+              "game": action.game
+            }
+          }
+          socket.send(JSON.stringify(data));
+        }
+        break
       default:
         console.log('the next action:', action)
         return next(action)

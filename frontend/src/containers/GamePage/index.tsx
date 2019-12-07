@@ -27,7 +27,7 @@ class GamePage extends Component<GameProps, AppState> {
             </Container>
           </Grid.Column>
           <Grid.Column>
-            <ChessBoard orientation={color} />
+            <ChessBoard orientation={color} game={game} />
           </Grid.Column>
           <Grid.Column>
             <List>

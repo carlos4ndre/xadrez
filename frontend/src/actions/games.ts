@@ -45,3 +45,19 @@ export const endGame = (game: Game) => ({
   type: types.END_GAME,
   game
 })
+
+export const movePieceRequest = (move: string, game: Game) => ({
+  type: types.MOVE_PIECE_REQUEST,
+  move,
+  game
+})
+
+export const movePieceSuccess = (game: Game) => ({
+  type: types.MOVE_PIECE_SUCCESS,
+  game
+})
+
+export const movePieceFailure = (error: string) => ({
+  type: types.MOVE_PIECE_FAILURE,
+  error
+})

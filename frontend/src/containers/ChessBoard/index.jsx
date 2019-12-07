@@ -1,4 +1,6 @@
 import React, { Component } from "react"
+import { connect } from 'react-redux'
+import { movePieceRequest } from 'actions'
 import Chess from "chess.js"
 import Chessboard from "chessboardjsx"
 
@@ -70,6 +72,9 @@ class ChessBoard extends Component {
       history: this.game.history({ verbose: true }),
       squareStyles: squareStyling({ pieceSquare, history })
     }))
+
+    const uci = `${sourceSquare}${targetSquare}`
+    this.props.movePiece(uci, this.props.game)
   }
 
   onMouseOverSquare = square => {
@@ -175,4 +180,17 @@ const squareStyling = ({ pieceSquare, history }) => {
   }
 }
 
-export default ChessBoard
+const mapStateToProps = (originalState, originalOwnProps) => {
+  return (state, ownProps) => {
+    return {}
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  movePiece: (move, game) => dispatch(movePieceRequest(move, game)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ChessBoard)
