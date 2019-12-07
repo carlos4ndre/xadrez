@@ -19,7 +19,7 @@ class CreateGameQuestion extends Component<CreateGameQuestionProps, AppState> {
       <Grid padded>
         <Grid.Row>
           <Grid.Column>
-            <Header as='h3'><h1 style={{ color: 'white' }}>Would you like to play?</h1></Header>
+            <Header as='h3'><b style={{ color: 'white' }}>Would you like to play?</b></Header>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>

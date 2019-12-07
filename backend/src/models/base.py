@@ -34,5 +34,5 @@ class BaseModel(Model):
         else:
             return attr
 
-    created_at = UTCDateTimeAttribute(default=datetime.utcnow)
-    updated_at = UTCDateTimeAttribute(default=datetime.utcnow)
+    createdAt = UTCDateTimeAttribute(default=datetime.utcnow)
+    updatedAt = UTCDateTimeAttribute(default=datetime.utcnow)

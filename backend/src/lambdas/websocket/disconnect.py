@@ -12,10 +12,10 @@ def handler(event, context):
 
     try:
         logger.info("Update player status")
-        for player in Player.connection_id_index.query(connection_id):
+        for player in Player.connectionIdIndex.query(connection_id):
             player.update(actions=[
                 Player.status.set(PlayerStatus.OFFLINE),
-                Player.updated_at.set(datetime.now())
+                Player.updatedAt.set(datetime.now())
             ])
         return {"statusCode": 200, "body": "Disconnect successful"}
     except Exception as e:

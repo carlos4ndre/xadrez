@@ -12,7 +12,7 @@ class ConnectionIdIndex(GlobalSecondaryIndex):
         write_capacity_units = 1
         projection = AllProjection()
 
-    connection_id = UnicodeAttribute(hash_key=True)
+    connectionId = UnicodeAttribute(hash_key=True)
 
 
 class Player(BaseModel):
@@ -24,6 +24,6 @@ class Player(BaseModel):
     nickname = UnicodeAttribute()
     email = UnicodeAttribute()
     picture = UnicodeAttribute()
-    connection_id = UnicodeAttribute()
-    connection_id_index = ConnectionIdIndex()
+    connectionId = UnicodeAttribute()
+    connectionIdIndex = ConnectionIdIndex()
     status = NumberAttribute(default=PlayerStatus.OFFLINE)

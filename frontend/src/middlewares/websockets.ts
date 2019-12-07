@@ -61,7 +61,7 @@ const socketMiddleware = () => {
           const data = {
             "action": "createGame",
             "content": {
-              "challengee_id": action.challengee.id,
+              "challengeeId": action.challengee.id,
               "gameOptions": action.gameOptions
             }
           }

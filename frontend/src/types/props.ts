@@ -22,6 +22,9 @@ export interface GameChallengeInfoProps {
 }
 
 export interface GameProps {
+  game: Game,
+  whitePlayer: Player,
+  blackPlayer: Player
 }
 
 export interface ProfileProps {

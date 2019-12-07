@@ -20,7 +20,8 @@ const rejectGame = function*(action: types.RejectGame) {
 }
 
 const startGame = function*(action: types.StartGame) {
-  yield put(push('/game'))
+  const gameId = action.game.id
+  yield put(push(`/game/${gameId}`))
   yield call(toast.success, 'Game has started!')
 }
 

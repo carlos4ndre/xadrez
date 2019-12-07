@@ -16,7 +16,7 @@ def handler(event, context):
     try:
         content = json.loads(event["body"])["content"]
         challenger_id = event["requestContext"]["authorizer"]["principalId"]
-        challengee_id = content["challengee_id"]
+        challengee_id = content["challengeeId"]
         mode = content["gameOptions"]["mode"]
         color = content["gameOptions"]["color"]
     except KeyError as e:
@@ -35,8 +35,8 @@ def handler(event, context):
 
         game = Game(id=str(uuid.uuid4()),
                     mode=GameMode[mode.upper()],
-                    white_player_id=white_player_id,
-                    black_player_id=black_player_id)
+                    whitePlayerId=white_player_id,
+                    blackPlayerId=black_player_id)
         game.save()
     except Exception as e:
         logger.error(e)
@@ -46,7 +46,7 @@ def handler(event, context):
     try:
         challengee = Player.get(challengee_id)
         challenger = Player.get(challenger_id)
-        connection_id = challengee.connection_id
+        connection_id = challengee.connectionId
         data = {
             "action": "createGame",
             "content": {

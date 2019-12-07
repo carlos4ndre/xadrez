@@ -48,10 +48,10 @@ def handler(event, context):
             Player.status.set(PlayerStatus.ONLINE),
 
             # user websocket connection
-            Player.connection_id.set(connection_id),
+            Player.connectionId.set(connection_id),
 
             # record updated time
-            Player.updated_at.set(datetime.now())
+            Player.updatedAt.set(datetime.now())
         ])
     except Exception as e:
         logger.error(e)

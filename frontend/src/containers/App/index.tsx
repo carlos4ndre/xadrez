@@ -14,8 +14,8 @@ const App = () => (
     <Divider hidden/>
     <Switch>
       <Route exact path='/' component={HomePage}/>
-      <Route exact path='/profile' component={ProfilePage}/>
-      <Route exact path='/game' component={GamePage}/>
+      <Route exact path='/profile/me' component={ProfilePage}/>
+      <Route exact path='/game/:gameId' component={GamePage}/>
       <Route exact path='/callback' component={Callback}/>
       <Route component={NotFound}/>
     </Switch>

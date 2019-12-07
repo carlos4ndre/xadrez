@@ -25,7 +25,7 @@ class Header extends Component<HeaderProps, AppState> {
   }
 
   handleProfileUser() {
-    this.props.history.push('/profile')
+    this.props.history.push('/profile/me')
   }
 
   logInLogOutButton() {
