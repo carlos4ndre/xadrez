@@ -16,6 +16,9 @@ export interface HomeProps {
   getPlayers: (user: UserState) => void
 }
 
+export interface GameProps {
+}
+
 export interface ProfileProps {
   user: UserState
 }

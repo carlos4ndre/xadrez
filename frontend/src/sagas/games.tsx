@@ -1,5 +1,6 @@
 import React from 'react'
-import { all, takeLatest, call } from 'redux-saga/effects'
+import { all, takeLatest, put, call } from 'redux-saga/effects'
+import { push } from 'connected-react-router'
 import * as types from 'actionTypes'
 import { toast } from 'react-toastify'
 import CreateGameQuestion from 'containers/CreateGameQuestion'
@@ -19,6 +20,7 @@ const rejectGame = function*(action: types.RejectGame) {
 }
 
 const startGame = function*(action: types.StartGame) {
+  yield put(push('/game'))
   yield call(toast.success, 'Game has started!')
 }
 
