@@ -9,7 +9,7 @@ import ChessBoard from 'containers/ChessBoard'
 
 class GamePage extends Component<GameProps, AppState> {
   render() {
-    const { whitePlayer, blackPlayer } = this.props
+    const { game, whitePlayer, blackPlayer, color } = this.props
 
     return (
       <Grid>
@@ -27,21 +27,29 @@ class GamePage extends Component<GameProps, AppState> {
             </Container>
           </Grid.Column>
           <Grid.Column>
-            <ChessBoard />
+            <ChessBoard orientation={color} />
           </Grid.Column>
           <Grid.Column>
-          <Header as='h2'>White</Header>
-          {
-            whitePlayer ?
-            <PlayerIcon player={whitePlayer} />
-            : <Dimmer active><Loader /></Dimmer>
-          }
-          <Header as='h2'>Black</Header>
-          {
-            blackPlayer ?
-            <PlayerIcon player={blackPlayer} />
-            : <Dimmer active><Loader /></Dimmer>
-          }
+            <List>
+              <List.Item>
+                <Header as='h2'>White</Header>
+                {
+                  whitePlayer ?
+                  <PlayerIcon player={whitePlayer} />
+                  : <Dimmer active><Loader /></Dimmer>
+                }
+                <Header as='h2'>Black</Header>
+                {
+                  blackPlayer ?
+                  <PlayerIcon player={blackPlayer} />
+                  : <Dimmer active><Loader /></Dimmer>
+                }
+              </List.Item>
+              <List.Item>
+                <Header as='h2'>Turn to play</Header>
+                {game.playerTurn}
+              </List.Item>
+            </List>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row centered columns={3}>
@@ -56,12 +64,13 @@ const mapStateToProps = (originalState: any, originalOwnProps: any) => {
     const { match } = ownProps
     const gameId = match.params.gameId
     const game = selectors.getGame(state, gameId)
+    const color = (state.user.id === game.whitePlayerId ? 'white' : 'black')
 
     return {
-      user: state.user,
       game,
       whitePlayer: selectors.getPlayer(state, game.whitePlayerId),
-      blackPlayer: selectors.getPlayer(state, game.blackPlayerId)
+      blackPlayer: selectors.getPlayer(state, game.blackPlayerId),
+      color
     }
   }
 }

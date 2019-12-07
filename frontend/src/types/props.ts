@@ -2,6 +2,7 @@ import { UserState } from 'types/state'
 import { Game, GameOptions } from 'types/game'
 import { History } from 'history'
 import { Player } from 'types/player'
+import Chess from "chess.js"
 
 export interface HeaderProps {
   user: UserState,
@@ -24,7 +25,8 @@ export interface GameChallengeInfoProps {
 export interface GameProps {
   game: Game,
   whitePlayer: Player,
-  blackPlayer: Player
+  blackPlayer: Player,
+  color: string
 }
 
 export interface ProfileProps {
@@ -58,4 +60,9 @@ export interface CreateGameQuestionProps {
   closeToast?: () => void,
   acceptGame: (game: Game) => void,
   rejectGame: (game: Game) => void
+}
+
+export interface ChessBoardProps {
+  orientation: 'white' | 'black',
+  game: any
 }

@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import Chess from "chess.js"
 import Chessboard from "chessboardjsx"
 
-class HumanVsHuman extends Component {
+class ChessBoard extends Component {
   state = {
     fen: "start",
     dropSquareStyle: {},
@@ -12,8 +12,15 @@ class HumanVsHuman extends Component {
     history: []
   }
 
+  game = new Chess()
+
   componentDidMount() {
-    this.game = new Chess()
+    this.onDrop = this.onDrop.bind(this)
+    this.onMouseOverSquare = this.onMouseOverSquare.bind(this)
+    this.onMouseOutSquare = this.onMouseOutSquare.bind(this)
+    this.onDragOverSquare = this.onDragOverSquare.bind(this)
+    this.onSquareClick = this.onSquareClick.bind(this)
+    this.onSquareRightClick= this.onSquareRightClick.bind(this)
   }
 
   removeHighlightSquare = () => {
@@ -117,62 +124,36 @@ class HumanVsHuman extends Component {
     })
   }
 
-  onSquareRightClick = square =>
+  onSquareRightClick = square => {
     this.setState({
       squareStyles: { [square]: { backgroundColor: "deepPink" } }
     })
+  }
 
   render() {
     const { fen, dropSquareStyle, squareStyles } = this.state
+    const { orientation } = this.props
 
-    return this.props.children({
-      squareStyles,
-      position: fen,
-      onMouseOverSquare: this.onMouseOverSquare,
-      onMouseOutSquare: this.onMouseOutSquare,
-      onDrop: this.onDrop,
-      dropSquareStyle,
-      onDragOverSquare: this.onDragOverSquare,
-      onSquareClick: this.onSquareClick,
-      onSquareRightClick: this.onSquareRightClick
-    })
+    return (
+      <Chessboard
+        width={320}
+        position={fen}
+        onDrop={this.onDrop}
+        orientation={orientation}
+        onMouseOverSquare={this.onMouseOverSquare}
+        onMouseOutSquare={this.onMouseOutSquare}
+        boardStyle={{
+          borderRadius: "5px",
+          boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
+        }}
+        squareStyles={squareStyles}
+        dropSquareStyle={dropSquareStyle}
+        onDragOverSquare={this.onDragOverSquare}
+        onSquareClick={this.onSquareClick}
+        onSquareRightClick={this.onSquareRightClick}
+      />
+    )
   }
-}
-
-export default function WithMoveValidation() {
-  return (
-    <HumanVsHuman>
-      {({
-        position,
-        onDrop,
-        onMouseOverSquare,
-        onMouseOutSquare,
-        squareStyles,
-        dropSquareStyle,
-        onDragOverSquare,
-        onSquareClick,
-        onSquareRightClick
-      }) => (
-        <Chessboard
-          id="humanVsHuman"
-          width={320}
-          position={position}
-          onDrop={onDrop}
-          onMouseOverSquare={onMouseOverSquare}
-          onMouseOutSquare={onMouseOutSquare}
-          boardStyle={{
-            borderRadius: "5px",
-            boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
-          }}
-          squareStyles={squareStyles}
-          dropSquareStyle={dropSquareStyle}
-          onDragOverSquare={onDragOverSquare}
-          onSquareClick={onSquareClick}
-          onSquareRightClick={onSquareRightClick}
-        />
-      )}
-    </HumanVsHuman>
-  )
 }
 
 const squareStyling = ({ pieceSquare, history }) => {
@@ -193,3 +174,5 @@ const squareStyling = ({ pieceSquare, history }) => {
     })
   }
 }
+
+export default ChessBoard
