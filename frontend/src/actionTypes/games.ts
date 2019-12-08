@@ -1,6 +1,6 @@
 import { Player } from 'types/player'
 import { UserState } from 'types/state'
-import { Game, GameOptions } from 'types/game'
+import { Game, GameOptions, Move } from 'types/game'
 
 export const CREATE_GAME_REQUEST  = 'CREATE_GAME_REQUEST'
 export const CREATE_GAME_QUESTION = 'CREATE_GAME_QUESTION'
@@ -60,7 +60,7 @@ export interface EndGame {
 
 export interface MovePieceRequest {
   type: typeof MOVE_PIECE_REQUEST,
-  move: string,
+  move: Move,
   game: Game
 }
 

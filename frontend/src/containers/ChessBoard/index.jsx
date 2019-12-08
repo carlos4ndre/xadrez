@@ -6,7 +6,6 @@ import Chessboard from "chessboardjsx"
 
 class ChessBoard extends Component {
   state = {
-    fen: "start",
     dropSquareStyle: {},
     squareStyles: {},
     pieceSquare: "",
@@ -15,6 +14,12 @@ class ChessBoard extends Component {
   }
 
   game = new Chess()
+
+  componentDidUpdate(nextProps) {
+    console.log("Update board")
+    console.log(nextProps.game.fen)
+    this.game.load(nextProps.game.fen)
+  }
 
   componentDidMount() {
     this.onDrop = this.onDrop.bind(this)
@@ -63,18 +68,17 @@ class ChessBoard extends Component {
       from: sourceSquare,
       to: targetSquare,
       promotion: "q" // always promote to a queen for example simplicity
-    });
+    })
 
     // illegal move
     if (move === null) return;
     this.setState(({ history, pieceSquare }) => ({
-      fen: this.game.fen(),
       history: this.game.history({ verbose: true }),
       squareStyles: squareStyling({ pieceSquare, history })
     }))
 
-    const uci = `${sourceSquare}${targetSquare}`
-    this.props.movePiece(uci, this.props.game)
+    const moveInfo  = {from: sourceSquare, to: targetSquare}
+    this.props.movePiece(moveInfo, this.props.game)
   }
 
   onMouseOverSquare = square => {
@@ -111,19 +115,18 @@ class ChessBoard extends Component {
     this.setState(({ history }) => ({
       squareStyles: squareStyling({ pieceSquare: square, history }),
       pieceSquare: square
-    }));
+    }))
 
     let move = this.game.move({
       from: this.state.pieceSquare,
       to: square,
       promotion: "q" // always promote to a queen for example simplicity
-    });
+    })
 
     // illegal move
-    if (move === null) return;
+    if (move === null) return
 
     this.setState({
-      fen: this.game.fen(),
       history: this.game.history({ verbose: true }),
       pieceSquare: ""
     })
@@ -136,13 +139,14 @@ class ChessBoard extends Component {
   }
 
   render() {
-    const { fen, dropSquareStyle, squareStyles } = this.state
-    const { orientation } = this.props
+    const { dropSquareStyle, squareStyles } = this.state
+    const { orientation, game } = this.props
 
     return (
       <Chessboard
+        id="chessboard"
         width={320}
-        position={fen}
+        position={game.fen}
         onDrop={this.onDrop}
         orientation={orientation}
         onMouseOverSquare={this.onMouseOverSquare}

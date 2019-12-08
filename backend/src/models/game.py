@@ -1,8 +1,9 @@
 import os
+import chess
 from pynamodb.attributes import UnicodeAttribute, ListAttribute, NumberAttribute
 from src.models.attributes import EnumAttribute
 from src.models.base import BaseModel
-from src.constants import GameMode, GameColor, GameStatus, GameResult
+from src.constants import GameMode, GameColor, GameStatus
 
 
 class Game(BaseModel):
@@ -15,6 +16,6 @@ class Game(BaseModel):
     whitePlayerId = UnicodeAttribute()
     blackPlayerId = UnicodeAttribute()
     moves = ListAttribute(default=list)
+    fen = UnicodeAttribute(default=chess.STARTING_FEN)
     playerTurn = EnumAttribute(default=GameColor.WHITE, enum_cls=GameColor)
     status = EnumAttribute(default=GameStatus.NOT_STARTED, enum_cls=GameStatus)
-    result = EnumAttribute(default=GameResult.NOT_AVAILABLE, enum_cls=GameResult)

@@ -30,6 +30,15 @@ const endGame = function*(action: types.EndGame) {
     case 'rejected':
       yield call(toast.error, 'Game request was rejected')
       break
+    case 'white_wins':
+      yield call(toast.info, 'White is victourious!')
+      break
+    case 'black_wins':
+      yield call(toast.info, 'Black is Victorious!')
+      break
+    case 'draw':
+      yield call(toast.info, 'It is a Draw!')
+      break
     default:
       yield call(toast.error, 'Game ended due to unknown error')
   }

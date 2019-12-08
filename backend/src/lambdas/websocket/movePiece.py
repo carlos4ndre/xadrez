@@ -3,7 +3,7 @@ import json
 import chess
 from datetime import datetime
 from src.models import Game, Player
-from src.constants import GameStatus, GameResult, GameColor
+from src.constants import GameColor, GameStatus
 from src.lambdas.websocket.utils import send_to_connection
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,8 @@ def handler(event, context):
         black_player_id = content["game"]["blackPlayerId"]
         player_color = (GameColor.WHITE if player_id == white_player_id else GameColor.BLACK)
         opponent_color = (GameColor.BLACK if player_color == GameColor.WHITE else GameColor.WHITE)
-        current_move = content["move"]
+        move_from = content["move"]["from"]
+        move_to = content["move"]["to"]
     except KeyError as e:
         logger.error("Failed to parse event: {}".format(e))
 
@@ -43,11 +44,13 @@ def handler(event, context):
 
         # replay all moves to catch all edge cases concerning repetitions
         board = chess.Board()
-        for m in game.moves:
-            board.push(chess.Move.from_uci(m))
+        current_uci = f"{move_from}{move_to}"
+        game.moves.append(current_uci)
+        for move in game.moves:
+            board.push(chess.Move.from_uci(move))
 
         # check move is legal
-        if chess.Move.from_uci(current_move) not in board.legal_moves:
+        if not board.is_valid():
             logger.info("Notify player with invalid move")
             try:
                 data = {
@@ -65,30 +68,21 @@ def handler(event, context):
 
 
     logger.info("Check game has ended")
-    status, result = None, None
-    if board.is_stalemate():
-        status = GameStatus.STALEMATE
-        result = GameResult.DRAW
-    elif board.is_insufficient_material():
-        status = GameStatus.INSUFFICIENT_MATERIAL
-        result = GameResult.DRAW
-    elif board.is_fivefold_repetition():
-        status = GameStatus.FIVE_FOLD_REPETITION
-        result = GameResult.DRAW
-    elif board.is_seventyfive_moves():
-        status = GameStatus.FIFTY_FIVE_REPETITION
-        result = GameResult.DRAW
+    status = None
+    if (board.is_stalemate() and
+        board.is_insufficient_material() and
+        board.is_fivefold_repetition() and
+            board.is_seventyfive_moves()):
+        status = GameStatus.DRAW
     elif board.is_checkmate():
-        status = GameStatus.WINNER
-        result = player_color
+        status = (GameStatus.WHITE_WINS if player_color == GameColor.WHITE else GameStatus.BLACK_WINS)
 
-    if result:
+    if status:
         try:
             logger.info("Update game with the final result")
             game.update(
                 actions=[
                     Game.status.set(status),
-                    Game.result.set(result),
                     Game.updatedAt.set(datetime.now())
                 ]
             )
@@ -102,7 +96,7 @@ def handler(event, context):
                 "action": "endGame",
                 "content": {"game": game.to_dict()}
             }
-            player_ids = list(set([white_player_id, black_player_id]))
+            player_ids = [white_player_id, black_player_id]
             for player in Player.batch_get(player_ids, attributes_to_get=["connectionId"]):
                 send_to_connection(player.connectionId, data, event)
             return {"statusCode": 200, "body": "Game ended successful"}
@@ -112,10 +106,10 @@ def handler(event, context):
 
     try:
         logger.info("Change player's turn")
-        game.moves.append(current_move)
         game.update(
             actions=[
                 Game.moves.set(game.moves),
+                Game.fen.set(board.fen()),
                 Game.playerTurn.set(opponent_color),
                 Game.updatedAt.set(datetime.now())
             ]
@@ -130,7 +124,7 @@ def handler(event, context):
             "action": "movePieceSuccess",
             "content": {"game": game.to_dict()}
         }
-        player_ids = list(set([white_player_id, black_player_id]))
+        player_ids = [white_player_id, black_player_id]
         for player in Player.batch_get(player_ids, attributes_to_get=["connectionId"]):
             send_to_connection(player.connectionId, data, event)
     except Exception as e:

@@ -49,7 +49,7 @@ def handler(event, context):
             "action": "startGame",
             "content": {"game": game.to_dict()}
         }
-        player_ids = list(set([challenger_id, challengee_id]))
+        player_ids = [challenger_id, challengee_id]
         for player in Player.batch_get(player_ids, attributes_to_get=["connectionId"]):
             send_to_connection(player.connectionId, data, event)
     except Exception as e:

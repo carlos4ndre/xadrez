@@ -1,7 +1,7 @@
 import * as types from 'actionTypes'
 import { Player } from 'types/player'
 import { UserState } from 'types/state'
-import { Game, GameOptions } from 'types/game'
+import { Game, GameOptions, Move } from 'types/game'
 
 export const createGame = (user: UserState, challengee: Player, gameOptions: GameOptions) => ({
   type: types.CREATE_GAME_REQUEST,
@@ -46,7 +46,7 @@ export const endGame = (game: Game) => ({
   game
 })
 
-export const movePieceRequest = (move: string, game: Game) => ({
+export const movePieceRequest = (move: Move, game: Game) => ({
   type: types.MOVE_PIECE_REQUEST,
   move,
   game
