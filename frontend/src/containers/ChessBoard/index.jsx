@@ -140,7 +140,8 @@ class ChessBoard extends Component {
 
   render() {
     const { dropSquareStyle, squareStyles } = this.state
-    const { orientation, game } = this.props
+    const { playerColor, game } = this.props
+    const draggable = (playerColor === game.playerTurn)
 
     return (
       <Chessboard
@@ -148,7 +149,8 @@ class ChessBoard extends Component {
         width={320}
         position={game.fen}
         onDrop={this.onDrop}
-        orientation={orientation}
+        orientation={playerColor}
+        draggable={draggable}
         onMouseOverSquare={this.onMouseOverSquare}
         onMouseOutSquare={this.onMouseOutSquare}
         boardStyle={{
