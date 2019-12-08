@@ -15,6 +15,9 @@ class GameStatus(Enum):
     RESIGN = 6
     DRAW = 7
     WINNER = 8
+    INSUFFICIENT_MATERIAL = 9
+    FIVE_FOLD_REPETITION = 10
+    FIFTY_FIVE_REPETITION = 11
 
 
 class GameMode(Enum):

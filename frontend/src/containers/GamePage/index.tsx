@@ -64,7 +64,7 @@ const mapStateToProps = (originalState: any, originalOwnProps: any) => {
     const { match } = ownProps
     const gameId = match.params.gameId
     const game = selectors.getGame(state, gameId)
-    const color = (state.user.id === game.whitePlayerId ? 'white' : 'black')
+    const color = (state.user.profile.sub === game.whitePlayerId ? 'white' : 'black')
 
     return {
       game,

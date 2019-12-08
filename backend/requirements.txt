@@ -3,3 +3,4 @@ boto3==1.10.30
 requests==2.22.0
 cryptography==2.8
 pynamodb==4.2.0
+python-chess==0.29.0

@@ -106,6 +106,12 @@ functions:
       - websocket:
           route: rejectGame
 
+  movePiece:
+    handler: src/lambdas/websocket/movePiece.handler
+    events:
+      - websocket:
+          route: movePiece
+
   getPlayers:
     handler: src/lambdas/http/getPlayers.handler
     events:

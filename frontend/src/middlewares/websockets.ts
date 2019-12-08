@@ -24,6 +24,12 @@ const socketMiddleware = () => {
       case 'startGame':
         store.dispatch(actions.startGame(content.game))
         break
+      case 'movePieceSuccess':
+        store.dispatch(actions.movePieceSuccess(content.game))
+        break
+      case 'movePieceFailure':
+        store.dispatch(actions.movePieceFailure("Invalid move"))
+        break
       case 'endGame':
         store.dispatch(actions.endGame(content.game))
         break
