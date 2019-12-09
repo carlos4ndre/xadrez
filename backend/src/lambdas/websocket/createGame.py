@@ -40,9 +40,9 @@ def handler(event, context):
         game.save()
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 500, "body": "Game create failed"}
+        return {"statusCode": 500, "body": "Create game failed"}
 
-    logger.info("Send invite to player")
+    logger.info("Notify player")
     try:
         challengee = Player.get(challengee_id)
         challenger = Player.get(challenger_id)
@@ -62,6 +62,6 @@ def handler(event, context):
         send_to_connection(connection_id, data, event)
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 500, "body": "Failed to send new game invitation to player"}
+        return {"statusCode": 500, "body": "Failed to notify player"}
 
-    return {"statusCode": 200, "body": "Game create successful"}
+    return {"statusCode": 200, "body": "Create game successful"}

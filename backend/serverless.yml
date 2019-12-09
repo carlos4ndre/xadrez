@@ -112,6 +112,12 @@ functions:
       - websocket:
           route: movePiece
 
+  leaveGame:
+    handler: src/lambdas/websocket/leaveGame.handler
+    events:
+      - websocket:
+          route: leaveGame
+
   getPlayers:
     handler: src/lambdas/http/getPlayers.handler
     events:

@@ -3,7 +3,7 @@ import json
 import chess
 from datetime import datetime
 from src.models import Game, Player
-from src.constants import GameColor, GameStatus
+from src.constants import GameColor, GameStatus, GameResult
 from src.lambdas.websocket.utils import send_to_connection
 
 logger = logging.getLogger(__name__)
@@ -55,7 +55,7 @@ def handler(event, context):
             try:
                 data = {
                     "action": "movePieceFailure",
-                    "content": {"game": game.to_dict()}
+                    "content": {"error": str(board.status())}
                 }
                 send_to_connection(connection_id, data, event)
                 return {"statusCode": 200, "body": "Move is invalid"}
@@ -68,14 +68,22 @@ def handler(event, context):
 
 
     logger.info("Check game has ended")
-    status = None
-    if (board.is_stalemate() and
-        board.is_insufficient_material() and
-        board.is_fivefold_repetition() and
-            board.is_seventyfive_moves()):
-        status = GameStatus.DRAW
+    status, result = None, None
+    if board.is_stalemate():
+        status = GameStatus.STALEMATE
+        result = GameResult.DRAW
+    elif board.is_insufficient_material():
+        status = GameStatus.INSUFFICIENT_MATERIAL
+        result = GameResult.DRAW
+    elif board.is_fivefold_repetition():
+        status = GameStatus.FIVE_FOLD_REPETITION
+        result = GameResult.DRAW
+    elif board.is_seventyfive_moves():
+        status = GameStatus.SEVENTY_FIVE_MOVES
+        result = GameResult.DRAW
     elif board.is_checkmate():
-        status = (GameStatus.WHITE_WINS if player_color == GameColor.WHITE else GameStatus.BLACK_WINS)
+        status = GameStatus.CHECKMATE
+        result = (GameResult.WHITE_WINS if player_color == GameColor.WHITE else GameResult.BLACK_WINS)
 
     if status:
         try:
@@ -83,6 +91,7 @@ def handler(event, context):
             game.update(
                 actions=[
                     Game.status.set(status),
+                    Game.result.set(result),
                     Game.updatedAt.set(datetime.now())
                 ]
             )
@@ -99,7 +108,7 @@ def handler(event, context):
             player_ids = [white_player_id, black_player_id]
             for player in Player.batch_get(player_ids, attributes_to_get=["connectionId"]):
                 send_to_connection(player.connectionId, data, event)
-            return {"statusCode": 200, "body": "Game ended successful"}
+            return {"statusCode": 200, "body": "End Game successful"}
         except Exception as e:
             logger.error(e)
             return {"statusCode": 500, "body": "Failed to notify players"}
@@ -131,4 +140,4 @@ def handler(event, context):
         logger.error(e)
         return {"statusCode": 500, "body": "Failed to notify players"}
 
-    return {"statusCode": 200, "body": "Move is valid"}
+    return {"statusCode": 200, "body": "Move piece successful"}

@@ -30,14 +30,21 @@ const endGame = function*(action: types.EndGame) {
     case 'rejected':
       yield call(toast.error, 'Game request was rejected')
       break
-    case 'white_wins':
-      yield call(toast.info, 'White is victourious!')
+    case 'resigned':
+      yield call(toast.error, 'The player has resigned')
       break
-    case 'black_wins':
-      yield call(toast.info, 'Black is Victorious!')
+    case 'checkmate':
+      const winner = (action.game.result === 'white_wins' ? 'White' : 'Black')
+      yield call(toast.info, `${winner} is victourious`)
       break
-    case 'draw':
-      yield call(toast.info, 'It is a Draw!')
+    case 'insufficient_material':
+      yield call(toast.info, 'Match is over due to insufficient material')
+      break
+    case 'seventy_five_moves':
+      yield call(toast.info, 'Match is over due to seventy five moves')
+      break
+    case 'five_fold_repetition':
+      yield call(toast.info, 'Match is over due to five fold repetition')
       break
     default:
       yield call(toast.error, 'Game ended due to unknown error')

@@ -61,3 +61,18 @@ export const movePieceFailure = (error: string) => ({
   type: types.MOVE_PIECE_FAILURE,
   error
 })
+
+export const leaveGame = (game: Game) => ({
+  type: types.LEAVE_GAME_REQUEST,
+  game
+})
+
+export const leaveGameSuccess = (game: Game) => ({
+  type: types.LEAVE_GAME_SUCCESS,
+  game
+})
+
+export const leaveGameFailure = (error: string) => ({
+  type: types.LEAVE_GAME_FAILURE,
+  error
+})

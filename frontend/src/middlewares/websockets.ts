@@ -28,7 +28,7 @@ const socketMiddleware = () => {
         store.dispatch(actions.movePieceSuccess(content.game))
         break
       case 'movePieceFailure':
-        store.dispatch(actions.movePieceFailure("Invalid move"))
+        store.dispatch(actions.movePieceFailure(content.error))
         break
       case 'endGame':
         store.dispatch(actions.endGame(content.game))
@@ -100,6 +100,15 @@ const socketMiddleware = () => {
               "move": action.move,
               "game": action.game
             }
+          }
+          socket.send(JSON.stringify(data));
+        }
+        break
+      case types.LEAVE_GAME_REQUEST:
+        if (socket) {
+          const data = {
+            "action": "leaveGame",
+            "content": {"game": action.game}
           }
           socket.send(JSON.stringify(data));
         }

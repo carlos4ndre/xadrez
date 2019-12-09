@@ -2,7 +2,9 @@ import { Player } from 'types/player'
 
 export type GameModes = 'standard'
 
-export type GameStatus = 'not_started' | 'started' | 'rejected' | 'draw' | 'white_wins' | 'black_wins'
+export type GameStatus = 'not_started' | 'started' | 'rejected' | 'resigned' | 'checkmate' | 'insufficient_material' | 'seventy_five_moves' | 'five_fold_repetition'
+
+export type GameResult = 'white_wins' | 'black_wins' | 'draw' | 'undetermined'
 
 export interface GameOptions {
   mode: GameModes,
@@ -18,7 +20,8 @@ export interface Game {
   whitePlayerId: string,
   blackPlayerId: string,
   moves: string[],
-  status: GameStatus
+  status: GameStatus,
+  result: GameResult
 }
 
 export interface Move {

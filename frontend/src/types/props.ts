@@ -62,6 +62,13 @@ export interface CreateGameQuestionProps {
   rejectGame: (game: Game) => void
 }
 
+export interface LeaveGameFormProps {
+  game: Game,
+  submitErrors: object,
+  children: object,
+  leaveGame: (game: Game) => void
+}
+
 export interface ChessBoardProps {
   orientation: 'white' | 'black',
   game: any

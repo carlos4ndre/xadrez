@@ -16,6 +16,10 @@ export const MOVE_PIECE_REQUEST = 'MOVE_PIECE_REQUEST'
 export const MOVE_PIECE_SUCCESS = 'MOVE_PIECE_SUCCESS'
 export const MOVE_PIECE_FAILURE = 'MOVE_PIECE_FAILURE'
 
+export const LEAVE_GAME_REQUEST = 'LEAVE_GAME_REQUEST'
+export const LEAVE_GAME_SUCCESS = 'LEAVE_GAME_SUCCESS'
+export const LEAVE_GAME_FAILURE = 'LEAVE_GAME_FAILURE'
+
 export interface CreateGameRequest {
   type: typeof CREATE_GAME_REQUEST,
   user: UserState,
@@ -74,6 +78,21 @@ export interface MovePieceFailure {
   error: string
 }
 
+export interface LeaveGameRequest {
+  type: typeof LEAVE_GAME_REQUEST,
+  game: Game
+}
+
+export interface LeaveGameSuccess {
+  type: typeof LEAVE_GAME_SUCCESS,
+  game: Game
+}
+
+export interface LeaveGameFailure {
+  type: typeof LEAVE_GAME_FAILURE,
+  error: string
+}
+
 export type GamesActionTypes =
   CreateGameRequest |
   CreateGameSuccess |
@@ -86,4 +105,7 @@ export type GamesActionTypes =
   EndGame |
   MovePieceRequest |
   MovePieceSuccess |
-  MovePieceFailure
+  MovePieceFailure |
+  LeaveGameRequest |
+  LeaveGameSuccess |
+  LeaveGameFailure

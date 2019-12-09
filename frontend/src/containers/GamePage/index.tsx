@@ -3,7 +3,8 @@ import * as selectors from 'selectors'
 import { connect } from 'react-redux'
 import { AppState } from 'types/state'
 import { GameProps } from 'types/props'
-import { Grid, Header, Container, List, Dimmer, Loader } from 'semantic-ui-react'
+import { Grid, Header, Container, List, Dimmer, Loader, Button } from 'semantic-ui-react'
+import { LeaveGameForm } from 'containers/Forms'
 import PlayerIcon from 'components/PlayerIcon'
 import ChessBoard from 'containers/ChessBoard'
 
@@ -53,6 +54,9 @@ class GamePage extends Component<GameProps, AppState> {
           </Grid.Column>
         </Grid.Row>
         <Grid.Row centered columns={3}>
+          <LeaveGameForm game={game}>
+            <Button>Leave Game</Button>
+          </LeaveGameForm>
         </Grid.Row>
       </Grid>
     )

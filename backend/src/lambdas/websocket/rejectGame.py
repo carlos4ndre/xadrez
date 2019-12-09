@@ -43,7 +43,7 @@ def handler(event, context):
         logger.error(e)
         return {"statusCode": 500, "body": "Game update failed"}
 
-    logger.info("Notify user")
+    logger.info("Notify player")
     try:
         player = Player.get(challenger_id)
         data = {
@@ -53,6 +53,6 @@ def handler(event, context):
         send_to_connection(player.connectionId, data, event)
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 500, "body": "Failed to send end game to player"}
+        return {"statusCode": 500, "body": "Failed to notify player"}
 
-    return {"statusCode": 200, "body": "Game reject successful"}
+    return {"statusCode": 200, "body": "Rejecet game successful"}

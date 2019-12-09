@@ -17,8 +17,17 @@ class GameColor(Enum):
 
 class GameStatus(Enum):
     NOT_STARTED = 1
-    STARTED = 2
-    REJECTED = 3
-    DRAW = 4
-    WHITE_WINS = 5
-    BLACK_WINS = 6
+    STARTED = 3
+    REJECTED = 4
+    RESIGNED = 5
+    CHECKMATE = 6
+    INSUFFICIENT_MATERIAL = 7
+    SEVENTY_FIVE_MOVES = 8
+    FIVE_FOLD_REPETITION = 9
+
+
+class GameResult(Enum):
+    WHITE_WINS = 1
+    BLACK_WINS = 2
+    DRAW = 3
+    UNDETERMINED = 4
