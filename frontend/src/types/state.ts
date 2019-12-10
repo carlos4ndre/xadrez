@@ -26,3 +26,7 @@ export interface GamesState {
   allIds: string[],
   isFetching: boolean
 }
+
+export interface ChatRoomState {
+  text: string
+}

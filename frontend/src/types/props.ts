@@ -73,3 +73,6 @@ export interface ChessBoardProps {
   orientation: 'white' | 'black',
   game: any
 }
+
+export interface ChatRoomProps {
+}
