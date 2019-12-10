@@ -1,18 +1,14 @@
 // AWS
-const env = 'dev'
-const apiHostname = 'qio82i41dl.execute-api.us-east-1.amazonaws.com'
-const wsHostname = '0a48md855m.execute-api.us-east-1.amazonaws.com'
-const websiteHostname = 'localhost:3000'
-export const apiEndpoint = `https://${apiHostname}/${env}`
-export const wsEndpoint = `wss://${wsHostname}/${env}`
-
+export const apiEndpoint = process.env.REACT_APP_API_URL
+export const wsEndpoint = process.env.REACT_APP_WS_URL
+export const websiteEndpoint = process.env.REACT_APP_WEBSITE_URL
 
 // Auth0
-const domain = 'dev-embzl7vs.auth0.com'
-const clientId = 'brSV94G2uZANc2lmTtZYXUmci2pTdx1H'
+const domain = process.env.REACT_APP_AUTH0_DOMAIN
+const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID
 export const authConfig: any = {
   domain,
   clientId,
   audience: `https://${domain}/userinfo`,
-  callbackUrl: `http://${websiteHostname}/callback`
+  callbackUrl: `${websiteEndpoint}/callback`
 }
