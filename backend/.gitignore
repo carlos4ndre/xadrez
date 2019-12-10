@@ -53,3 +53,7 @@ target/
 .idea
 todo.txt
 notes/
+venv/
+
+# Dynamodb
+.dynamodb

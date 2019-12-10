@@ -11,6 +11,7 @@ build: ## Build backend
 	yarn install
 
 dev: ## Run backend locally
+	sls dynamodb install
 	sls offline --verbose
 
 deploy: ## Deploy backend to AWS Lambda
