@@ -3,11 +3,12 @@ import * as selectors from 'selectors'
 import { connect } from 'react-redux'
 import { AppState } from 'types/state'
 import { GameProps } from 'types/props'
-import { Grid, Header, Container, List, Dimmer, Loader, Button } from 'semantic-ui-react'
+import { Grid, Header, List, Dimmer, Loader, Button } from 'semantic-ui-react'
 import { LeaveGameForm } from 'containers/Forms'
 import { Link } from 'react-router-dom'
 import PlayerIcon from 'components/PlayerIcon'
 import ChessBoard from 'containers/ChessBoard'
+import ChatRoom from 'containers/ChatRoom'
 
 class GamePage extends Component<GameProps, AppState> {
   render() {
@@ -22,11 +23,7 @@ class GamePage extends Component<GameProps, AppState> {
         </Grid.Row>
         <Grid.Row centered columns={3}>
           <Grid.Column>
-            <Header as='h2'>Chat Room</Header>
-            <Container text>
-              <List>
-              </List>
-            </Container>
+            <ChatRoom game={game} />
           </Grid.Column>
           <Grid.Column>
             <ChessBoard playerColor={color} game={game} />

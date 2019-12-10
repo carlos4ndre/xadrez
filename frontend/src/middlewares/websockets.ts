@@ -33,6 +33,9 @@ const socketMiddleware = () => {
       case 'endGame':
         store.dispatch(actions.endGame(content.game))
         break
+      case 'sendMessage':
+        store.dispatch(actions.receivedMessage(content.text, content.game))
+        break
       default:
         break
     }
@@ -65,10 +68,10 @@ const socketMiddleware = () => {
       case types.CREATE_GAME_REQUEST:
         if (socket) {
           const data = {
-            "action": "createGame",
-            "content": {
-              "challengeeId": action.challengee.id,
-              "gameOptions": action.gameOptions
+            'action': 'createGame',
+            'content': {
+              'challengeeId': action.challengee.id,
+              'gameOptions': action.gameOptions
             }
           }
           socket.send(JSON.stringify(data));
@@ -77,8 +80,8 @@ const socketMiddleware = () => {
       case types.ACCEPT_GAME:
         if (socket) {
           const data = {
-            "action": "acceptGame",
-            "content": {"game": action.game}
+            'action': 'acceptGame',
+            'content': {'game': action.game}
           }
           socket.send(JSON.stringify(data));
         }
@@ -86,8 +89,8 @@ const socketMiddleware = () => {
       case types.REJECT_GAME:
         if (socket) {
           const data = {
-            "action": "rejectGame",
-            "content": {"game": action.game}
+            'action': 'rejectGame',
+            'content': {'game': action.game}
           }
           socket.send(JSON.stringify(data));
         }
@@ -95,10 +98,10 @@ const socketMiddleware = () => {
       case types.MOVE_PIECE_REQUEST:
         if (socket) {
           const data = {
-            "action": "movePiece",
-            "content": {
-              "move": action.move,
-              "game": action.game
+            'action': 'movePiece',
+            'content': {
+              'move': action.move,
+              'game': action.game
             }
           }
           socket.send(JSON.stringify(data));
@@ -107,8 +110,17 @@ const socketMiddleware = () => {
       case types.LEAVE_GAME_REQUEST:
         if (socket) {
           const data = {
-            "action": "leaveGame",
-            "content": {"game": action.game}
+            'action': 'leaveGame',
+            'content': {'game': action.game}
+          }
+          socket.send(JSON.stringify(data));
+        }
+        break
+      case types.SEND_MESSAGE_REQUEST:
+        if (socket) {
+          const data = {
+            'action': 'sendMessage',
+            'content': {'text': action.text, 'game': action.game}
           }
           socket.send(JSON.stringify(data));
         }

@@ -1,4 +1,5 @@
 export * from 'actionTypes/user'
 export * from 'actionTypes/players'
 export * from 'actionTypes/games'
+export * from 'actionTypes/messages'
 export * from 'actionTypes/websockets'

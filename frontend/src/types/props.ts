@@ -71,8 +71,10 @@ export interface LeaveGameFormProps {
 
 export interface ChessBoardProps {
   orientation: 'white' | 'black',
-  game: any
+  game: Game
 }
 
 export interface ChatRoomProps {
+  game: Game,
+  sendMessage: (text: string, game: Game) => void
 }
