@@ -5,6 +5,7 @@ from random import sample
 from src.models import Game, Player
 from src.constants import GameMode
 from src.lambdas.websocket.utils import send_to_connection
+from src.helpers import create_aws_lambda_response
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,8 @@ def handler(event, context):
         mode = content["gameOptions"]["mode"]
         color = content["gameOptions"]["color"]
     except KeyError as e:
-        logger.error("Failed to parse event: {}".format(e))
+        logger.error(e)
+        return create_aws_lambda_response(500, "Failed to parse event")
 
     logger.info("Save new game")
     try:
@@ -39,8 +41,7 @@ def handler(event, context):
                     blackPlayerId=black_player_id)
         game.save()
     except Exception as e:
-        logger.error(e)
-        return {"statusCode": 500, "body": "Create game failed"}
+        return create_aws_lambda_response(500, "Failed to create game")
 
     logger.info("Notify player")
     try:
@@ -62,6 +63,6 @@ def handler(event, context):
         send_to_connection(connection_id, data, event)
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 500, "body": "Failed to notify player"}
+        return create_aws_lambda_response(500, "Failed to notify player")
 
-    return {"statusCode": 200, "body": "Create game successful"}
+    return create_aws_lambda_response(200, "Create game successful")

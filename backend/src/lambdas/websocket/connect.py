@@ -3,6 +3,7 @@ from datetime import datetime
 from src.models import Player
 from src.constants import PlayerStatus
 from src.auth.auth0 import decode_jwt_token
+from src.helpers import create_aws_lambda_response
 
 logger = logging.getLogger(__name__)
 
@@ -13,19 +14,19 @@ def handler(event, context):
 
     logger.info("Validate connectionId")
     if not connection_id:
-        return {"statusCode": 500, "body": "connectionId is missing"}
+        return create_aws_lambda_response(500, "connectionId is missing")
 
     logger.info("Validate jwt token")
     token = event.get("queryStringParameters", {}).get("token")
     if not token:
-        return {"statusCode": 400, "body": "token is missing from query string parameters"}
+        return create_aws_lambda_response(400, "token is missing from query string parameters")
 
     logger.info("Decode jwt token")
     try:
         payload = decode_jwt_token(token)
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 400, "body": "Failed to decode token"}
+        return create_aws_lambda_response(400, "Failed to decode token")
 
     player_id = payload["sub"]
     try:
@@ -55,6 +56,6 @@ def handler(event, context):
         ])
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 500, "body": "Failed to update profile"}
+        return create_aws_lambda_response(500, "Failed to update profile")
 
-    return {"statusCode": 200, "body": "Connect successful"}
+    return create_aws_lambda_response(200, "Connect successful")

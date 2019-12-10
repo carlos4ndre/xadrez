@@ -16,7 +16,7 @@ class ConnectionIdIndex(GlobalSecondaryIndex):
 
 
 class Player(BaseModel):
-    class Meta:
+    class Meta(BaseModel.Meta):
         table_name = os.environ["PLAYERS_TABLE"]
 
     id = UnicodeAttribute(hash_key=True)

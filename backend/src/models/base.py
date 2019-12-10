@@ -1,12 +1,16 @@
+import os
+import json
 from datetime import datetime
 from enum import Enum
-import json
-
 from pynamodb.models import Model
 from pynamodb.attributes import MapAttribute, UTCDateTimeAttribute
 
 
 class BaseModel(Model):
+    class Meta:
+        if os.environ.get("IS_OFFLINE") == "true":
+            host = "http://localhost:8000"
+
     def to_json(self, indent=2):
         return json.dumps(self.to_dict(), indent=indent)
 

@@ -1,5 +1,10 @@
 from enum import Enum
 
+DEFAULT_AWS_RESPONSE_HEADERS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': True
+}
+
 
 class PlayerStatus:
     ONLINE = 1

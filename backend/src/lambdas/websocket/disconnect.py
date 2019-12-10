@@ -2,6 +2,7 @@ import logging
 from datetime import datetime
 from src.models import Player
 from src.constants import PlayerStatus
+from src.helpers import create_aws_lambda_response
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ def handler(event, context):
                 Player.status.set(PlayerStatus.OFFLINE),
                 Player.updatedAt.set(datetime.now())
             ])
-        return {"statusCode": 200, "body": "Disconnect successful"}
+        return create_aws_lambda_response(200, "Disconnect successful")
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 500, "body": "Disconnect failed"}
+        return create_aws_lambda_response(500, "Disconnect failed")

@@ -7,7 +7,7 @@ from src.constants import GameMode, GameColor, GameStatus, GameResult
 
 
 class Game(BaseModel):
-    class Meta:
+    class Meta(BaseModel.Meta):
         table_name = os.environ["GAMES_TABLE"]
 
     id = UnicodeAttribute(hash_key=True)

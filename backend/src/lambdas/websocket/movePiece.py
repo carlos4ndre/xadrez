@@ -5,6 +5,7 @@ from datetime import datetime
 from src.models import Game, Player
 from src.constants import GameColor, GameStatus, GameResult
 from src.lambdas.websocket.utils import send_to_connection
+from src.helpers import create_aws_lambda_response
 
 logger = logging.getLogger(__name__)
 
@@ -20,19 +21,18 @@ def handler(event, context):
         move_from = content["move"]["from"]
         move_to = content["move"]["to"]
     except KeyError as e:
-        logger.error("Failed to parse event: {}".format(e))
+        logger.error(e)
+        return create_aws_lambda_response(500, "Failed to parse event")
 
     logger.info("Check move is valid")
     try:
         game = Game.get(game_id)
         if player_id not in [game.whitePlayerId, game.blackPlayerId]:
-            logger.error("Player is not part of the game")
-            return {"statusCode": 500, "body": "Send message failed"}
+            return create_aws_lambda_response(500, "Player is not part of the game")
 
         player_color = (GameColor.WHITE if player_id == game.whitePlayerId else GameColor.BLACK)
         if player_color != game.playerTurn:
-            logger.error("It is not the player's turn")
-            return {"statusCode": 500, "body": "Move failed"}
+            return create_aws_lambda_response(500, "It is not the player's turn")
 
         # replay all moves to catch all edge cases concerning repetitions
         board = chess.Board()
@@ -50,14 +50,13 @@ def handler(event, context):
                     "content": {"error": str(board.status())}
                 }
                 send_to_connection(connection_id, data, event)
-                return {"statusCode": 200, "body": "Move is invalid"}
+                return create_aws_lambda_response(500, "Move is invalid")
             except Exception as e:
                 logger.error(e)
-                return {"statusCode": 500, "body": "Failed to notify user"}
+                return create_aws_lambda_response(500, "Failed to notify player")
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 500, "body": "Failed to validate move"}
-
+        return create_aws_lambda_response(500, "Failed to validate move")
 
     logger.info("Check game has ended")
     status, result = None, None
@@ -89,7 +88,7 @@ def handler(event, context):
             )
         except Exception as e:
             logger.error(e)
-            return {"statusCode": 500, "body": "Failed to update game"}
+            return create_aws_lambda_response(500, "Failed to update game")
 
         try:
             logger.info("Notify players the game has ended")
@@ -100,10 +99,10 @@ def handler(event, context):
             player_ids = [game.whitePlayerId, game.blackPlayerId]
             for player in Player.batch_get(player_ids, attributes_to_get=["connectionId"]):
                 send_to_connection(player.connectionId, data, event)
-            return {"statusCode": 200, "body": "End Game successful"}
+            return create_aws_lambda_response(200, "End Game successful")
         except Exception as e:
             logger.error(e)
-            return {"statusCode": 500, "body": "Failed to notify players"}
+            return create_aws_lambda_response(500, "Failed to notify players")
 
     try:
         logger.info("Change player's turn")
@@ -118,7 +117,7 @@ def handler(event, context):
         )
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 500, "body": "Failed to update game"}
+        return create_aws_lambda_response(500, "Failed to update game")
 
     logger.info("Notify users the move is valid")
     try:
@@ -131,6 +130,6 @@ def handler(event, context):
             send_to_connection(player.connectionId, data, event)
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 500, "body": "Failed to notify players"}
+        return create_aws_lambda_response(500, "Failed to notify players")
 
-    return {"statusCode": 200, "body": "Move piece successful"}
+    return create_aws_lambda_response(200, "Move piece successful")

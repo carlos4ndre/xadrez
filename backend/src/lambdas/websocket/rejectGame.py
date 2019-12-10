@@ -4,6 +4,7 @@ from datetime import datetime
 from src.models import Game, Player
 from src.constants import GameStatus
 from src.lambdas.websocket.utils import send_to_connection
+from src.helpers import create_aws_lambda_response
 
 logger = logging.getLogger(__name__)
 
@@ -17,14 +18,14 @@ def handler(event, context):
         game_id = content["game"]["id"]
         challengee_id = event["requestContext"]["authorizer"]["principalId"]
     except KeyError as e:
-        logger.error("Failed to parse event: {}".format(e))
+        logger.error(e)
+        return create_aws_lambda_response(500, "Faield to parse event")
 
     logger.info("Update game status")
     try:
         game = Game.get(game_id)
         if player_id not in [game.whitePlayerId, game.blackPlayerId]:
-            logger.error("Player is not part of the game")
-            return {"statusCode": 500, "body": "Send message failed"}
+            return create_aws_lambda_response(500, "Player is not part of the game")
 
         game.update(
             actions=[
@@ -34,7 +35,7 @@ def handler(event, context):
         )
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 500, "body": "Game update failed"}
+        return create_aws_lambda_response(500, "Game update failed")
 
     logger.info("Notify player")
     try:
@@ -47,6 +48,6 @@ def handler(event, context):
         send_to_connection(player.connectionId, data, event)
     except Exception as e:
         logger.error(e)
-        return {"statusCode": 500, "body": "Failed to notify player"}
+        return create_aws_lambda_response(500, "Failed to notify player")
 
-    return {"statusCode": 200, "body": "Rejecet game successful"}
+    return create_aws_lambda_response(200, "Rejecet game successful")
