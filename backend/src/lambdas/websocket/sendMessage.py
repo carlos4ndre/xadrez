@@ -21,7 +21,7 @@ def handler(event, context):
     logger.info("Check player can send message")
     try:
         game = Game.get(game_id)
-        if player_id not in [game.white_player_id, game.black_player_id]:
+        if player_id not in [game.whitePlayerId, game.blackPlayerId]:
             logger.error("Player is not part of the game")
             return {"statusCode": 500, "body": "Send message failed"}
     except Exception as e:
@@ -30,7 +30,7 @@ def handler(event, context):
 
     try:
         logger.info("Send message to player")
-        target_player_id = game.white_player_id if game.white_player_id != player_id else game.black_player_id
+        target_player_id = game.whitePlayerId if player_id != game.whitePlayerId else game.blackPlayerId
         target_player = Player.get(target_player_id)
         data = {
             "action": "sendMessage",

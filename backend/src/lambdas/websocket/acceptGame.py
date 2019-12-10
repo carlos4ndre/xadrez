@@ -15,23 +15,16 @@ def handler(event, context):
     try:
         content = json.loads(event["body"])["content"]
         game_id = content["game"]["id"]
-        challengee_id = event["requestContext"]["authorizer"]["principalId"]
-        white_player_id = content["game"]["whitePlayerId"]
-        black_player_id = content["game"]["blackPlayerId"]
-        if white_player_id == challengee_id:
-            challenger_id = black_player_id
-        else:
-            challenger_id = white_player_id
+        player_id = event["requestContext"]["authorizer"]["principalId"]
     except KeyError as e:
         logger.error("Failed to parse event: {}".format(e))
 
     logger.info("Update game status")
     try:
         game = Game.get(game_id)
-        if (game.whitePlayerId != white_player_id and
-            game.blackPlayerId != black_player_id):
-            logger.error("White/Black player ids do not match with those in game")
-            return {"statusCode": 500, "body": "Game update failed"}
+        if player_id not in [game.whitePlayerId, game.blackPlayerId]:
+            logger.error("Player is not part of the game")
+            return {"statusCode": 500, "body": "Send message failed"}
 
         game.update(
             actions=[
@@ -49,7 +42,7 @@ def handler(event, context):
             "action": "startGame",
             "content": {"game": game.to_dict()}
         }
-        player_ids = [challenger_id, challengee_id]
+        player_ids = [game.whitePlayerId, game.blackPlayerId]
         for player in Player.batch_get(player_ids, attributes_to_get=["connectionId"]):
             send_to_connection(player.connectionId, data, event)
     except Exception as e:

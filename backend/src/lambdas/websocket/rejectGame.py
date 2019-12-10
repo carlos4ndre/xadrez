@@ -16,22 +16,15 @@ def handler(event, context):
         content = json.loads(event["body"])["content"]
         game_id = content["game"]["id"]
         challengee_id = event["requestContext"]["authorizer"]["principalId"]
-        white_player_id = content["game"]["whitePlayerId"]
-        black_player_id = content["game"]["blackPlayerId"]
-        if white_player_id == challengee_id:
-            challenger_id = black_player_id
-        else:
-            challenger_id = white_player_id
     except KeyError as e:
         logger.error("Failed to parse event: {}".format(e))
 
     logger.info("Update game status")
     try:
         game = Game.get(game_id)
-        if (game.whitePlayerId != white_player_id and
-            game.blackPlayerId != black_player_id):
-            logger.error("White/Black player ids do not match with those in game")
-            return {"statusCode": 500, "body": "Game update failed"}
+        if player_id not in [game.whitePlayerId, game.blackPlayerId]:
+            logger.error("Player is not part of the game")
+            return {"statusCode": 500, "body": "Send message failed"}
 
         game.update(
             actions=[
@@ -45,6 +38,7 @@ def handler(event, context):
 
     logger.info("Notify player")
     try:
+        challenger_id = game.whitePlayerId if challengee_id == game.blackPlayerId else game.black_player_id
         player = Player.get(challenger_id)
         data = {
             "action": "endGame",

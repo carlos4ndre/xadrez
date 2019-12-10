@@ -17,10 +17,6 @@ def handler(event, context):
         content = json.loads(event["body"])["content"]
         game_id = content["game"]["id"]
         player_id = event["requestContext"]["authorizer"]["principalId"]
-        white_player_id = content["game"]["whitePlayerId"]
-        black_player_id = content["game"]["blackPlayerId"]
-        player_color = (GameColor.WHITE if player_id == white_player_id else GameColor.BLACK)
-        opponent_color = (GameColor.BLACK if player_color == GameColor.WHITE else GameColor.WHITE)
         move_from = content["move"]["from"]
         move_to = content["move"]["to"]
     except KeyError as e:
@@ -28,16 +24,12 @@ def handler(event, context):
 
     logger.info("Check move is valid")
     try:
-        if player_id not in [white_player_id, black_player_id]:
-            logger.error("Player is not part of the game")
-            return {"statusCode": 500, "body": "Move failed"}
-
         game = Game.get(game_id)
-        if (game.whitePlayerId != white_player_id and
-            game.blackPlayerId != black_player_id):
-            logger.error("White/Black player ids do not match with those in game")
-            return {"statusCode": 500, "body": "Move failed"}
+        if player_id not in [game.whitePlayerId, game.blackPlayerId]:
+            logger.error("Player is not part of the game")
+            return {"statusCode": 500, "body": "Send message failed"}
 
+        player_color = (GameColor.WHITE if player_id == game.whitePlayerId else GameColor.BLACK)
         if player_color != game.playerTurn:
             logger.error("It is not the player's turn")
             return {"statusCode": 500, "body": "Move failed"}
@@ -105,7 +97,7 @@ def handler(event, context):
                 "action": "endGame",
                 "content": {"game": game.to_dict()}
             }
-            player_ids = [white_player_id, black_player_id]
+            player_ids = [game.whitePlayerId, game.blackPlayerId]
             for player in Player.batch_get(player_ids, attributes_to_get=["connectionId"]):
                 send_to_connection(player.connectionId, data, event)
             return {"statusCode": 200, "body": "End Game successful"}
@@ -115,6 +107,7 @@ def handler(event, context):
 
     try:
         logger.info("Change player's turn")
+        opponent_color = (GameColor.BLACK if player_color == GameColor.WHITE else GameColor.WHITE)
         game.update(
             actions=[
                 Game.moves.set(game.moves),
@@ -133,7 +126,7 @@ def handler(event, context):
             "action": "movePieceSuccess",
             "content": {"game": game.to_dict()}
         }
-        player_ids = [white_player_id, black_player_id]
+        player_ids = [game.whitePlayerId, game.blackPlayerId]
         for player in Player.batch_get(player_ids, attributes_to_get=["connectionId"]):
             send_to_connection(player.connectionId, data, event)
     except Exception as e:

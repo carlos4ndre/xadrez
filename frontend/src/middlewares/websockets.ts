@@ -2,6 +2,22 @@ import { wsEndpoint } from '../config/app'
 import * as actions from 'actions'
 import * as types from 'actionTypes'
 
+const emitEvent = (socket: WebSocket|undefined, action: any, content: object) => {
+  try {
+    if (!socket) {
+      console.error('The socket is not initialized')
+      return
+    }
+
+    socket.send(JSON.stringify({
+      'action': action,
+      'content': content
+    }))
+  } catch(error) {
+    console.error(`Failed to emit event for action ${action}: ${error}`)
+  }
+}
+
 const socketMiddleware = () => {
   let socket: (WebSocket|undefined) = undefined
 
@@ -45,9 +61,7 @@ const socketMiddleware = () => {
   return (store: any) => (next: any) => (action: any) => {
     switch (action.type) {
       case types.WS_CONNECT_REQUEST:
-        if (socket) {
-          socket.close()
-        }
+        if (socket) {socket.close()}
 
         // connect to the remote host
         const wsUrl = `${wsEndpoint}/?token=${action.jwtToken}`
@@ -62,68 +76,29 @@ const socketMiddleware = () => {
       case types.WS_DISCONNECT_REQUEST:
         if (socket) {
           socket.close()
+          console.log('websocket closed')
         }
-        console.log('websocket closed')
         break
       case types.CREATE_GAME_REQUEST:
-        if (socket) {
-          const data = {
-            'action': 'createGame',
-            'content': {
-              'challengeeId': action.challengee.id,
-              'gameOptions': action.gameOptions
-            }
-          }
-          socket.send(JSON.stringify(data));
-        }
+        emitEvent(socket, 'createGame', {
+            'challengeeId': action.challengee.id,
+            'gameOptions': action.gameOptions
+        })
         break
       case types.ACCEPT_GAME:
-        if (socket) {
-          const data = {
-            'action': 'acceptGame',
-            'content': {'game': action.game}
-          }
-          socket.send(JSON.stringify(data));
-        }
+        emitEvent(socket, 'acceptGame', {'game': action.game})
         break
       case types.REJECT_GAME:
-        if (socket) {
-          const data = {
-            'action': 'rejectGame',
-            'content': {'game': action.game}
-          }
-          socket.send(JSON.stringify(data));
-        }
+        emitEvent(socket, 'rejectGame', {'game': action.game})
         break
       case types.MOVE_PIECE_REQUEST:
-        if (socket) {
-          const data = {
-            'action': 'movePiece',
-            'content': {
-              'move': action.move,
-              'game': action.game
-            }
-          }
-          socket.send(JSON.stringify(data));
-        }
+        emitEvent(socket, 'movePiece', {'move': action.move, 'game': action.game})
         break
       case types.LEAVE_GAME_REQUEST:
-        if (socket) {
-          const data = {
-            'action': 'leaveGame',
-            'content': {'game': action.game}
-          }
-          socket.send(JSON.stringify(data));
-        }
+        emitEvent(socket, 'leaveGame', {'game': action.game})
         break
       case types.SEND_MESSAGE_REQUEST:
-        if (socket) {
-          const data = {
-            'action': 'sendMessage',
-            'content': {'text': action.text, 'game': action.game}
-          }
-          socket.send(JSON.stringify(data));
-        }
+        emitEvent(socket, 'sendMessage', {'text': action.text, 'game': action.game})
         break
       default:
         console.log('the next action:', action)

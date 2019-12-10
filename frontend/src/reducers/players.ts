@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { GET_PLAYERS_REQUEST, GET_PLAYERS_SUCCESS, GET_PLAYERS_FAILURE, PlayersActionTypes } from 'actionTypes'
+import * as types from 'actionTypes'
 import { PlayersState } from 'types/state'
 import { Player } from 'types/player'
 
@@ -9,13 +9,13 @@ const initialState = {
   isFetching: false
 }
 
-const reducer = (state: PlayersState = initialState, action: PlayersActionTypes) => {
+const reducer = (state: PlayersState = initialState, action: types.PlayersActionTypes) => {
   switch (action.type) {
-    case GET_PLAYERS_REQUEST:
+    case types.GET_PLAYERS_REQUEST:
       return getPlayers(state)
-    case GET_PLAYERS_SUCCESS:
+    case types.GET_PLAYERS_SUCCESS:
       return getPlayersSuccess(state, action.players)
-    case GET_PLAYERS_FAILURE:
+    case types.GET_PLAYERS_FAILURE:
       return getPlayersFailure(state)
     default:
       return state

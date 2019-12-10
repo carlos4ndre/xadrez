@@ -1,4 +1,4 @@
-import { LOGIN_USER_SUCCESS, LOGOUT_USER_SUCCESS, UserActionTypes } from 'actionTypes'
+import * as types from 'actionTypes'
 import { UserState } from 'types/state'
 
 const initialState = {
@@ -24,11 +24,11 @@ const initialState = {
   }
 }
 
-const reducer = (state: UserState = initialState, action: UserActionTypes) => {
+const reducer = (state: UserState = initialState, action: types.UserActionTypes) => {
   switch (action.type) {
-    case LOGIN_USER_SUCCESS:
+    case types.LOGIN_USER_SUCCESS:
       return loginUser(state, action.user)
-    case LOGOUT_USER_SUCCESS:
+    case types.LOGOUT_USER_SUCCESS:
       return logoutUser(state)
     default:
       return state

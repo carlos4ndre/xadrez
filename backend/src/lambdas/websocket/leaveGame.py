@@ -16,24 +16,17 @@ def handler(event, context):
         content = json.loads(event["body"])["content"]
         game_id = content["game"]["id"]
         player_id = event["requestContext"]["authorizer"]["principalId"]
-        white_player_id = content["game"]["whitePlayerId"]
-        black_player_id = content["game"]["blackPlayerId"]
-        player_color = (GameColor.WHITE if player_id == white_player_id else GameColor.BLACK)
     except KeyError as e:
         logger.error("Failed to parse event: {}".format(e))
 
     logger.info("Update game status")
     try:
-        if player_id not in [white_player_id, black_player_id]:
-            logger.error("Player is not part of the game")
-            return {"statusCode": 500, "body": "Move failed"}
-
         game = Game.get(game_id)
-        if (game.whitePlayerId != white_player_id and
-            game.blackPlayerId != black_player_id):
-            logger.error("White/Black player ids do not match with those in game")
-            return {"statusCode": 500, "body": "Game update failed"}
+        if player_id not in [game.whitePlayerId, game.blackPlayerId]:
+            logger.error("Player is not part of the game")
+            return {"statusCode": 500, "body": "Send message failed"}
 
+        player_color = (GameColor.WHITE if player_id == game.whitePlayerId else GameColor.BLACK)
         result = (GameResult.BLACK_WINS if player_color == GameColor.WHITE else GameResult.WHITE_WINS)
         game.update(
             actions=[
@@ -52,7 +45,7 @@ def handler(event, context):
             "action": "endGame",
             "content": {"game": game.to_dict()}
         }
-        player_ids = [white_player_id, black_player_id]
+        player_ids = [game.whitePlayerId, game.blackPlayerId]
         for player in Player.batch_get(player_ids, attributes_to_get=["connectionId"]):
             send_to_connection(player.connectionId, data, event)
     except Exception as e:
