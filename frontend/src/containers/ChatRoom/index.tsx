@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { sendMessage } from 'actions'
-import { Comment, Header, Input, InputOnChangeData } from 'semantic-ui-react'
+import { Container, Comment, Header, Input, InputOnChangeData } from 'semantic-ui-react'
 import { ChatRoomState } from 'types/state'
 import { ChatRoomProps } from 'types/props'
 import { Game } from 'types/game'
+import { getChatRoom } from 'selectors/chatrooms'
+
 
 class ChatRoom extends Component<ChatRoomProps, ChatRoomState> {
+  chatRoomRef = React.createRef<HTMLDivElement>()
 
   constructor(props: ChatRoomProps) {
     super(props)
@@ -14,6 +17,12 @@ class ChatRoom extends Component<ChatRoomProps, ChatRoomState> {
 
     this.handleChange = this.handleChange.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
+  }
+
+  componentDidUpdate() {
+    if (this.chatRoomRef.current) {
+      this.chatRoomRef.current.scrollIntoView({behavior: 'smooth'})
+    }
   }
 
   handleChange = (e: React.ChangeEvent<HTMLInputElement>, data: InputOnChangeData) => {
@@ -28,39 +37,31 @@ class ChatRoom extends Component<ChatRoomProps, ChatRoomState> {
   }
 
   render() {
-    const comments = [
-      {
-        "id": "12345",
-        "game_id": "123",
-        "author": {
-          "id": "3234",
-          "name": "john",
-          "picture": "http://something",
-        },
-        "text": "Great game!",
-        "created_at": "2019-01-01"
-      }
-    ]
+    const { messages } = this.props
 
     return (
-      <Comment.Group>
-        <Header as='h3' dividing>
-          Chat
-        </Header>
-        {
-          comments.map(comment => (
-            <Comment>
-              <Comment.Avatar src={comment.author.picture} />
-              <Comment.Content>
-                <Comment.Author as='a'>{comment.author.name}</Comment.Author>
-                <Comment.Metadata>
-                  <div>{comment.created_at}</div>
-                </Comment.Metadata>
-                <Comment.Text>{comment.text}</Comment.Text>
-              </Comment.Content>
-            </Comment>
-          ))
-        }
+      <Container>
+        <div ref={this.chatRoomRef} style={{overflow: 'auto', maxHeight: '350px'}}>
+        <Comment.Group>
+          <Header as='h3' dividing>
+            Chat
+          </Header>
+          {
+            messages.map(message => (
+              <Comment>
+                <Comment.Avatar src={message.author.picture} />
+                <Comment.Content>
+                  <Comment.Author as='a'>{message.author.name}</Comment.Author>
+                  <Comment.Metadata>
+                    <div>{message.created_at}</div>
+                  </Comment.Metadata>
+                  <Comment.Text>{message.text}</Comment.Text>
+                </Comment.Content>
+              </Comment>
+            ))
+          }
+        </Comment.Group>
+        </div>
         <Input
           icon='paper plane'
           placeholder='Write something...'
@@ -68,14 +69,19 @@ class ChatRoom extends Component<ChatRoomProps, ChatRoomState> {
           onChange={this.handleChange}
           onKeyPress={this.handleKeyPress}
         />
-      </Comment.Group>
+      </Container>
+
     )
   }
 }
 
 const mapStateToProps = (originalState: any, originalOwnProps: any) => {
   return (state: any, ownProps: any) => {
-    return {}
+    const chatRoom = getChatRoom(state, ownProps.game.id)
+    const messages = (chatRoom && chatRoom.messages) || []
+    return {
+      messages
+    }
   }
 }
 

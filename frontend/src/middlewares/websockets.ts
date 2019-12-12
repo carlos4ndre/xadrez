@@ -50,7 +50,7 @@ const socketMiddleware = () => {
         store.dispatch(actions.endGame(content.game))
         break
       case 'sendMessage':
-        store.dispatch(actions.receivedMessage(content.text, content.game))
+        store.dispatch(actions.receivedMessage(content.message))
         break
       default:
         break

@@ -1,5 +1,6 @@
 import { UserState } from 'types/state'
 import { Game, GameOptions } from 'types/game'
+import { Message } from 'types/chatroom'
 import { History } from 'history'
 import { Player } from 'types/player'
 import Chess from "chess.js"
@@ -76,5 +77,6 @@ export interface ChessBoardProps {
 
 export interface ChatRoomProps {
   game: Game,
+  messages: Message[],
   sendMessage: (text: string, game: Game) => void
 }

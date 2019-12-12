@@ -1,5 +1,6 @@
 import logging
 import json
+from datetime import datetime
 from src.models import Game, Player
 from src.lambdas.websocket.utils import send_to_connection
 from src.helpers import create_aws_lambda_response
@@ -30,17 +31,34 @@ def handler(event, context):
         return create_aws_lambda_response(500, "Send message failed")
 
     try:
-        logger.info("Send message to player")
-        target_player_id = game.whitePlayerId if player_id != game.whitePlayerId else game.blackPlayerId
-        target_player = Player.get(target_player_id)
-        data = {
-            "action": "sendMessage",
-            "content": {"text": text, "game": game.to_dict()}
-        }
-        send_to_connection(target_player.connectionId, data, event)
+        logger.info("Generate message")
+        sender = Player.get(player_id)
+        data = generate_message(game.id, sender, text)
+
+        logger.info("Send message to players")
+        for player in Player.batch_get([game.whitePlayerId, game.blackPlayerId]):
+            send_to_connection(player.connectionId, data, event)
         return create_aws_lambda_response(200, "Send message successful")
     except Exception as e:
         logger.error(e)
         return create_aws_lambda_response(500, "Failed to notify player")
 
     return create_aws_lambda_response(200, "Send message successful")
+
+
+def generate_message(room_id, player, text):
+    return {
+        "action": "sendMessage",
+        "content": {
+            "message": {
+                "room_id": room_id,
+                "author": {
+                    "id": player.id,
+                    "name": player.name,
+                    "picture": player.picture
+                },
+                "text": text,
+                "created_at": datetime.now().isoformat()
+            }
+        }
+    }
