@@ -7,7 +7,7 @@ const wsConnect = function*(action: types.LoginUserSuccess) {
     yield put(actions.wsConnect(action.user.idToken))
   }
   else {
-    yield put(actions.wsConnectFailure("Missing user idToken"))
+    yield put(actions.wsConnectFailure('Missing user idToken'))
   }
 }
 

@@ -1,9 +1,9 @@
 export interface Player {
-  id: string,
-  name: string,
-  email: string,
-  nickname: string,
-  picture: string,
+  id: string
+  name: string
+  email: string
+  nickname: string
+  picture: string
   status: number
 }
 

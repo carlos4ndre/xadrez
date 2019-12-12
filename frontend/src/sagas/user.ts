@@ -2,7 +2,7 @@ import { all, takeLatest, call, put } from 'redux-saga/effects'
 import * as actions from 'actions'
 import * as types from 'actionTypes'
 import { login, logout, handleAuthentication } from '../auth/Auth'
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 
 const loginUser = function*() {
   try {
@@ -23,7 +23,7 @@ const loginUserCallback = function*() {
     yield put(actions.loginUserSuccess(user))
   } catch(e) {
     console.log(e)
-    yield put(actions.loginUserFailure("Failed to handle login callback"))
+    yield put(actions.loginUserFailure('Failed to handle login callback'))
   }
 }
 
@@ -36,7 +36,7 @@ const logoutUser = function*() {
     yield call(logout)
     yield put(actions.logoutUserSuccess())
   } catch(e) {
-    yield put(actions.logoutUserFailure("Failed to logout user"))
+    yield put(actions.logoutUserFailure('Failed to logout user'))
   }
 }
 

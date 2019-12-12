@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 class ProfilePage extends Component<ProfileProps, AppState> {
   render() {
     if (!this.props.user.authenticated) {
-      return <Redirect to="/" />
+      return <Redirect to='/' />
     }
 
     return (

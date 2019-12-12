@@ -19,6 +19,7 @@ export function handleAuthentication() {
       }
       const idToken = authResult.idToken;
       const profile = authResult.idTokenPayload;
+
       // set the time that the id token will expire at
       const expiresAt = authResult.idTokenPayload.exp * 1000;
       resolve({

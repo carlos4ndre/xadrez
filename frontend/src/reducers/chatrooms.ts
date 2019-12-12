@@ -21,7 +21,7 @@ const reducer = (state: ChatRoomsState = initialState, action: types.MessagesAct
 
 const addMessage = (state: ChatRoomsState, message: Message) => {
   const room_id = message.room_id
-  const chatRoom = state.byId[room_id] || {"messages": []}
+  const chatRoom = state.byId[room_id] || {'messages': []}
 
   return {
     ...state,

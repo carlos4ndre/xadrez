@@ -7,25 +7,25 @@ export type GameStatus = 'not_started' | 'started' | 'rejected' | 'resigned' | '
 export type GameResult = 'white_wins' | 'black_wins' | 'draw' | 'undetermined'
 
 export interface GameOptions {
-  mode: GameModes,
-  color: 'white' | 'black' | 'random',
+  mode: GameModes
+  color: 'white' | 'black' | 'random'
   time: 'notime' | '5m' | '10m'
 }
 
 export interface Game {
-  id: string,
-  mode: GameModes,
-  time: number,
-  playerTurn: string,
-  whitePlayerId: string,
-  blackPlayerId: string,
-  moves: string[],
-  status: GameStatus,
+  id: string
+  mode: GameModes
+  time: number
+  playerTurn: string
+  whitePlayerId: string
+  blackPlayerId: string
+  moves: string[]
+  status: GameStatus
   result: GameResult
 }
 
 export interface Move {
-  from: string,
+  from: string
   to: string
 }
 

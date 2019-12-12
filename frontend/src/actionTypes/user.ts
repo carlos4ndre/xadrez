@@ -38,4 +38,11 @@ export interface LogoutUserFailure {
   type: typeof LOGOUT_USER_FAILURE
 }
 
-export type UserActionTypes = LoginUserRequest | LoginUserCallback | LoginUserSuccess | LoginUserFailure | LogoutUserRequest | LogoutUserSuccess | LogoutUserFailure
+export type UserActionTypes =
+  LoginUserRequest |
+  LoginUserCallback |
+  LoginUserSuccess |
+  LoginUserFailure |
+  LogoutUserRequest |
+  LogoutUserSuccess |
+  LogoutUserFailure

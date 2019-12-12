@@ -1,15 +1,14 @@
 export interface Author {
-  id: string,
-  name: string,
+  id: string
+  name: string
   picture: string
 }
 
-
 export interface Message {
-  id: string,
-  room_id: string,
-  author: Author,
-  text: string,
+  id: string
+  room_id: string
+  author: Author
+  text: string
   created_at: string
 }
 

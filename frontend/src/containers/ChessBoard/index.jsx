@@ -1,22 +1,22 @@
-import React, { Component } from "react"
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { movePieceRequest } from 'actions'
-import Chess from "chess.js"
-import Chessboard from "chessboardjsx"
+import Chess from 'chess.js'
+import Chessboard from 'chessboardjsx'
 
 class ChessBoard extends Component {
   state = {
     dropSquareStyle: {},
     squareStyles: {},
-    pieceSquare: "",
-    square: "",
+    pieceSquare: '',
+    square: '',
     history: []
   }
 
   game = new Chess()
 
   componentDidUpdate(nextProps) {
-    console.log("Update board")
+    console.log('Update board')
     console.log(nextProps.game.fen)
     this.game.load(nextProps.game.fen)
   }
@@ -44,8 +44,8 @@ class ChessBoard extends Component {
           ...{
             [c]: {
               background:
-                "radial-gradient(circle, #fffc00 36%, transparent 40%)",
-              borderRadius: "50%"
+                'radial-gradient(circle, #fffc00 36%, transparent 40%)',
+              borderRadius: '50%'
             }
           },
           ...squareStyling({
@@ -67,7 +67,7 @@ class ChessBoard extends Component {
     let move = this.game.move({
       from: sourceSquare,
       to: targetSquare,
-      promotion: "q" // always promote to a queen for example simplicity
+      promotion: 'q' // always promote to a queen for example simplicity
     })
 
     // illegal move
@@ -105,9 +105,9 @@ class ChessBoard extends Component {
   onDragOverSquare = square => {
     this.setState({
       dropSquareStyle:
-        square === "e4" || square === "d4" || square === "e5" || square === "d5"
-          ? { backgroundColor: "cornFlowerBlue" }
-          : { boxShadow: "inset 0 0 1px 4px rgb(255, 255, 0)" }
+        square === 'e4' || square === 'd4' || square === 'e5' || square === 'd5'
+          ? { backgroundColor: 'cornFlowerBlue' }
+          : { boxShadow: 'inset 0 0 1px 4px rgb(255, 255, 0)' }
     })
   }
 
@@ -120,7 +120,7 @@ class ChessBoard extends Component {
     let move = this.game.move({
       from: this.state.pieceSquare,
       to: square,
-      promotion: "q" // always promote to a queen for example simplicity
+      promotion: 'q' // always promote to a queen for example simplicity
     })
 
     // illegal move
@@ -128,13 +128,13 @@ class ChessBoard extends Component {
 
     this.setState({
       history: this.game.history({ verbose: true }),
-      pieceSquare: ""
+      pieceSquare: ''
     })
   }
 
   onSquareRightClick = square => {
     this.setState({
-      squareStyles: { [square]: { backgroundColor: "deepPink" } }
+      squareStyles: { [square]: { backgroundColor: 'deepPink' } }
     })
   }
 
@@ -145,7 +145,7 @@ class ChessBoard extends Component {
 
     return (
       <Chessboard
-        id="chessboard"
+        id='chessboard'
         width={320}
         position={game.fen}
         onDrop={this.onDrop}
@@ -154,7 +154,7 @@ class ChessBoard extends Component {
         onMouseOverSquare={this.onMouseOverSquare}
         onMouseOutSquare={this.onMouseOutSquare}
         boardStyle={{
-          borderRadius: "5px",
+          borderRadius: '5px',
           boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
         }}
         squareStyles={squareStyles}
@@ -172,15 +172,15 @@ const squareStyling = ({ pieceSquare, history }) => {
   const targetSquare = history.length && history[history.length - 1].to;
 
   return {
-    [pieceSquare]: { backgroundColor: "rgba(255, 255, 0, 0.4)" },
+    [pieceSquare]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' },
     ...(history.length && {
       [sourceSquare]: {
-        backgroundColor: "rgba(255, 255, 0, 0.4)"
+        backgroundColor: 'rgba(255, 255, 0, 0.4)'
       }
     }),
     ...(history.length && {
       [targetSquare]: {
-        backgroundColor: "rgba(255, 255, 0, 0.4)"
+        backgroundColor: 'rgba(255, 255, 0, 0.4)'
       }
     })
   }

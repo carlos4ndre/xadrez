@@ -3,8 +3,7 @@ import json
 from datetime import datetime
 from src.models import Game, Player
 from src.constants import GameStatus
-from src.lambdas.websocket.utils import send_to_connection
-from src.helpers import create_aws_lambda_response
+from src.helpers import create_aws_lambda_response, send_to_connection
 
 logger = logging.getLogger(__name__)
 

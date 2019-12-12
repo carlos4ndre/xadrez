@@ -5,7 +5,6 @@ import store, { history } from 'config/store'
 import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'
 import { toast } from 'react-toastify'
-
 import 'react-toastify/dist/ReactToastify.css'
 import 'semantic-ui-css/semantic.min.css'
 

@@ -31,10 +31,10 @@ def get_jwt_public_key_from_environment():
 def get_jwt_public_key_from_jwks_url(token):
     jwks = requests.get(AUTH0_JWKS_URL).json()
     public_keys = {}
-    for jwk_key in jwks['keys']:
-        kid = jwk_key['kid']
+    for jwk_key in jwks["keys"]:
+        kid = jwk_key["kid"]
         public_keys[kid] = jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk_key))
-    kid = jwt.get_unverified_header(token)['kid']
+    kid = jwt.get_unverified_header(token)["kid"]
     return public_keys[kid]
 
 

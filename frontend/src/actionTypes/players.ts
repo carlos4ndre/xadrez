@@ -19,4 +19,7 @@ export interface GetPlayersFailure {
   type: typeof GET_PLAYERS_FAILURE
 }
 
-export type PlayersActionTypes = GetPlayersRequest | GetPlayersSuccess | GetPlayersFailure
+export type PlayersActionTypes =
+  GetPlayersRequest |
+  GetPlayersSuccess |
+  GetPlayersFailure
