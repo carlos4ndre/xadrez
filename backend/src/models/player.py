@@ -1,8 +1,9 @@
 import os
-from pynamodb.attributes import UnicodeAttribute, NumberAttribute
-from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
-from src.models.base import BaseModel
+
+from pynamodb.attributes import NumberAttribute, UnicodeAttribute
+from pynamodb.indexes import AllProjection, GlobalSecondaryIndex
 from src.constants import PlayerStatus
+from src.models.base import BaseModel
 
 
 class ConnectionIdIndex(GlobalSecondaryIndex):

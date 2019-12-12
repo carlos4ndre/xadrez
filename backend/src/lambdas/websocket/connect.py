@@ -1,9 +1,10 @@
 import logging
 from datetime import datetime
-from src.models import Player
-from src.constants import PlayerStatus
+
 from src.auth.auth0 import decode_jwt_token
+from src.constants import PlayerStatus
 from src.helpers import create_aws_lambda_response
+from src.models import Player
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,9 @@ def handler(event, context):
     logger.info("Validate jwt token")
     token = event.get("queryStringParameters", {}).get("token")
     if not token:
-        return create_aws_lambda_response(400, "token is missing from query string parameters")
+        return create_aws_lambda_response(
+            400, "token is missing from query string parameters"
+        )
 
     logger.info("Decode jwt token")
     try:
@@ -32,28 +35,27 @@ def handler(event, context):
     try:
         logger.info("Get player info")
         player = Player.get(player_id)
-    except Player.DoesNotExist as e:
+    except Player.DoesNotExist:
         logger.info("New player connecting, using defaults")
         player = Player(id=player_id)
 
     try:
         logger.info("Update player profile and connection info")
-        player.update(actions=[
-            # user profile from auth0
-            Player.name.set(payload["name"]),
-            Player.nickname.set(payload["nickname"]),
-            Player.email.set(payload["email"]),
-            Player.picture.set(payload["picture"]),
-
-            # user status
-            Player.status.set(PlayerStatus.ONLINE),
-
-            # user websocket connection
-            Player.connectionId.set(connection_id),
-
-            # record updated time
-            Player.updatedAt.set(datetime.now())
-        ])
+        player.update(
+            actions=[
+                # user profile from auth0
+                Player.name.set(payload["name"]),
+                Player.nickname.set(payload["nickname"]),
+                Player.email.set(payload["email"]),
+                Player.picture.set(payload["picture"]),
+                # user status
+                Player.status.set(PlayerStatus.ONLINE),
+                # user websocket connection
+                Player.connectionId.set(connection_id),
+                # record updated time
+                Player.updatedAt.set(datetime.now()),
+            ]
+        )
     except Exception as e:
         logger.error(e)
         return create_aws_lambda_response(500, "Failed to update profile")

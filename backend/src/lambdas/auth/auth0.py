@@ -1,6 +1,5 @@
-import json
 import logging
-import requests
+
 from src.auth.auth0 import decode_jwt_token
 from src.helpers import create_aws_lambda_response, generate_policy
 

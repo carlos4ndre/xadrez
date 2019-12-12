@@ -1,6 +1,7 @@
 import json
-import boto3
 import logging
+
+import boto3
 from src.constants import DEFAULT_AWS_RESPONSE_HEADERS
 
 logger = logging.getLogger(__name__)
@@ -12,8 +13,9 @@ def send_to_connection(connection_id, data, event):
     stage = event["requestContext"]["stage"]
     endpoint_url = f"https://{domain_name}/{stage}"
     gatewayapi = boto3.client("apigatewaymanagementapi", endpoint_url=endpoint_url)
-    return gatewayapi.post_to_connection(ConnectionId=connection_id,
-                                         Data=json.dumps(data).encode('utf-8'))
+    return gatewayapi.post_to_connection(
+        ConnectionId=connection_id, Data=json.dumps(data).encode("utf-8")
+    )
 
 
 def generate_policy(principal_id, effect, resource):
@@ -22,24 +24,15 @@ def generate_policy(principal_id, effect, resource):
         "policyDocument": {
             "Version": "2012-10-17",
             "Statement": [
-                {
-                    "Action": "execute-api:Invoke",
-                    "Effect": effect,
-                    "Resource": resource
-
-                }
-            ]
-        }
+                {"Action": "execute-api:Invoke", "Effect": effect, "Resource": resource}
+            ],
+        },
     }
 
 
 def create_aws_lambda_response(status_code, body, headers=DEFAULT_AWS_RESPONSE_HEADERS):
     if not isinstance(body, str):
         body = json.dumps(body, indent=4, sort_keys=True)
-    response = {
-        "statusCode": status_code,
-        "headers": headers,
-        "body": body
-    }
+    response = {"statusCode": status_code, "headers": headers, "body": body}
     logger.debug(response)
     return response

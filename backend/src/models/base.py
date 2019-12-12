@@ -1,9 +1,10 @@
-import os
 import json
+import os
 from datetime import datetime
 from enum import Enum
-from pynamodb.models import Model
+
 from pynamodb.attributes import MapAttribute, UTCDateTimeAttribute
+from pynamodb.models import Model
 
 
 class BaseModel(Model):

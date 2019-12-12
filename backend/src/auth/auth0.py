@@ -1,6 +1,8 @@
 import json
-import requests
 import os
+
+import requests
+
 import jwt
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_pem_x509_certificate
@@ -12,7 +14,9 @@ AUTH0_JWKS_URL = os.getenv("AUTH0_JWKS_URL")
 
 def decode_jwt_token(auth_token):
     public_key = get_jwt_public_key(auth_token)
-    return jwt.decode(auth_token, public_key, algorithms=["RS256"], audience=AUTH0_CLIENT_ID)
+    return jwt.decode(
+        auth_token, public_key, algorithms=["RS256"], audience=AUTH0_CLIENT_ID
+    )
 
 
 def get_jwt_public_key(auth_token):
@@ -47,6 +51,10 @@ def convert_certificate_to_pem(public_key):
 
 def format_public_key(public_key):
     public_key = public_key.replace("\n", " ").replace("\r", "")
-    public_key = public_key.replace("-----BEGIN CERTIFICATE-----", "-----BEGIN CERTIFICATE-----\n")
-    public_key = public_key.replace("-----END CERTIFICATE-----", "\n-----END CERTIFICATE-----")
+    public_key = public_key.replace(
+        "-----BEGIN CERTIFICATE-----", "-----BEGIN CERTIFICATE-----\n"
+    )
+    public_key = public_key.replace(
+        "-----END CERTIFICATE-----", "\n-----END CERTIFICATE-----"
+    )
     return public_key

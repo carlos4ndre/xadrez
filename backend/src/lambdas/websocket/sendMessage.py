@@ -1,8 +1,9 @@
-import logging
 import json
+import logging
 from datetime import datetime
-from src.models import Game, Player
+
 from src.helpers import create_aws_lambda_response, send_to_connection
+from src.models import Game, Player
 
 logger = logging.getLogger(__name__)
 
@@ -54,10 +55,10 @@ def generate_message(room_id, player, text):
                 "author": {
                     "id": player.id,
                     "name": player.name,
-                    "picture": player.picture
+                    "picture": player.picture,
                 },
                 "text": text,
-                "created_at": datetime.now().isoformat()
+                "created_at": datetime.now().isoformat(),
             }
-        }
+        },
     }

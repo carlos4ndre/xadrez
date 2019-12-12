@@ -1,9 +1,15 @@
 import os
+
 import chess
-from pynamodb.attributes import UnicodeAttribute, ListAttribute, NumberAttribute
+from src.constants import GameColor, GameMode, GameResult, GameStatus
 from src.models.attributes import EnumAttribute
 from src.models.base import BaseModel
-from src.constants import GameMode, GameColor, GameStatus, GameResult
+
+from pynamodb.attributes import (
+    ListAttribute,
+    NumberAttribute,
+    UnicodeAttribute,
+)
 
 
 class Game(BaseModel):

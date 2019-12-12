@@ -7,6 +7,14 @@ help: ## List all Makefile targets
 clean: ## Cleanup temporary resources
 	rm -rf node_modules/ build/ .dynamodb/
 
+lint: ## Run linters
+	tox -e black,pylint
+
+security: ## Run security checks
+	tox -e bandit,safety
+
+test: lint security ## Run tests
+
 build: ## Build backend
 	yarn install
 

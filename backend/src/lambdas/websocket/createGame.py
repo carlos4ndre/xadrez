@@ -1,10 +1,11 @@
-import logging
 import json
+import logging
 import uuid
 from random import sample
-from src.models import Game, Player
+
 from src.constants import GameMode
 from src.helpers import create_aws_lambda_response, send_to_connection
+from src.models import Game, Player
 
 logger = logging.getLogger(__name__)
 
@@ -34,12 +35,15 @@ def handler(event, context):
         else:
             white_player_id, black_player_id = sample([challenger_id, challengee_id], 2)
 
-        game = Game(id=str(uuid.uuid4()),
-                    mode=GameMode[mode.upper()],
-                    whitePlayerId=white_player_id,
-                    blackPlayerId=black_player_id)
+        game = Game(
+            id=str(uuid.uuid4()),
+            mode=GameMode[mode.upper()],
+            whitePlayerId=white_player_id,
+            blackPlayerId=black_player_id,
+        )
         game.save()
     except Exception as e:
+        logger.error(e)
         return create_aws_lambda_response(500, "Failed to create game")
 
     logger.info("Notify player")
@@ -54,10 +58,10 @@ def handler(event, context):
                     "id": challenger.id,
                     "name": challenger.name,
                     "nickname": challenger.nickname,
-                    "picture": challenger.picture
+                    "picture": challenger.picture,
                 },
-                "game": game.to_dict()
-            }
+                "game": game.to_dict(),
+            },
         }
         send_to_connection(connection_id, data, event)
     except Exception as e:

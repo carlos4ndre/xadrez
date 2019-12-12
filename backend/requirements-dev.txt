@@ -1,0 +1,6 @@
+-r requirements.txt
+
+black==19.10b0
+flake8==3.7.9
+bandit==1.6.2
+safety==1.8.5
