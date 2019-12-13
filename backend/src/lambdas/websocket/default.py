@@ -1,6 +1,6 @@
 import logging
 
-from src.helpers import create_aws_lambda_response
+from src.lambdas.helpers import create_aws_lambda_response
 
 logger = logging.getLogger(__name__)
 

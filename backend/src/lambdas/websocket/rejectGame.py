@@ -3,8 +3,14 @@ import logging
 from datetime import datetime
 
 from src.constants import GameStatus
-from src.helpers import create_aws_lambda_response, send_to_connection
-from src.models import Game, Player
+from src.lambdas.helpers import (
+    create_aws_lambda_response,
+    check_player_permissions,
+    notify_player,
+    get_opponent_id,
+    update_game_state,
+)
+from src.models import Game
 
 logger = logging.getLogger(__name__)
 
@@ -13,42 +19,40 @@ def handler(event, context):
     connection_id = event["requestContext"].get("connectionId")
     logger.info("Reject game request from connectionId {})".format(connection_id))
 
-    try:
-        content = json.loads(event["body"])["content"]
-        game_id = content["game"]["id"]
-        challengee_id = event["requestContext"]["authorizer"]["principalId"]
-    except KeyError as e:
-        logger.error(e)
-        return create_aws_lambda_response(500, "Faield to parse event")
+    logger.info("Parse event")
+    data, err = parse_event(event)
+    if err:
+        return create_aws_lambda_response(500, err)
+    game_id, challengee_id = data["game_id"], data["challengee_id"]
+    game = Game.get(game_id)
 
-    logger.info("Update game status")
-    try:
-        game = Game.get(game_id)
-        if challengee_id not in [game.whitePlayerId, game.blackPlayerId]:
-            return create_aws_lambda_response(500, "Player is not part of the game")
+    logger.info("Check player permissions")
+    err = check_player_permissions(game, challengee_id)
+    if err:
+        return create_aws_lambda_response(500, err)
 
-        game.update(
-            actions=[
-                Game.status.set(GameStatus.REJECTED),
-                Game.updatedAt.set(datetime.now()),
-            ]
-        )
-    except Exception as e:
-        logger.error(e)
-        return create_aws_lambda_response(500, "Game update failed")
+    logger.info("Update game state")
+    attributes = {"status": GameStatus.REJECTED, "updatedAt": datetime.now()}
+    err = update_game_state(game, attributes)
+    if err:
+        return create_aws_lambda_response(500, err)
 
     logger.info("Notify player")
-    try:
-        challenger_id = (
-            game.whitePlayerId
-            if challengee_id == game.blackPlayerId
-            else game.black_player_id
-        )
-        player = Player.get(challenger_id)
-        data = {"action": "endGame", "content": {"game": game.to_dict()}}
-        send_to_connection(player.connectionId, data, event)
-    except Exception as e:
-        logger.error(e)
-        return create_aws_lambda_response(500, "Failed to notify player")
+    challenger_id = get_opponent_id(challengee_id, game)
+    err = notify_player(challenger_id, "endGame", {"game": game.to_dict()})
+    if err:
+        return create_aws_lambda_response(500, err)
+    return create_aws_lambda_response(200, "Reject game successful")
 
-    return create_aws_lambda_response(200, "Rejecet game successful")
+
+def parse_event(event):
+    try:
+        content = json.loads(event["body"])["content"]
+        data = {
+            "game_id": content["game"]["id"],
+            "challengee_id": event["requestContext"]["authorizer"]["principalId"],
+        }
+        return data, ""
+    except KeyError as e:
+        logger.error(e)
+        return {}, "Faield to parse event"

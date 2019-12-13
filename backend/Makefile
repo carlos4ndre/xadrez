@@ -8,7 +8,7 @@ clean: ## Cleanup temporary resources
 	rm -rf node_modules/ build/ .dynamodb/
 
 lint: ## Run linters
-	tox -e black,pylint
+	tox -e black,flake8
 
 security: ## Run security checks
 	tox -e bandit,safety
@@ -18,8 +18,10 @@ test: lint security ## Run tests
 build: ## Build backend
 	yarn install
 
-dev: ## Run backend locally
+install-serverless-plugins: ## Install serverless plugins
 	sls dynamodb install
+
+dev: install-serverless-plugins ## Run backend locally
 	sls offline --verbose
 
 deploy: ## Deploy backend to AWS Lambda

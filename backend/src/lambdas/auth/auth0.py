@@ -1,7 +1,7 @@
 import logging
 
 from src.auth.auth0 import decode_jwt_token
-from src.helpers import create_aws_lambda_response, generate_policy
+from src.lambdas.helpers import create_aws_lambda_response, generate_policy
 
 logger = logging.getLogger(__name__)
 

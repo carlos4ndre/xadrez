@@ -4,7 +4,7 @@ import uuid
 from random import sample
 
 from src.constants import GameMode
-from src.helpers import create_aws_lambda_response, send_to_connection
+from src.lambdas.helpers import create_aws_lambda_response, notify_player
 from src.models import Game, Player
 
 logger = logging.getLogger(__name__)
@@ -14,27 +14,55 @@ def handler(event, context):
     connection_id = event["requestContext"].get("connectionId")
     logger.info("Create game request from connectionId {})".format(connection_id))
 
-    try:
-        content = json.loads(event["body"])["content"]
-        challenger_id = event["requestContext"]["authorizer"]["principalId"]
-        challengee_id = content["challengeeId"]
-        mode = content["gameOptions"]["mode"]
-        color = content["gameOptions"]["color"]
-    except KeyError as e:
-        logger.error(e)
-        return create_aws_lambda_response(500, "Failed to parse event")
+    logger.info("Parse event")
+    data, err = parse_event(event)
+    if err:
+        return create_aws_lambda_response(500, err)
+    challenger_id, challengee_id = data["challenger_id"], data["challengee_id"]
+    mode, color = data["mode"], data["color"]
 
     logger.info("Save new game")
-    try:
-        if color == "white":
-            white_player_id = challenger_id
-            black_player_id = challengee_id
-        elif color == "black":
-            white_player_id = challengee_id
-            black_player_id = challenger_id
-        else:
-            white_player_id, black_player_id = sample([challenger_id, challengee_id], 2)
+    game, err = create_game(challenger_id, challengee_id, mode, color)
+    if err:
+        return create_aws_lambda_response(500, err)
 
+    logger.info("Notify player")
+    challenger = Player.get(challenger_id)
+    content = {
+        "challenger": {
+            "id": challenger.id,
+            "name": challenger.name,
+            "nickname": challenger.nickname,
+            "picture": challenger.picture,
+        },
+        "game": game.to_dict(),
+    }
+    err = notify_player(challengee_id, "createGame", content)
+    if err:
+        return create_aws_lambda_response(500, "Failed to notify player")
+    return create_aws_lambda_response(200, "Create game successful")
+
+
+def parse_event(event):
+    try:
+        content = json.loads(event["body"])["content"]
+        data = {
+            "challenger_id": event["requestContext"]["authorizer"]["principalId"],
+            "challengee_id": content["challengeeId"],
+            "mode": content["gameOptions"]["mode"],
+            "color": content["gameOptions"]["color"],
+        }
+        return data, ""
+    except KeyError as e:
+        logger.error(e)
+        return {}, "Failed to parse event"
+
+
+def create_game(challenger_id, challengee_id, mode, color):
+    try:
+        white_player_id, black_player_id = assign_player_color(
+            color, challenger_id, challengee_id
+        )
         game = Game(
             id=str(uuid.uuid4()),
             mode=GameMode[mode.upper()],
@@ -42,30 +70,17 @@ def handler(event, context):
             blackPlayerId=black_player_id,
         )
         game.save()
+        return game, ""
     except Exception as e:
+        print(e)
         logger.error(e)
-        return create_aws_lambda_response(500, "Failed to create game")
+        return {}, "Failed to create game"
 
-    logger.info("Notify player")
-    try:
-        challengee = Player.get(challengee_id)
-        challenger = Player.get(challenger_id)
-        connection_id = challengee.connectionId
-        data = {
-            "action": "createGame",
-            "content": {
-                "challenger": {
-                    "id": challenger.id,
-                    "name": challenger.name,
-                    "nickname": challenger.nickname,
-                    "picture": challenger.picture,
-                },
-                "game": game.to_dict(),
-            },
-        }
-        send_to_connection(connection_id, data, event)
-    except Exception as e:
-        logger.error(e)
-        return create_aws_lambda_response(500, "Failed to notify player")
 
-    return create_aws_lambda_response(200, "Create game successful")
+def assign_player_color(color, challenger_id, challengee_id):
+    if color == "white":
+        return challenger_id, challengee_id
+    elif color == "black":
+        return challengee_id, challenger_id
+    else:
+        return sample([challenger_id, challengee_id], 2)

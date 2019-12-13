@@ -8,6 +8,7 @@ provider:
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
+  websocketsApiName: ${self:service}-${self:provider.stage}-websocketApi
 
   tracing:
     lambda: true
@@ -20,6 +21,7 @@ provider:
     PLAYERS_TABLE: Players-${self:provider.stage}
     GAMES_TABLE: Games-${self:provider.stage}
     CONNECTION_ID_INDEX: ConnectionIdIndex
+    WEBSOCKET_API_ENDPOINT: !Join ['', ['https://', !Ref WebsocketsApi, '.execute-api.', "${self:provider.region}", '.amazonaws.com/', "${self:provider.stage}/"]]
 
   iamRoleStatements:
     - Effect: Allow
