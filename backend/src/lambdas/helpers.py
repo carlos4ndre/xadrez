@@ -5,7 +5,7 @@ import logging
 import boto3
 from src.auth import auth0
 from src.constants import DEFAULT_AWS_RESPONSE_HEADERS, GameColor
-from src.models import Player, Game
+from src.models import Player, Game, Message
 
 logger = logging.getLogger(__name__)
 dynamodb = boto3.resource("dynamodb")
@@ -112,3 +112,13 @@ def update_player(player, attributes):
     except Exception as e:
         logger.error(e)
         return "Failed to update player"
+
+
+def create_message(room_id, player_id, content):
+    try:
+        message = Message(roomId=room_id, playerId=player_id, content=content)
+        message.save()
+        return message, ""
+    except Exception as e:
+        logger.error(e)
+        return {}, "Failed to create message"

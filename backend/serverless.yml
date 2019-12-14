@@ -20,6 +20,7 @@ provider:
     AUTH0_JWKS_URL: https://${self:provider.environment.AUTH0_DOMAIN}/.well-known/jwks.json
     PLAYERS_TABLE: Players-${self:provider.stage}
     GAMES_TABLE: Games-${self:provider.stage}
+    CHAT_ROOM_MESSAGES_TABLE: ChatRoomMessages-${self:provider.stage}
     CONNECTION_ID_INDEX: ConnectionIdIndex
     WEBSOCKET_API_ENDPOINT: !Join ['', ['https://', !Ref WebsocketsApi, '.execute-api.', "${self:provider.region}", '.amazonaws.com/', "${self:provider.stage}/"]]
 
@@ -50,6 +51,17 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.GAMES_TABLE}
+
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:BatchGetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CHAT_ROOM_MESSAGES_TABLE}
 
 plugins:
   - serverless-python-requirements
@@ -192,3 +204,19 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.GAMES_TABLE}
+
+    ChatRoomMessagesDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: roomId
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: roomId
+            KeyType: HASH
+          - AttributeName: createdAt
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.CHAT_ROOM_MESSAGES_TABLE}

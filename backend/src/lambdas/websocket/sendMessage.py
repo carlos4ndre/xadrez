@@ -6,6 +6,7 @@ from src.lambdas.helpers import (
     create_aws_lambda_response,
     check_player_permissions,
     notify_players,
+    create_message
 )
 from src.models import Game, Player
 
@@ -31,6 +32,11 @@ def handler(event, context):
     logger.info("Generate message")
     sender = Player.get(player_id)
     message = generate_message(game.id, sender, text)
+
+    logger.info("Save message")
+    _, err = create_message(game_id, player_id, message["text"])
+    if err:
+        return create_aws_lambda_response(500, err)
 
     logger.info("Send message to players")
     player_ids = [game.whitePlayerId, game.blackPlayerId]
