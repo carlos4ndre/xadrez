@@ -1,12 +1,12 @@
 import json
 import logging
-from datetime import datetime
 
 from src.lambdas.helpers import (
     create_aws_lambda_response,
     check_player_permissions,
     notify_players,
-    create_message
+    create_message,
+    generate_message
 )
 from src.models import Game, Player
 
@@ -58,16 +58,3 @@ def parse_event(event):
     except KeyError as e:
         logger.error(e)
         return {}, "Failed to parse event"
-
-
-def generate_message(room_id, player, text):
-    return {
-        "room_id": room_id,
-        "author": {
-            "id": player.id,
-            "name": player.name,
-            "picture": player.picture,
-        },
-        "text": text,
-        "created_at": datetime.now().isoformat()
-    }

@@ -2,8 +2,6 @@ import json
 import logging
 from datetime import datetime
 
-import chess
-from src.constants import GameColor, GameResult, GameStatus
 from src.lambdas.helpers import (
     create_aws_lambda_response,
     check_player_permissions,
@@ -12,6 +10,8 @@ from src.lambdas.helpers import (
     notify_players,
     update_game_state,
     get_opponent_color,
+    generate_board_from_moves,
+    is_game_ended
 )
 from src.models import Game
 
@@ -92,35 +92,3 @@ def parse_event(event):
     except KeyError as e:
         logger.error(e)
         return {}, "Failed to parse event"
-
-
-def generate_board_from_moves(moves):
-    # replay all moves to catch all edge cases concerning repetitions
-    board = chess.Board()
-    for move in moves:
-        board.push(chess.Move.from_uci(move))
-    return board
-
-
-def is_game_ended(board, player_color):
-    status, result = None, None
-    if board.is_stalemate():
-        status = GameStatus.STALEMATE
-        result = GameResult.DRAW
-    elif board.is_insufficient_material():
-        status = GameStatus.INSUFFICIENT_MATERIAL
-        result = GameResult.DRAW
-    elif board.is_fivefold_repetition():
-        status = GameStatus.FIVE_FOLD_REPETITION
-        result = GameResult.DRAW
-    elif board.is_seventyfive_moves():
-        status = GameStatus.SEVENTY_FIVE_MOVES
-        result = GameResult.DRAW
-    elif board.is_checkmate():
-        status = GameStatus.CHECKMATE
-        result = (
-            GameResult.WHITE_WINS
-            if player_color == GameColor.WHITE
-            else GameResult.BLACK_WINS
-        )
-    return status, result

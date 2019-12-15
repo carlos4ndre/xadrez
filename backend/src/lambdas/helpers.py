@@ -1,10 +1,14 @@
 import os
+import chess
+import uuid
 import json
 import logging
 
 import boto3
+from random import sample
+from datetime import datetime
 from src.auth import auth0
-from src.constants import DEFAULT_AWS_RESPONSE_HEADERS, GameColor
+from src.constants import DEFAULT_AWS_RESPONSE_HEADERS, GameColor, GameResult, GameMode, GameStatus
 from src.models import Player, Game, Message
 
 logger = logging.getLogger(__name__)
@@ -67,6 +71,25 @@ def notify_players(player_ids, action, content):
         return "Failed to notify players"
 
 
+def create_game(challenger_id, challengee_id, mode, color):
+    try:
+        white_player_id, black_player_id = assign_player_color(
+            color, challenger_id, challengee_id
+        )
+        game = Game(
+            id=str(uuid.uuid4()),
+            mode=GameMode[mode.upper()],
+            whitePlayerId=white_player_id,
+            blackPlayerId=black_player_id,
+        )
+        game.save()
+        return game, ""
+    except Exception as e:
+        print(e)
+        logger.error(e)
+        return {}, "Failed to create game"
+
+
 def update_game_state(game, attributes):
     try:
         actions = [getattr(Game, k).set(v) for k, v in attributes.items()]
@@ -74,6 +97,38 @@ def update_game_state(game, attributes):
     except Exception as e:
         logger.error(e)
         return "Failed to update game"
+
+
+def generate_board_from_moves(moves):
+    # replay all moves to catch all edge cases concerning repetitions
+    board = chess.Board()
+    for move in moves:
+        board.push(chess.Move.from_uci(move))
+    return board
+
+
+def is_game_ended(board, player_color):
+    status, result = None, None
+    if board.is_stalemate():
+        status = GameStatus.STALEMATE
+        result = GameResult.DRAW
+    elif board.is_insufficient_material():
+        status = GameStatus.INSUFFICIENT_MATERIAL
+        result = GameResult.DRAW
+    elif board.is_fivefold_repetition():
+        status = GameStatus.FIVE_FOLD_REPETITION
+        result = GameResult.DRAW
+    elif board.is_seventyfive_moves():
+        status = GameStatus.SEVENTY_FIVE_MOVES
+        result = GameResult.DRAW
+    elif board.is_checkmate():
+        status = GameStatus.CHECKMATE
+        result = (
+            GameResult.WHITE_WINS
+            if player_color == GameColor.WHITE
+            else GameResult.BLACK_WINS
+        )
+    return status, result
 
 
 def get_opponent_id(player_id, game):
@@ -84,6 +139,18 @@ def get_opponent_id(player_id, game):
 
 def get_opponent_color(game):
     return GameColor.BLACK if game.playerTurn == GameColor.WHITE else GameColor.WHITE
+
+
+def get_result(game, player_id):
+    player_color = (
+        GameColor.WHITE if player_id == game.whitePlayerId else GameColor.BLACK
+    )
+    result = (
+        GameResult.BLACK_WINS
+        if player_color == GameColor.WHITE
+        else GameResult.WHITE_WINS
+    )
+    return result
 
 
 def decode_jwt_token(token):
@@ -114,6 +181,15 @@ def update_player(player, attributes):
         return "Failed to update player"
 
 
+def assign_player_color(color, challenger_id, challengee_id):
+    if color == "white":
+        return challenger_id, challengee_id
+    elif color == "black":
+        return challengee_id, challenger_id
+    else:
+        return sample([challenger_id, challengee_id], 2)
+
+
 def create_message(room_id, player_id, content):
     try:
         message = Message(roomId=room_id, playerId=player_id, content=content)
@@ -122,3 +198,16 @@ def create_message(room_id, player_id, content):
     except Exception as e:
         logger.error(e)
         return {}, "Failed to create message"
+
+
+def generate_message(room_id, player, text):
+    return {
+        "room_id": room_id,
+        "author": {
+            "id": player.id,
+            "name": player.name,
+            "picture": player.picture,
+        },
+        "text": text,
+        "created_at": datetime.now().isoformat()
+    }

@@ -2,12 +2,13 @@ import json
 import logging
 from datetime import datetime
 
-from src.constants import GameColor, GameResult, GameStatus
+from src.constants import GameStatus
 from src.lambdas.helpers import (
     create_aws_lambda_response,
     check_player_permissions,
     notify_players,
     update_game_state,
+    get_result
 )
 from src.models import Game
 
@@ -59,15 +60,3 @@ def parse_event(event):
     except KeyError as e:
         logger.error(e)
         return {}, "Failed to parse event"
-
-
-def get_result(game, player_id):
-    player_color = (
-        GameColor.WHITE if player_id == game.whitePlayerId else GameColor.BLACK
-    )
-    result = (
-        GameResult.BLACK_WINS
-        if player_color == GameColor.WHITE
-        else GameResult.WHITE_WINS
-    )
-    return result

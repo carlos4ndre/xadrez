@@ -1,11 +1,8 @@
 import json
 import logging
-import uuid
-from random import sample
 
-from src.constants import GameMode
-from src.lambdas.helpers import create_aws_lambda_response, notify_player
-from src.models import Game, Player
+from src.lambdas.helpers import create_aws_lambda_response, notify_player, create_game
+from src.models import Player
 
 logger = logging.getLogger(__name__)
 
@@ -56,31 +53,3 @@ def parse_event(event):
     except KeyError as e:
         logger.error(e)
         return {}, "Failed to parse event"
-
-
-def create_game(challenger_id, challengee_id, mode, color):
-    try:
-        white_player_id, black_player_id = assign_player_color(
-            color, challenger_id, challengee_id
-        )
-        game = Game(
-            id=str(uuid.uuid4()),
-            mode=GameMode[mode.upper()],
-            whitePlayerId=white_player_id,
-            blackPlayerId=black_player_id,
-        )
-        game.save()
-        return game, ""
-    except Exception as e:
-        print(e)
-        logger.error(e)
-        return {}, "Failed to create game"
-
-
-def assign_player_color(color, challenger_id, challengee_id):
-    if color == "white":
-        return challenger_id, challengee_id
-    elif color == "black":
-        return challengee_id, challenger_id
-    else:
-        return sample([challenger_id, challengee_id], 2)
