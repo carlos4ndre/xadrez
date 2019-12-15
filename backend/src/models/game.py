@@ -23,7 +23,7 @@ class Game(BaseModel):
     blackPlayerId = UnicodeAttribute()
     moves = ListAttribute(default=list)
     fen = UnicodeAttribute(default=chess.STARTING_FEN)
-    playerTurn = EnumAttribute(default=GameColor.WHITE, enum_cls=GameColor)
+    playerTurn = UnicodeAttribute()
     status = EnumAttribute(default=GameStatus.NOT_STARTED, enum_cls=GameStatus)
     result = EnumAttribute(default=GameResult.UNDETERMINED, enum_cls=GameResult)
 
@@ -31,20 +31,16 @@ class Game(BaseModel):
         return player_id in [self.whitePlayerId, self.blackPlayerId]
 
     def is_player_turn(self, player_id):
-        player_color = self.get_player_color(player_id)
-        return player_color != self.playerTurn
+        return player_id == self.playerTurn
 
     def get_player_color(self, player_id):
         return GameColor.WHITE if player_id == self.whitePlayerId else GameColor.BLACK
 
     def get_current_player_id(self):
-        player_color = self.get_player_color(self.whitePlayerId)
-        if player_color == GameColor.WHITE:
-            return self.whitePlayerId
-        return self.blackPlayerId
+        return self.playerTurn
 
     def get_current_player_color(self):
-        return self.playerTurn
+        return self.get_player_color(self.playerTurn)
 
     def get_waiting_player_id(self):
         current_player_id = self.get_current_player_id()
@@ -53,10 +49,12 @@ class Game(BaseModel):
         return self.whitePlayerId
 
     def get_waiting_player_color(self):
-        return GameColor.BLACK if self.playerTurn == GameColor.WHITE else GameColor.WHITE
+        current_player_id = self.get_current_player_id()
+        if current_player_id == self.whitePlayerId:
+            return GameColor.BLACK
+        return GameColor.WHITE
 
     def get_opponent_id(self, player_id):
-        player_color = self.get_player_color(player_id)
-        if player_color == GameColor.WHITE:
+        if player_id == self.whitePlayerId:
             return self.blackPlayerId
         return self.whitePlayerId

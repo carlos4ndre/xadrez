@@ -141,7 +141,8 @@ class ChessBoard extends Component {
   render() {
     const { dropSquareStyle, squareStyles } = this.state
     const { playerColor, game } = this.props
-    const draggable = (playerColor === game.playerTurn)
+    const currentPlayerColor = (game.playerTurn === game.whitePlayerId ? 'white' : 'black')
+    const draggable = (playerColor === currentPlayerColor)
 
     return (
       <Chessboard

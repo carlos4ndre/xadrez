@@ -59,7 +59,7 @@ def handler(event, context):
     attributes = {
         "moves": game.moves,
         "fen": board.fen(),
-        "playerTurn": game.get_waiting_player_color(),
+        "playerTurn": game.get_waiting_player_id(),
         "updatedAt": datetime.now(),
     }
     err = update_game_state(game, attributes)
