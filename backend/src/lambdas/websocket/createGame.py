@@ -18,7 +18,7 @@ def handler(event, context):
     challenger_id, challengee_id = data["challenger_id"], data["challengee_id"]
     mode, color = data["mode"], data["color"]
 
-    logger.info("Save new game")
+    logger.info("Create game")
     game, err = create_game(challenger_id, challengee_id, mode, color)
     if err:
         return create_aws_lambda_response(500, err)

@@ -1,13 +1,10 @@
 import json
 import logging
-from datetime import datetime
 
-from src.constants import GameStatus
 from src.lambdas.helpers import (
     create_aws_lambda_response,
-    check_player_permissions,
     notify_players,
-    update_game_state,
+    start_game,
 )
 from src.models import Game
 
@@ -22,17 +19,15 @@ def handler(event, context):
     data, err = parse_event(event)
     if err:
         return create_aws_lambda_response(500, err)
-
-    logger.info("Check player permissions")
     game_id, player_id = data["game_id"], data["player_id"]
     game = Game.get(game_id)
-    err = check_player_permissions(game, player_id)
-    if err:
-        return create_aws_lambda_response(403, err)
 
-    logger.info("Update game state")
-    attributes = {"status": GameStatus.STARTED, "updatedAt": datetime.now()}
-    err = update_game_state(game, attributes)
+    logger.info("Check player permissions")
+    if game.is_player_in_game(player_id):
+        return create_aws_lambda_response(403, "Player is not part of the game")
+
+    logger.info("Start game")
+    err = start_game(game, player_id)
     if err:
         return create_aws_lambda_response(500, err)
 

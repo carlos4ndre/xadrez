@@ -4,12 +4,9 @@ from datetime import datetime
 
 from src.lambdas.helpers import (
     create_aws_lambda_response,
-    check_player_permissions,
-    check_player_turn,
     notify_player,
     notify_players,
     update_game_state,
-    get_opponent_color,
     generate_board_from_moves,
     is_game_ended
 )
@@ -30,12 +27,10 @@ def handler(event, context):
     game = Game.get(game_id)
 
     logger.info("Check player permissions")
-    err = check_player_permissions(game, player_id) or check_player_turn(
-        game, player_id
-    )
-    if err:
-        logger.info(err)
-        return create_aws_lambda_response(500, err)
+    if game.is_player_in_game(player_id):
+        return create_aws_lambda_response(403, "Player is not part of the game")
+    if game.is_player_turn(player_id):
+        return create_aws_lambda_response(403, "It is not player turn to play")
 
     logger.info("Check move is valid")
     game.moves.append(move_uci)
@@ -64,7 +59,7 @@ def handler(event, context):
     attributes = {
         "moves": game.moves,
         "fen": board.fen(),
-        "playerTurn": get_opponent_color(game),
+        "playerTurn": game.get_waiting_player_color(),
         "updatedAt": datetime.now(),
     }
     err = update_game_state(game, attributes)

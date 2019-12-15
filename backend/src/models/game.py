@@ -26,3 +26,37 @@ class Game(BaseModel):
     playerTurn = EnumAttribute(default=GameColor.WHITE, enum_cls=GameColor)
     status = EnumAttribute(default=GameStatus.NOT_STARTED, enum_cls=GameStatus)
     result = EnumAttribute(default=GameResult.UNDETERMINED, enum_cls=GameResult)
+
+    def is_player_in_game(self, player_id):
+        return player_id in [self.whitePlayerId, self.blackPlayerId]
+
+    def is_player_turn(self, player_id):
+        player_color = self.get_player_color(player_id)
+        return player_color != self.playerTurn
+
+    def get_player_color(self, player_id):
+        return GameColor.WHITE if player_id == self.whitePlayerId else GameColor.BLACK
+
+    def get_current_player_id(self):
+        player_color = self.get_player_color(self.whitePlayerId)
+        if player_color == GameColor.WHITE:
+            return self.whitePlayerId
+        return self.blackPlayerId
+
+    def get_current_player_color(self):
+        return self.playerTurn
+
+    def get_waiting_player_id(self):
+        current_player_id = self.get_current_player_id()
+        if current_player_id == self.whitePlayerId:
+            return self.blackPlayerId
+        return self.whitePlayerId
+
+    def get_waiting_player_color(self):
+        return GameColor.BLACK if self.playerTurn == GameColor.WHITE else GameColor.WHITE
+
+    def get_opponent_id(self, player_id):
+        player_color = self.get_player_color(player_id)
+        if player_color == GameColor.WHITE:
+            return self.blackPlayerId
+        return self.whitePlayerId

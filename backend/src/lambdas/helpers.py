@@ -44,15 +44,12 @@ def create_aws_lambda_response(status_code, body, headers=DEFAULT_AWS_RESPONSE_H
 
 
 def check_player_permissions(game, player_id):
-    if player_id not in [game.whitePlayerId, game.blackPlayerId]:
+    if not game.is_valid_player(player_id):
         return "Player is not part of the game"
 
 
 def check_player_turn(game, player_id):
-    player_color = (
-        GameColor.WHITE if player_id == game.whitePlayerId else GameColor.BLACK
-    )
-    if player_color != game.playerTurn:
+    if not game.is_player_turn(player_id):
         return "It is not the player's turn"
 
 
@@ -99,6 +96,31 @@ def update_game_state(game, attributes):
         return "Failed to update game"
 
 
+def resign_player(game, player_id):
+    player_color = game.get_player_color(player_id)
+    status = GameStatus.REJECTED
+    result = GameResult.WHITE_WINS
+    if player_color == GameColor.WHITE:
+        result = GameResult.BLACK_WINS
+
+    attributes = {
+        "status": status,
+        "result": result,
+        "updatedAt": datetime.now(),
+    }
+    return update_game_state(game, attributes)
+
+
+def start_game(game, player_id):
+    attributes = {"status": GameStatus.STARTED, "updatedAt": datetime.now()}
+    return update_game_state(game, attributes)
+
+
+def reject_game(game, player_id):
+    attributes = {"status": GameStatus.REJECTED, "updatedAt": datetime.now()}
+    return update_game_state(game, attributes)
+
+
 def generate_board_from_moves(moves):
     # replay all moves to catch all edge cases concerning repetitions
     board = chess.Board()
@@ -129,28 +151,6 @@ def is_game_ended(board, player_color):
             else GameResult.BLACK_WINS
         )
     return status, result
-
-
-def get_opponent_id(player_id, game):
-    if player_id == game.whitePlayerId:
-        return game.blackPlayerId
-    return game.whitePlayerId
-
-
-def get_opponent_color(game):
-    return GameColor.BLACK if game.playerTurn == GameColor.WHITE else GameColor.WHITE
-
-
-def get_result(game, player_id):
-    player_color = (
-        GameColor.WHITE if player_id == game.whitePlayerId else GameColor.BLACK
-    )
-    result = (
-        GameResult.BLACK_WINS
-        if player_color == GameColor.WHITE
-        else GameResult.WHITE_WINS
-    )
-    return result
 
 
 def decode_jwt_token(token):

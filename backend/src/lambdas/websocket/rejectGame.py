@@ -1,14 +1,10 @@
 import json
 import logging
-from datetime import datetime
 
-from src.constants import GameStatus
 from src.lambdas.helpers import (
     create_aws_lambda_response,
-    check_player_permissions,
     notify_player,
-    get_opponent_id,
-    update_game_state,
+    reject_game,
 )
 from src.models import Game
 
@@ -27,18 +23,16 @@ def handler(event, context):
     game = Game.get(game_id)
 
     logger.info("Check player permissions")
-    err = check_player_permissions(game, challengee_id)
-    if err:
-        return create_aws_lambda_response(500, err)
+    if game.is_player_in_game(challengee_id):
+        return create_aws_lambda_response(403, "Player is not part of the game")
 
-    logger.info("Update game state")
-    attributes = {"status": GameStatus.REJECTED, "updatedAt": datetime.now()}
-    err = update_game_state(game, attributes)
+    logger.info("Reject game")
+    err = reject_game(game, challengee_id)
     if err:
         return create_aws_lambda_response(500, err)
 
     logger.info("Notify player")
-    challenger_id = get_opponent_id(challengee_id, game)
+    challenger_id = game.get_opponent_id(challengee_id)
     err = notify_player(challenger_id, "endGame", {"game": game.to_dict()})
     if err:
         return create_aws_lambda_response(500, err)
