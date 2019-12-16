@@ -46,6 +46,9 @@ const endGame = function*(action: types.EndGame) {
     case 'five_fold_repetition':
       yield call(toast.info, 'Match is over due to five fold repetition')
       break
+    case 'out_of_time':
+      yield call(toast.info, 'Match is over due to out of time')
+      break
     default:
       yield call(toast.error, 'Game ended due to unknown error')
   }

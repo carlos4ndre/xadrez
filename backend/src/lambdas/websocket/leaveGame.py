@@ -4,7 +4,7 @@ import logging
 from src.lambdas.helpers import (
     create_aws_lambda_response,
     notify_players,
-    resign_player
+    resign_player,
 )
 from src.models import Game
 
@@ -23,7 +23,7 @@ def handler(event, context):
     game = Game.get(game_id)
 
     logger.info("Check player permissions")
-    if game.is_player_in_game(player_id):
+    if not game.is_player_in_game(player_id):
         return create_aws_lambda_response(403, "Player is not part of the game")
 
     logger.info("Resign player")

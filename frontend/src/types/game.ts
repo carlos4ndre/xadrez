@@ -2,7 +2,7 @@ import { Player } from 'types/player'
 
 export type GameModes = 'standard'
 
-export type GameStatus = 'not_started' | 'started' | 'rejected' | 'resigned' | 'checkmate' | 'insufficient_material' | 'seventy_five_moves' | 'five_fold_repetition'
+export type GameStatus = 'not_started' | 'started' | 'rejected' | 'resigned' | 'checkmate' | 'insufficient_material' | 'seventy_five_moves' | 'five_fold_repetition' | 'out_of_time'
 
 export type GameResult = 'white_wins' | 'black_wins' | 'draw' | 'undetermined'
 

@@ -4,6 +4,9 @@ DEFAULT_AWS_RESPONSE_HEADERS = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Credentials": True,
 }
+GAME_MIN_TIME_SECONDS = 60
+GAME_MAX_TIME_SECONDS = 60 * 5
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
 
 class PlayerStatus:
@@ -29,6 +32,7 @@ class GameStatus(Enum):
     INSUFFICIENT_MATERIAL = 7
     SEVENTY_FIVE_MOVES = 8
     FIVE_FOLD_REPETITION = 9
+    OUT_OF_TIME = 10
 
 
 class GameResult(Enum):

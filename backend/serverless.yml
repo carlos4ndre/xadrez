@@ -2,6 +2,13 @@ service: xadrez-backend
 
 frameworkVersion: '>=1.28.0 <2.0.0'
 
+#package:
+#  individually: true
+#  exclude:
+#    - ./**
+#  include:
+#    - ./src/**
+
 provider:
   name: aws
   runtime: python3.7
@@ -70,8 +77,10 @@ plugins:
 
 custom:
   pythonRequirements:
+    useDownloadCache: true
+    useStaticCache: true
     dockerizePip: true
-    noDeploy: []
+    slim: true
   serverless-offline:
     port: 5000
   dynamodb:

@@ -1,14 +1,14 @@
 import json
 import logging
-from datetime import datetime
 
 from src.lambdas.helpers import (
     create_aws_lambda_response,
     notify_player,
     notify_players,
-    update_game_state,
     generate_board_from_moves,
-    is_game_ended
+    move_piece,
+    is_game_ended,
+    end_game,
 )
 from src.models import Game
 
@@ -27,9 +27,9 @@ def handler(event, context):
     game = Game.get(game_id)
 
     logger.info("Check player permissions")
-    if game.is_player_in_game(player_id):
+    if not game.is_player_in_game(player_id):
         return create_aws_lambda_response(403, "Player is not part of the game")
-    if game.is_player_turn(player_id):
+    if not game.is_player_turn(player_id):
         return create_aws_lambda_response(403, "It is not player turn to play")
 
     logger.info("Check move is valid")
@@ -40,11 +40,10 @@ def handler(event, context):
         return create_aws_lambda_response(400, "Invalid move")
 
     logger.info("Check game has ended")
-    status, result = is_game_ended(board, game.playerTurn)
+    status, result = is_game_ended(game, board)
     if status:
         logger.info("Update game with the final result")
-        attributes = {"status": status, "result": result, "updatedAt": datetime.now()}
-        err = update_game_state(game, attributes)
+        err = end_game(game, status, result)
         if err:
             return create_aws_lambda_response(500, err)
 
@@ -55,14 +54,8 @@ def handler(event, context):
             return create_aws_lambda_response(500, err)
         return create_aws_lambda_response(200, "End game successful")
 
-    logger.info("Change player's turn")
-    attributes = {
-        "moves": game.moves,
-        "fen": board.fen(),
-        "playerTurn": game.get_waiting_player_id(),
-        "updatedAt": datetime.now(),
-    }
-    err = update_game_state(game, attributes)
+    logger.info("Move piece")
+    err = move_piece(game, board.fen())
     if err:
         return create_aws_lambda_response(500, err)
 

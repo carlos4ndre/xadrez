@@ -13,15 +13,17 @@ lint: ## Run linters
 security: ## Run security checks
 	tox -e bandit,safety
 
-test: lint security ## Run tests
+unit: ## Run unit tests
 
-build: ## Build backend
+integration: ## Run unit tests
+
+test: lint security unit integration ## Run tests
+
+install: ## Install backend dependencies
 	yarn install
-
-install-serverless-plugins: ## Install serverless plugins
 	sls dynamodb install
 
-dev: install-serverless-plugins ## Run backend locally
+dev: ## Run backend locally
 	sls offline --verbose
 
 deploy: ## Deploy backend to AWS Lambda

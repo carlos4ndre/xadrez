@@ -8,7 +8,15 @@ import boto3
 from random import sample
 from datetime import datetime
 from src.auth import auth0
-from src.constants import DEFAULT_AWS_RESPONSE_HEADERS, GameColor, GameResult, GameMode, GameStatus
+from src.constants import (
+    DEFAULT_AWS_RESPONSE_HEADERS,
+    GameColor,
+    GameResult,
+    GameMode,
+    GameStatus,
+    GAME_MIN_TIME_SECONDS,
+    GAME_MAX_TIME_SECONDS,
+)
 from src.models import Player, Game, Message
 
 logger = logging.getLogger(__name__)
@@ -68,23 +76,69 @@ def notify_players(player_ids, action, content):
         return "Failed to notify players"
 
 
-def create_game(challenger_id, challengee_id, mode, color):
-    try:
-        white_player_id, black_player_id = assign_player_color(
-            color, challenger_id, challengee_id
+def create_game(challenger_id, challengee_id, options):
+    mode, color, time = options["mode"], options["color"], int(options["time"])
+
+    logger.info("Check time is valid")
+    is_time_enabled = time != 0
+    if is_time_enabled and GAME_MIN_TIME_SECONDS > time > GAME_MAX_TIME_SECONDS:
+        return (
+            {},
+            "Time must be between {} and {}".format(
+                GAME_MIN_TIME_SECONDS, GAME_MAX_TIME_SECONDS
+            ),
         )
+
+    logger.info("Assign color to players")
+    white_player_id, black_player_id = assign_player_color(
+        color, challenger_id, challengee_id
+    )
+
+    try:
+        time_in_milleseconds = time * 1000
         game = Game(
             id=str(uuid.uuid4()),
             mode=GameMode[mode.upper()],
+            time=time_in_milleseconds,
+            whitePlayerTimeLeft=time_in_milleseconds,
+            blackPlayerTimeLeft=time_in_milleseconds,
             whitePlayerId=white_player_id,
             blackPlayerId=black_player_id,
+            playerTurn=white_player_id
         )
         game.save()
         return game, ""
     except Exception as e:
-        print(e)
         logger.error(e)
         return {}, "Failed to create game"
+
+
+def move_piece(game, fen):
+    now = datetime.now()
+    attributes = {
+        "moves": game.moves,
+        "fen": fen,
+        "playerTurn": game.get_waiting_player_id(),
+        "lastMoveTime": now,
+        "updatedAt": now,
+    }
+
+    if game.is_time_enabled():
+        logger.info("Calculate player time left")
+        if game.get_current_player_color() == GameColor.WHITE:
+            time_left = game.whitePlayerTimeLeft - game.calculate_move_delta(now)
+            attributes.update({"whitePlayerTimeLeft": time_left})
+        else:
+            time_left = game.blackPlayerTimeLeft - game.calculate_move_delta(now)
+            attributes.update({"blackPlayerTimeLeft": time_left})
+
+    logger.info("Update game")
+    return update_game_state(game, attributes)
+
+
+def end_game(game, status, result):
+    attributes = {"status": status, "result": result, "updatedAt": datetime.now()}
+    return update_game_state(game, attributes)
 
 
 def update_game_state(game, attributes):
@@ -129,28 +183,32 @@ def generate_board_from_moves(moves):
     return board
 
 
-def is_game_ended(board, player_color):
-    status, result = None, None
+def is_game_ended(game, board):
+    player_id = game.get_current_player_id()
+    player_color = game.get_current_player_color()
     if board.is_stalemate():
-        status = GameStatus.STALEMATE
-        result = GameResult.DRAW
+        return GameStatus.STALEMATE, GameResult.DRAW
     elif board.is_insufficient_material():
-        status = GameStatus.INSUFFICIENT_MATERIAL
-        result = GameResult.DRAW
+        return GameStatus.INSUFFICIENT_MATERIAL, GameResult.DRAW
     elif board.is_fivefold_repetition():
-        status = GameStatus.FIVE_FOLD_REPETITION
-        result = GameResult.DRAW
+        return GameStatus.FIVE_FOLD_REPETITION, GameResult.DRAW
     elif board.is_seventyfive_moves():
-        status = GameStatus.SEVENTY_FIVE_MOVES
-        result = GameResult.DRAW
+        return GameStatus.SEVENTY_FIVE_MOVES, GameResult.DRAW
     elif board.is_checkmate():
-        status = GameStatus.CHECKMATE
         result = (
             GameResult.WHITE_WINS
             if player_color == GameColor.WHITE
             else GameResult.BLACK_WINS
         )
-    return status, result
+        return GameStatus.CHECKMATE, result
+    elif game.is_time_enabled() and not game.player_has_time_left(player_id):
+        result = (
+            GameResult.BLACK_WINS
+            if player_color == GameColor.WHITE
+            else GameResult.WHITE_WINS
+        )
+        return GameResult.OUT_OF_TIME, result
+    return None, None
 
 
 def decode_jwt_token(token):
@@ -203,11 +261,7 @@ def create_message(room_id, player_id, content):
 def generate_message(room_id, player, text):
     return {
         "room_id": room_id,
-        "author": {
-            "id": player.id,
-            "name": player.name,
-            "picture": player.picture,
-        },
+        "author": {"id": player.id, "name": player.name, "picture": player.picture},
         "text": text,
-        "created_at": datetime.now().isoformat()
+        "created_at": datetime.now().isoformat(),
     }

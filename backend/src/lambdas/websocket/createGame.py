@@ -16,10 +16,10 @@ def handler(event, context):
     if err:
         return create_aws_lambda_response(500, err)
     challenger_id, challengee_id = data["challenger_id"], data["challengee_id"]
-    mode, color = data["mode"], data["color"]
+    game_options = data["game_options"]
 
     logger.info("Create game")
-    game, err = create_game(challenger_id, challengee_id, mode, color)
+    game, err = create_game(challenger_id, challengee_id, game_options)
     if err:
         return create_aws_lambda_response(500, err)
 
@@ -46,8 +46,7 @@ def parse_event(event):
         data = {
             "challenger_id": event["requestContext"]["authorizer"]["principalId"],
             "challengee_id": content["challengeeId"],
-            "mode": content["gameOptions"]["mode"],
-            "color": content["gameOptions"]["color"],
+            "game_options": content["gameOptions"],
         }
         return data, ""
     except KeyError as e:
