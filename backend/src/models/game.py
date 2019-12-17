@@ -1,8 +1,8 @@
 import os
 
 import chess
-from datetime import datetime
-from src.constants import GameColor, GameMode, GameResult, GameStatus, DATETIME_FORMAT
+from datetime import datetime, timezone
+from src.constants import GameColor, GameMode, GameResult, GameStatus
 from src.models.attributes import EnumAttribute
 from src.models.base import BaseModel
 
@@ -75,11 +75,13 @@ class Game(BaseModel):
         return time_left
 
     def calculate_move_delta(self, current_move_time):
-        last_move_time = datetime.strptime(self.lastMoveTime, DATETIME_FORMAT)
-        return (current_move_time - last_move_time).total_seconds() * 1000
+        return (current_move_time - self.lastMoveTime).total_seconds() * 1000
 
     def player_has_time_left(self, player_id):
-        now = datetime.now()
+        if not self.lastMoveTime:
+            return True
+
+        now = datetime.now(timezone.utc)
         time_left = self.get_player_time_left(player_id)
         move_delta = self.calculate_move_delta(now)
         return time_left - move_delta > 0

@@ -46,6 +46,7 @@ class CreateGameForm extends React.Component<CreateGameFormProps & InjectedFormP
     ]
     const gameTimeOptions = [
       {'key': 'notime', 'text': 'notime', 'value': '0'},
+      {'key': '1m', 'text': '1m', 'value': '60'},
       {'key': '5m', 'text': '5m', 'value': '300'},
       {'key': '10m', 'text': '10m', 'value': '600'}
     ]

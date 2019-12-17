@@ -3,16 +3,18 @@ import * as selectors from 'selectors'
 import { connect } from 'react-redux'
 import { AppState } from 'types/state'
 import { GameProps } from 'types/props'
-import { Grid, Header, List, Dimmer, Loader, Button } from 'semantic-ui-react'
+import { Grid, Header, List, Dimmer, Loader, Button, Container } from 'semantic-ui-react'
 import { LeaveGameForm } from 'containers/Forms'
 import { Link } from 'react-router-dom'
 import PlayerIcon from 'components/PlayerIcon'
+import Timer from 'components/Timer'
 import ChessBoard from 'containers/ChessBoard'
 import ChatRoom from 'containers/ChatRoom'
 
 class GamePage extends Component<GameProps, AppState> {
   render() {
     const { game, whitePlayer, blackPlayer, color } = this.props
+    const playerTurnColor = (game.playerTurn === whitePlayer.id ? 'white' : 'black')
 
     return (
       <Grid>
@@ -37,16 +39,18 @@ class GamePage extends Component<GameProps, AppState> {
                   <PlayerIcon player={whitePlayer} />
                   : <Dimmer active><Loader /></Dimmer>
                 }
+                <Timer key={game.whitePlayerTimeLeft} time={game.whitePlayerTimeLeft} autoStart={playerTurnColor === 'white'} />
                 <Header as='h2'>Black</Header>
                 {
                   blackPlayer ?
                   <PlayerIcon player={blackPlayer} />
                   : <Dimmer active><Loader /></Dimmer>
                 }
+                <Timer key={game.blackPlayerTimeLeft} time={game.blackPlayerTimeLeft} autoStart={playerTurnColor === 'black'} />
               </List.Item>
               <List.Item>
                 <Header as='h2'>Turn to play</Header>
-                {game.playerTurn}
+                <Container>{playerTurnColor}</Container>
               </List.Item>
             </List>
           </Grid.Column>

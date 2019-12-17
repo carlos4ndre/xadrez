@@ -9,13 +9,15 @@ export type GameResult = 'white_wins' | 'black_wins' | 'draw' | 'undetermined'
 export interface GameOptions {
   mode: GameModes
   color: 'white' | 'black' | 'random'
-  time: 'notime' | '5m' | '10m'
+  time: 'notime' | '1m' | '5m' | '10m'
 }
 
 export interface Game {
   id: string
   mode: GameModes
   time: number
+  whitePlayerTimeLeft: number
+  blackPlayerTimeLeft: number
   playerTurn: string
   whitePlayerId: string
   blackPlayerId: string

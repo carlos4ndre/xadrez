@@ -23,6 +23,7 @@
     "connected-react-router": "^6.6.1",
     "lodash": "^4.17.15",
     "react": "^16.12.0",
+    "react-countdown-now": "^2.1.2",
     "react-dom": "^16.12.0",
     "react-redux": "^7.1.3",
     "react-router": "^5.1.2",

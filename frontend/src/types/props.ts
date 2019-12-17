@@ -80,3 +80,8 @@ export interface ChatRoomProps {
   messages: Message[]
   sendMessage: (text: string, game: Game) => void
 }
+
+export interface TimerProps {
+  time: number
+  autoStart: boolean
+}

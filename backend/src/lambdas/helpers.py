@@ -6,7 +6,7 @@ import logging
 
 import boto3
 from random import sample
-from datetime import datetime
+from datetime import datetime, timezone
 from src.auth import auth0
 from src.constants import (
     DEFAULT_AWS_RESPONSE_HEADERS,
@@ -125,7 +125,7 @@ def create_game(challenger_id, challengee_id, options):
 
 
 def move_piece(game, fen):
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     attributes = {
         "moves": game.moves,
         "fen": fen,
@@ -134,7 +134,8 @@ def move_piece(game, fen):
         "updatedAt": now,
     }
 
-    if game.is_time_enabled():
+    # start decreasing time after first move
+    if game.is_time_enabled() and len(game.moves) > 1:
         logger.info("Calculate player time left")
         if game.get_current_player_color() == GameColor.WHITE:
             time_left = game.whitePlayerTimeLeft - game.calculate_move_delta(now)
@@ -148,7 +149,7 @@ def move_piece(game, fen):
 
 
 def end_game(game, status, result):
-    attributes = {"status": status, "result": result, "updatedAt": datetime.now()}
+    attributes = {"status": status, "result": result, "updatedAt": datetime.now(timezone.utc)}
     return update_game_state(game, attributes)
 
 
@@ -171,18 +172,18 @@ def resign_player(game, player_id):
     attributes = {
         "status": status,
         "result": result,
-        "updatedAt": datetime.now(),
+        "updatedAt": datetime.now(timezone.utc)
     }
     return update_game_state(game, attributes)
 
 
 def start_game(game, player_id):
-    attributes = {"status": GameStatus.STARTED, "updatedAt": datetime.now()}
+    attributes = {"status": GameStatus.STARTED, "updatedAt": datetime.now(timezone.utc)}
     return update_game_state(game, attributes)
 
 
 def reject_game(game, player_id):
-    attributes = {"status": GameStatus.REJECTED, "updatedAt": datetime.now()}
+    attributes = {"status": GameStatus.REJECTED, "updatedAt": datetime.now(timezone.utc)}
     return update_game_state(game, attributes)
 
 
@@ -218,7 +219,7 @@ def is_game_ended(game, board):
             if player_color == GameColor.WHITE
             else GameResult.WHITE_WINS
         )
-        return GameResult.OUT_OF_TIME, result
+        return GameStatus.OUT_OF_TIME, result
     return None, None
 
 
@@ -274,5 +275,5 @@ def generate_message(room_id, player, text):
         "room_id": room_id,
         "author": {"id": player.id, "name": player.name, "picture": player.picture},
         "text": text,
-        "created_at": datetime.now().isoformat(),
+        "created_at": datetime.now().isoformat()
     }

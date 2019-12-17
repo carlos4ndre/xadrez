@@ -40,7 +40,6 @@ def handler(event, context):
         notify_player(player_id, "movePieceFailure", {"error": str(board.status())})
         return create_aws_lambda_response(400, "Invalid move")
 
-    logger.info("Check game has ended")
     status, result = is_game_ended(game, board)
     if status:
         logger.info("Update game with the final result")
