@@ -25,6 +25,8 @@ dynamodb = boto3.resource("dynamodb")
 
 def send_to_connection(connection_id, data):
     endpoint_url = os.environ["WEBSOCKET_API_ENDPOINT"]
+    if os.environ.get("IS_OFFLINE") == "true":
+        endpoint_url = "http://localhost:3001"
     gatewayapi = boto3.client("apigatewaymanagementapi", endpoint_url=endpoint_url)
     return gatewayapi.post_to_connection(
         ConnectionId=connection_id, Data=json.dumps(data).encode("utf-8")
@@ -49,6 +51,15 @@ def create_aws_lambda_response(status_code, body, headers=DEFAULT_AWS_RESPONSE_H
     response = {"statusCode": status_code, "headers": headers, "body": body}
     logger.debug(response)
     return response
+
+
+def get_authorizer_principal_id(event):
+    if os.environ.get("IS_OFFLINE") == "true":
+        connection_id = event["requestContext"].get("connectionId")
+        for player in Player.scan():
+            if player.connectionId == connection_id:
+                return player.id
+    return event["requestContext"]["authorizer"]["principalId"]
 
 
 def check_player_permissions(game, player_id):

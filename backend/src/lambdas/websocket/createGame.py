@@ -1,7 +1,7 @@
 import json
 import logging
 
-from src.lambdas.helpers import create_aws_lambda_response, notify_player, create_game
+from src.lambdas.helpers import create_aws_lambda_response, notify_player, create_game, get_authorizer_principal_id
 from src.models import Player
 
 logger = logging.getLogger(__name__)
@@ -44,7 +44,7 @@ def parse_event(event):
     try:
         content = json.loads(event["body"])["content"]
         data = {
-            "challenger_id": event["requestContext"]["authorizer"]["principalId"],
+            "challenger_id": get_authorizer_principal_id(event),
             "challengee_id": content["challengeeId"],
             "game_options": content["gameOptions"],
         }

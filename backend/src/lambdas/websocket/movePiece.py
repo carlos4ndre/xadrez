@@ -9,6 +9,7 @@ from src.lambdas.helpers import (
     move_piece,
     is_game_ended,
     end_game,
+    get_authorizer_principal_id
 )
 from src.models import Game
 
@@ -73,7 +74,7 @@ def parse_event(event):
         content = json.loads(event["body"])["content"]
         data = {
             "game_id": content["game"]["id"],
-            "player_id": event["requestContext"]["authorizer"]["principalId"],
+            "player_id": get_authorizer_principal_id(event),
             "move_uci": content["move"]["from"] + content["move"]["to"],
         }
         return data, ""

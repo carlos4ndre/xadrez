@@ -6,6 +6,7 @@ from src.lambdas.helpers import (
     notify_players,
     create_message,
     generate_message,
+    get_authorizer_principal_id
 )
 from src.models import Game, Player
 
@@ -49,7 +50,7 @@ def parse_event(event):
         content = json.loads(event["body"])["content"]
         data = {
             "game_id": content["game"]["id"],
-            "player_id": event["requestContext"]["authorizer"]["principalId"],
+            "player_id": get_authorizer_principal_id(event),
             "text": content["text"],
         }
         return data, ""

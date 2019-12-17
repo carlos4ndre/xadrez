@@ -7,7 +7,7 @@ from src.models.base import BaseModel
 
 
 class ConnectionIdIndex(GlobalSecondaryIndex):
-    class Meta:
+    class Meta(BaseModel.Meta):
         index_name = os.environ["CONNECTION_ID_INDEX"]
         read_capacity_units = 2
         write_capacity_units = 1

@@ -5,6 +5,7 @@ from src.lambdas.helpers import (
     create_aws_lambda_response,
     notify_player,
     reject_game,
+    get_authorizer_principal_id
 )
 from src.models import Game
 
@@ -44,7 +45,7 @@ def parse_event(event):
         content = json.loads(event["body"])["content"]
         data = {
             "game_id": content["game"]["id"],
-            "challengee_id": event["requestContext"]["authorizer"]["principalId"],
+            "challengee_id": get_authorizer_principal_id(event)
         }
         return data, ""
     except KeyError as e:
