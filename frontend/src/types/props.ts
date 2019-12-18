@@ -15,6 +15,7 @@ export interface HeaderProps {
 export interface HomeProps {
   user: UserState
   players: Player[]
+  isFetchingPlayers: boolean
   getPlayers: (user: UserState) => void
 }
 

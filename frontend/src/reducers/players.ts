@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as types from 'actionTypes'
 import { PlayersState } from 'types/state'
-import { Player } from 'types/player'
+import { Player} from 'types/player'
 
 const initialState = {
   byId: {},
@@ -17,6 +17,8 @@ const reducer = (state: PlayersState = initialState, action: types.PlayersAction
       return getPlayersSuccess(state, action.players)
     case types.GET_PLAYERS_FAILURE:
       return getPlayersFailure(state)
+    case types.ADD_PLAYER:
+      return addPlayer(state, action.player)
     default:
       return state
   }

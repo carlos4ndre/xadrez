@@ -4,6 +4,11 @@ import { AppState } from 'types/state'
 export const players = (state: AppState) => state.players
 export const playerId = (state: AppState, id: string) => id
 
+export const isFetchingPlayers = createSelector(
+  players,
+  (players) => players.isFetching
+)
+
 export const getPlayers = createSelector(
   players,
   (players) => Object.values(players.byId)

@@ -16,3 +16,8 @@ export const getPlayersFailure = (error: string) => ({
   type: types.GET_PLAYERS_FAILURE,
   error
 })
+
+export const addPlayer = (player: Player) => ({
+  type: types.ADD_PLAYER,
+  player
+})
