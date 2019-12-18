@@ -15,6 +15,8 @@ class GamePage extends Component<GameProps, AppState> {
   render() {
     const { game, whitePlayer, blackPlayer, color } = this.props
     const playerTurnColor = (game.playerTurn === whitePlayer.id ? 'white' : 'black')
+    const startTimerWhitePlayer = (game.moves.length !== 0 && game.result === 'undetermined' && playerTurnColor === 'white')
+    const startTimerBlackPlayer = (game.moves.length !== 0 && game.result === 'undetermined' && playerTurnColor === 'black')
 
     return (
       <Grid>
@@ -39,14 +41,14 @@ class GamePage extends Component<GameProps, AppState> {
                   <PlayerIcon player={whitePlayer} />
                   : <Dimmer active><Loader /></Dimmer>
                 }
-                <Timer key={game.whitePlayerTimeLeft} time={game.whitePlayerTimeLeft} autoStart={playerTurnColor === 'white'} />
+                <Timer key={game.whitePlayerTimeLeft} time={game.whitePlayerTimeLeft} autoStart={startTimerWhitePlayer} />
                 <Header as='h2'>Black</Header>
                 {
                   blackPlayer ?
                   <PlayerIcon player={blackPlayer} />
                   : <Dimmer active><Loader /></Dimmer>
                 }
-                <Timer key={game.blackPlayerTimeLeft} time={game.blackPlayerTimeLeft} autoStart={playerTurnColor === 'black'} />
+                <Timer key={game.blackPlayerTimeLeft} time={game.blackPlayerTimeLeft} autoStart={startTimerBlackPlayer} />
               </List.Item>
               <List.Item>
                 <Header as='h2'>Turn to play</Header>

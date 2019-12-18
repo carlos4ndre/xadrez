@@ -16,8 +16,6 @@ class ChessBoard extends Component {
   game = new Chess()
 
   componentDidUpdate(nextProps) {
-    console.log('Update board')
-    console.log(nextProps.game.fen)
     this.game.load(nextProps.game.fen)
   }
 
