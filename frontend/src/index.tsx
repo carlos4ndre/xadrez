@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'semantic-ui-css/semantic.min.css'
+import 'emoji-mart/css/emoji-mart.css'
 
 toast.configure()
 
