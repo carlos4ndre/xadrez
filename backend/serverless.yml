@@ -168,6 +168,15 @@ functions:
           authorizer: auth
           cors: true
 
+  getPlayer:
+    handler: src/lambdas/http/getPlayer.handler
+    events:
+      - http:
+          method: get
+          path: players/{id}
+          authorizer: auth
+          cors: true
+
 resources:
   Resources:
     GatewayResponseDefault4XX:
