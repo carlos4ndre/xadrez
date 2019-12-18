@@ -115,7 +115,7 @@ def create_game(challenger_id, challengee_id, options):
             blackPlayerTimeLeft=time_in_milleseconds,
             whitePlayerId=white_player_id,
             blackPlayerId=black_player_id,
-            playerTurn=white_player_id
+            playerTurn=white_player_id,
         )
         game.save()
         return game, ""
@@ -149,7 +149,11 @@ def move_piece(game, fen):
 
 
 def end_game(game, status, result):
-    attributes = {"status": status, "result": result, "updatedAt": datetime.now(timezone.utc)}
+    attributes = {
+        "status": status,
+        "result": result,
+        "updatedAt": datetime.now(timezone.utc),
+    }
     return update_game_state(game, attributes)
 
 
@@ -172,7 +176,7 @@ def resign_player(game, player_id):
     attributes = {
         "status": status,
         "result": result,
-        "updatedAt": datetime.now(timezone.utc)
+        "updatedAt": datetime.now(timezone.utc),
     }
     return update_game_state(game, attributes)
 
@@ -183,7 +187,10 @@ def start_game(game, player_id):
 
 
 def reject_game(game, player_id):
-    attributes = {"status": GameStatus.REJECTED, "updatedAt": datetime.now(timezone.utc)}
+    attributes = {
+        "status": GameStatus.REJECTED,
+        "updatedAt": datetime.now(timezone.utc),
+    }
     return update_game_state(game, attributes)
 
 
@@ -275,5 +282,5 @@ def generate_message(room_id, player, text):
         "room_id": room_id,
         "author": {"id": player.id, "name": player.name, "picture": player.picture},
         "text": text,
-        "created_at": datetime.now().isoformat()
+        "created_at": datetime.now().isoformat(),
     }

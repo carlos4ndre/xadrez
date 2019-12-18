@@ -1,7 +1,12 @@
 import json
 import logging
 
-from src.lambdas.helpers import create_aws_lambda_response, notify_player, create_game, get_authorizer_principal_id
+from src.lambdas.helpers import (
+    create_aws_lambda_response,
+    notify_player,
+    create_game,
+    get_authorizer_principal_id,
+)
 from src.models import Player
 
 logger = logging.getLogger(__name__)

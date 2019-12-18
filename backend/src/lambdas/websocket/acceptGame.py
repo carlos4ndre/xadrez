@@ -5,7 +5,7 @@ from src.lambdas.helpers import (
     create_aws_lambda_response,
     notify_players,
     start_game,
-    get_authorizer_principal_id
+    get_authorizer_principal_id,
 )
 from src.models import Game
 
@@ -47,7 +47,7 @@ def parse_event(event):
         return (
             {
                 "game_id": content["game"]["id"],
-                "player_id": get_authorizer_principal_id(event)
+                "player_id": get_authorizer_principal_id(event),
             },
             "",
         )

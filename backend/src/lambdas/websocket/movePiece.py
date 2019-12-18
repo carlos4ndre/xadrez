@@ -9,7 +9,7 @@ from src.lambdas.helpers import (
     move_piece,
     is_game_ended,
     end_game,
-    get_authorizer_principal_id
+    get_authorizer_principal_id,
 )
 from src.models import Game
 

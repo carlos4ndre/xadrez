@@ -6,7 +6,7 @@ from src.lambdas.helpers import (
     notify_players,
     create_message,
     generate_message,
-    get_authorizer_principal_id
+    get_authorizer_principal_id,
 )
 from src.models import Game, Player
 
