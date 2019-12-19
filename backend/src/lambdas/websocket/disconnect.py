@@ -2,7 +2,8 @@ import logging
 from datetime import datetime
 
 from src.constants import PlayerStatus
-from src.lambdas.helpers import create_aws_lambda_response, update_player
+from src.helpers.aws import create_aws_lambda_response
+from src.bussiness_logic.player import update_player
 from src.models import Player
 
 logger = logging.getLogger(__name__)

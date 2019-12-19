@@ -1,12 +1,5 @@
 from enum import Enum
 
-DEFAULT_AWS_RESPONSE_HEADERS = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Credentials": True,
-}
-GAME_MIN_TIME_SECONDS = 60
-GAME_MAX_TIME_SECONDS = 60 * 5
-
 
 class PlayerStatus:
     ONLINE = 1

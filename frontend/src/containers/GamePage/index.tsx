@@ -3,7 +3,7 @@ import * as selectors from 'selectors'
 import { connect } from 'react-redux'
 import { AppState } from 'types/state'
 import { GameProps } from 'types/props'
-import { Grid, Header, List, Dimmer, Loader, Button, Container } from 'semantic-ui-react'
+import { Grid, Header, List, Dimmer, Loader, Button, Container, Label } from 'semantic-ui-react'
 import { LeaveGameForm } from 'containers/Forms'
 import { Link } from 'react-router-dom'
 import PlayerIcon from 'components/PlayerIcon'
@@ -15,6 +15,7 @@ class GamePage extends Component<GameProps, AppState> {
   render() {
     const { game, whitePlayer, blackPlayer, color } = this.props
     const playerTurnColor = (game.playerTurn === whitePlayer.id ? 'white' : 'black')
+    const hasTimeEnabled = (game.time !== 0)
     const startTimerWhitePlayer = (game.moves.length !== 0 && game.result === 'undetermined' && playerTurnColor === 'white')
     const startTimerBlackPlayer = (game.moves.length !== 0 && game.result === 'undetermined' && playerTurnColor === 'black')
 
@@ -41,14 +42,22 @@ class GamePage extends Component<GameProps, AppState> {
                   <PlayerIcon player={whitePlayer} />
                   : <Dimmer active><Loader /></Dimmer>
                 }
-                <Timer time={game.whitePlayerTimeLeft} autoStart={startTimerWhitePlayer} />
+                {
+                  hasTimeEnabled
+                  ? <Timer time={game.whitePlayerTimeLeft} autoStart={startTimerWhitePlayer} />
+                  : <Label color="green">No time</Label>
+                }
                 <Header as='h2'>Black</Header>
                 {
                   blackPlayer ?
                   <PlayerIcon player={blackPlayer} />
                   : <Dimmer active><Loader /></Dimmer>
                 }
-                <Timer time={game.blackPlayerTimeLeft} autoStart={startTimerBlackPlayer} />
+                {
+                  hasTimeEnabled
+                  ? <Timer time={game.blackPlayerTimeLeft} autoStart={startTimerBlackPlayer} />
+                  : <Label color="green">No time</Label>
+                }
               </List.Item>
               <List.Item>
                 <Header as='h2'>Turn to play</Header>

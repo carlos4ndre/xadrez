@@ -2,12 +2,9 @@ import logging
 
 from datetime import datetime
 from src.constants import PlayerStatus
-from src.lambdas.helpers import (
-    create_aws_lambda_response,
-    create_player,
-    update_player,
-    decode_jwt_token,
-)
+from src.helpers.aws import create_aws_lambda_response
+from src.bussiness_logic.auth import decode_jwt_token
+from src.bussiness_logic.player import create_player, update_player
 
 logger = logging.getLogger(__name__)
 
