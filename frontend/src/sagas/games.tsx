@@ -54,12 +54,17 @@ const endGame = function*(action: types.EndGame) {
   }
 }
 
+const movePieceFailure = function*(action: types.MovePieceFailure) {
+  yield call(toast.error, 'Move piece failure')
+}
+
 function* gamesSagas() {
   yield all([
     yield takeLatest(types.CREATE_GAME_QUESTION, createGameQuestion),
     yield takeLatest(types.ACCEPT_GAME, acceptGame),
     yield takeLatest(types.REJECT_GAME, rejectGame),
     yield takeLatest(types.START_GAME, startGame),
+    yield takeLatest(types.MOVE_PIECE_FAILURE, movePieceFailure),
     yield takeLatest(types.END_GAME, endGame)
   ])
 }

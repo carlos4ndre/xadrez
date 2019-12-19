@@ -6,6 +6,7 @@ import Chessboard from 'chessboardjsx'
 
 class ChessBoard extends Component {
   state = {
+    fen: 'start',
     dropSquareStyle: {},
     squareStyles: {},
     pieceSquare: '',
@@ -15,8 +16,11 @@ class ChessBoard extends Component {
 
   game = new Chess()
 
-  componentDidUpdate(nextProps) {
-    this.game.load(nextProps.game.fen)
+  componentDidUpdate(prevProps) {
+    if (this.props.game.fen !== this.state.fen) {
+      this.setState({fen: this.props.game.fen})
+      this.game.load(this.props.game.fen)
+    }
   }
 
   componentDidMount() {
@@ -71,6 +75,7 @@ class ChessBoard extends Component {
     // illegal move
     if (move === null) return;
     this.setState(({ history, pieceSquare }) => ({
+      fen: this.game.fen(),
       history: this.game.history({ verbose: true }),
       squareStyles: squareStyling({ pieceSquare, history })
     }))
@@ -124,6 +129,7 @@ class ChessBoard extends Component {
     if (move === null) return
 
     this.setState({
+      fen: this.game.fen(),
       history: this.game.history({ verbose: true }),
       pieceSquare: ''
     })
@@ -145,7 +151,7 @@ class ChessBoard extends Component {
       <Chessboard
         id='chessboard'
         width={320}
-        position={game.fen}
+        position={this.state.fen}
         onDrop={this.onDrop}
         orientation={playerColor}
         draggable={draggable}

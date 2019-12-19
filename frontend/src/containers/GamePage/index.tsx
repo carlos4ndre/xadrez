@@ -41,14 +41,14 @@ class GamePage extends Component<GameProps, AppState> {
                   <PlayerIcon player={whitePlayer} />
                   : <Dimmer active><Loader /></Dimmer>
                 }
-                <Timer key={game.whitePlayerTimeLeft} time={game.whitePlayerTimeLeft} autoStart={startTimerWhitePlayer} />
+                <Timer time={game.whitePlayerTimeLeft} autoStart={startTimerWhitePlayer} />
                 <Header as='h2'>Black</Header>
                 {
                   blackPlayer ?
                   <PlayerIcon player={blackPlayer} />
                   : <Dimmer active><Loader /></Dimmer>
                 }
-                <Timer key={game.blackPlayerTimeLeft} time={game.blackPlayerTimeLeft} autoStart={startTimerBlackPlayer} />
+                <Timer time={game.blackPlayerTimeLeft} autoStart={startTimerBlackPlayer} />
               </List.Item>
               <List.Item>
                 <Header as='h2'>Turn to play</Header>

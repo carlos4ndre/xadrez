@@ -100,10 +100,9 @@ const socketMiddleware = () => {
       case types.SEND_MESSAGE_REQUEST:
         emitEvent(socket, 'sendMessage', {'text': action.text, 'game': action.game})
         break
-      default:
-        console.log('the next action:', action)
-        return next(action)
     }
+    console.log('the next action:', action)
+    return next(action)
   }
 }
 
