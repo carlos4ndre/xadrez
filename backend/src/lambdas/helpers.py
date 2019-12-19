@@ -198,7 +198,7 @@ def generate_board_from_moves(moves):
     # replay all moves to catch all edge cases concerning repetitions
     board = chess.Board()
     for move in moves:
-        board.push(chess.Move.from_uci(move))
+        board.push_san(move)
     return board
 
 

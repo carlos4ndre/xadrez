@@ -24,7 +24,7 @@ def handler(event, context):
     data, err = parse_event(event)
     if err:
         return create_aws_lambda_response(500, err)
-    game_id, player_id, move_uci = data["game_id"], data["player_id"], data["move_uci"]
+    game_id, player_id, move_san = data["game_id"], data["player_id"], data["move_san"]
     game = Game.get(game_id)
 
     logger.info("Check player permissions")
@@ -34,7 +34,7 @@ def handler(event, context):
         return create_aws_lambda_response(403, "It is not player turn to play")
 
     logger.info("Check move is valid")
-    game.moves.append(move_uci)
+    game.moves.append(move_san)
     board = generate_board_from_moves(game.moves)
     if not board.is_valid():
         notify_player(player_id, "movePieceFailure", {"error": str(board.status())})
@@ -74,7 +74,7 @@ def parse_event(event):
         data = {
             "game_id": content["game"]["id"],
             "player_id": get_authorizer_principal_id(event),
-            "move_uci": content["move"]["from"] + content["move"]["to"],
+            "move_san": content["move"]["san"]
         }
         return data, ""
     except KeyError as e:

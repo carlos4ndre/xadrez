@@ -29,6 +29,11 @@ export interface Game {
 export interface Move {
   from: string
   to: string
+  captured: string
+  color: string
+  piece: string
+  promotion: string
+  san: string
 }
 
 export interface GameMap {[key: string]: Game}

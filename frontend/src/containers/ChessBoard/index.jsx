@@ -75,8 +75,7 @@ class ChessBoard extends Component {
       squareStyles: squareStyling({ pieceSquare, history })
     }))
 
-    const moveInfo  = {from: sourceSquare, to: targetSquare}
-    this.props.movePiece(moveInfo, this.props.game)
+    this.props.movePiece(move, this.props.game)
   }
 
   onMouseOverSquare = square => {
