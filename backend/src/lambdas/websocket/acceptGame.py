@@ -43,7 +43,7 @@ def parse_event(event):
         content = json.loads(event["body"])["content"]
         return (
             {
-                "game_id": content["game"]["id"],
+                "game_id": content["game_id"],
                 "player_id": get_authorizer_principal_id(event),
             },
             "",

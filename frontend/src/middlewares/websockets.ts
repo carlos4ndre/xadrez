@@ -86,22 +86,22 @@ const socketMiddleware = () => {
         })
         break
       case types.ACCEPT_GAME:
-        emitEvent(socket, 'acceptGame', {'game': action.game})
+        emitEvent(socket, 'acceptGame', {'game_id': action.game.id})
         break
       case types.REJECT_GAME:
-        emitEvent(socket, 'rejectGame', {'game': action.game})
+        emitEvent(socket, 'rejectGame', {'game_id': action.game.id})
         break
       case types.TIMEOUT_GAME:
-        emitEvent(socket, 'timeoutGame', {'game': action.game})
+        emitEvent(socket, 'timeoutGame', {'game_id': action.game.id})
         break
       case types.MOVE_PIECE_REQUEST:
-        emitEvent(socket, 'movePiece', {'move': action.move, 'game': action.game})
+        emitEvent(socket, 'movePiece', {'move': action.move, 'game_id': action.game.id})
         break
       case types.LEAVE_GAME_REQUEST:
-        emitEvent(socket, 'leaveGame', {'game': action.game})
+        emitEvent(socket, 'leaveGame', {'game_id': action.game.id})
         break
       case types.SEND_MESSAGE_REQUEST:
-        emitEvent(socket, 'sendMessage', {'text': action.text, 'game': action.game})
+        emitEvent(socket, 'sendMessage', {'text': action.text, 'game_id': action.game.id})
         break
     }
     console.log('the next action:', action)
