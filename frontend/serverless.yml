@@ -7,10 +7,36 @@ plugins:
 
 provider:
   stage: ${opt:stage, 'dev'}
+  region: us-east-1
   environment:
     WEBSITE_S3_BUCKET: xadrez-website-${self:provider.stage}
 
 custom:
   client:
     bucketName: ${self:provider.environment.WEBSITE_S3_BUCKET}
-    distributionFolder: public
+    distributionFolder: build
+    errorDocument: index.html
+resources:
+  Resources:
+    StaticSite:
+      Type: AWS::S3::Bucket
+      Properties:
+        AccessControl: PublicRead
+        BucketName: ${self:custom.client.bucketName}
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: index.html
+    # specifying the policies to make sure all files inside the Bucket are avaialble
+    WebAppS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: StaticSite
+        PolicyDocument:
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action:
+                - s3:GetObject
+              Resource: arn:aws:s3:::${self:custom.client.bucketName}/*
