@@ -22,6 +22,7 @@ const Timer: React.FunctionComponent<TimerProps> = (props) => {
       intervalDelay={0}
       precision={3}
       renderer={renderer}
+      onComplete={props.onComplete}
       autoStart={props.autoStart}
     />
   )

@@ -29,6 +29,7 @@ export interface GameProps {
   whitePlayer: Player
   blackPlayer: Player
   color: string
+  timeoutGame: (game: Game) => void
 }
 
 export interface ProfileProps {
@@ -85,4 +86,5 @@ export interface ChatRoomProps {
 export interface TimerProps {
   time: number
   autoStart: boolean
+  onComplete: () => void
 }

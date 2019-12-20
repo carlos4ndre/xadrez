@@ -77,6 +77,24 @@ def reject_game(game, player_id):
     return update_game_state(game, attributes)
 
 
+def timeout_game(game, timeout_player_id):
+    logger.info("Check player has timed out")
+    if not game.player_has_time_left(timeout_player_id):
+        return "Player has not timed out yet"
+
+    logger.info("Update game")
+    result = GameResult.WHITE_WINS
+    if game.get_player_color(timeout_player_id) == GameColor.WHITE:
+        result = GameResult.BLACK_WINS
+
+    attributes = {
+        "status": GameStatus.OUT_OF_TIME,
+        "result": result,
+        "updatedAt": datetime.now(timezone.utc),
+    }
+    return update_game_state(game, attributes)
+
+
 def resign_player(game, player_id):
     player_color = game.get_player_color(player_id)
     status = GameStatus.REJECTED

@@ -7,9 +7,10 @@ export const CREATE_GAME_QUESTION = 'CREATE_GAME_QUESTION'
 export const CREATE_GAME_SUCCESS  = 'CREATE_GAME_SUCCESS'
 export const CREATE_GAME_FAILURE  = 'CREATE_GAME_FAILURE'
 
+export const START_GAME  = 'START_GAME'
 export const ACCEPT_GAME  = 'ACCEPT_GAME'
 export const REJECT_GAME  = 'REJECT_GAME'
-export const START_GAME  = 'START_GAME'
+export const TIMEOUT_GAME  = 'TIMEOUT_GAME'
 export const END_GAME  = 'END_GAME'
 
 export const MOVE_PIECE_REQUEST = 'MOVE_PIECE_REQUEST'
@@ -49,6 +50,11 @@ export interface AcceptGame {
 
 export interface RejectGame {
   type: typeof REJECT_GAME,
+  game: Game
+}
+
+export interface TimeoutGame {
+  type: typeof TIMEOUT_GAME,
   game: Game
 }
 

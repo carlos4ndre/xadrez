@@ -140,6 +140,12 @@ functions:
       - websocket:
           route: rejectGame
 
+  timeoutGame:
+    handler: src/lambdas/websocket/timeoutGame.handler
+    events:
+      - websocket:
+          route: timeoutGame
+
   movePiece:
     handler: src/lambdas/websocket/movePiece.handler
     events:

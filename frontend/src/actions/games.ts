@@ -36,6 +36,11 @@ export const rejectGame = (game: Game) => ({
   game
 })
 
+export const timeoutGame = (game: Game) => ({
+  type: types.TIMEOUT_GAME,
+  game
+})
+
 export const startGame = (game: Game) => ({
   type: types.START_GAME,
   game

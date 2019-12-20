@@ -121,6 +121,7 @@ $ export AUTH0_CLIENT_ID="<Your Auth0 Client ID>
 $ make install
 $ virtualenv -p /usr/bin/python3.7 venv
 $ source venv/bin/activate
+$ pip install -r requirements.txt
 $ make dev
 ```
 

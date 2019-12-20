@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import * as selectors from 'selectors'
 import { connect } from 'react-redux'
+import { timeoutGame } from 'actions'
 import { AppState } from 'types/state'
 import { GameProps } from 'types/props'
+import { Game } from 'types/game'
 import { Grid, Header, List, Dimmer, Loader, Button, Container, Label } from 'semantic-ui-react'
 import { LeaveGameForm } from 'containers/Forms'
 import { Link } from 'react-router-dom'
@@ -12,6 +14,10 @@ import ChessBoard from 'containers/ChessBoard'
 import ChatRoom from 'containers/ChatRoom'
 
 class GamePage extends Component<GameProps, AppState> {
+  handleComplete = () => {
+    this.props.timeoutGame(this.props.game)
+  }
+
   render() {
     const { game, whitePlayer, blackPlayer, color } = this.props
     const playerTurnColor = (game.playerTurn === whitePlayer.id ? 'white' : 'black')
@@ -44,7 +50,7 @@ class GamePage extends Component<GameProps, AppState> {
                 }
                 {
                   hasTimeEnabled
-                  ? <Timer time={game.whitePlayerTimeLeft} autoStart={startTimerWhitePlayer} />
+                  ? <Timer time={game.whitePlayerTimeLeft} autoStart={startTimerWhitePlayer} onComplete={this.handleComplete.bind(this)} />
                   : <Label color="green">No time</Label>
                 }
                 <Header as='h2'>Black</Header>
@@ -55,7 +61,7 @@ class GamePage extends Component<GameProps, AppState> {
                 }
                 {
                   hasTimeEnabled
-                  ? <Timer time={game.blackPlayerTimeLeft} autoStart={startTimerBlackPlayer} />
+                  ? <Timer time={game.blackPlayerTimeLeft} autoStart={startTimerBlackPlayer} onComplete={this.handleComplete.bind(this)} />
                   : <Label color="green">No time</Label>
                 }
               </List.Item>
@@ -96,7 +102,9 @@ const mapStateToProps = (originalState: any, originalOwnProps: any) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => ({})
+const mapDispatchToProps = (dispatch: any) => ({
+  timeoutGame: (game: Game) => dispatch(timeoutGame(game))
+})
 
 export default connect(
   mapStateToProps,

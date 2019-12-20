@@ -91,6 +91,9 @@ const socketMiddleware = () => {
       case types.REJECT_GAME:
         emitEvent(socket, 'rejectGame', {'game': action.game})
         break
+      case types.TIMEOUT_GAME:
+        emitEvent(socket, 'timeoutGame', {'game': action.game})
+        break
       case types.MOVE_PIECE_REQUEST:
         emitEvent(socket, 'movePiece', {'move': action.move, 'game': action.game})
         break
