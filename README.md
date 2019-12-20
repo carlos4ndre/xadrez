@@ -10,7 +10,19 @@ I took this opportunity to build a chess game because despite its apperant simpl
 
 This is not supposed to be a production ready application, but good enough such that it can be easy to play and develop.
 
-There always space for improvement, which I'll be doing over time, such as adding more tests.
+There's always space for improvement, which I'll be doing over time, such as adding more tests.
+
+Why AWS? It is the only cloud provider lectured in the course, so naturally this work follows that same provider.
+
+Why Serverless? It seemed interesting to built an application with a more functional architecture where the state lies entirely on the database, idealy would have used actor/model with Elixir, but time didn't permit.
+
+Why Auth0? It was an easy way to use a third party application for managing the authentication/authorization logic, most of the client side was already well documented with working examples.
+
+Why Python? Easy to get started, but would have liked to try with Go or Elixir.
+
+Why React? Good boilerplate projects, Easy to develop, Great libraries for websockets and manage state such as redux and sagas, not to mention many other great libraries.
+
+Why DynamoDB? Was really easy to get started, initially wanted to use MongoDB, but the support wasn't straigtforward, best solution was probably provided from MongoDB Atlas, but for simpler deployment, decided to keep every resource under AWS.
 
 
 ## Features
@@ -77,7 +89,7 @@ $ make deploy
 ### Frontend
 
 1. Go into the frontend folder
-2. Using the information gathered from Auth0 and backend deployments, you should create the `.env` file with the following content:
+2. Using the information gathered from Auth0 and backend deployments, you should create the `.env` file, as shown in the following example:
 
 ```
 # Auth0
@@ -132,7 +144,7 @@ $ make dev
 ### Frontend
 
 1. Go into the frontend folder
-2. Using the information gathered from Auth0 and backend deployments, you should create the `.env.development` file with the following content:
+2. Using the information gathered from Auth0 and backend deployments, you should create the `.env.development` file, as shown in the following example:
 
 ```
 # Auth0
