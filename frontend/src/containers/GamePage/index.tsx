@@ -18,6 +18,14 @@ class GamePage extends Component<GameProps, AppState> {
     this.props.timeoutGame(this.props.game)
   }
 
+  displayOptionValue = (text: string) => {
+    let words = text.split('_')
+    words = words.map(w => {
+      return w.replace(/^\w/, c => c.toUpperCase())
+    })
+    return words.join(' ')
+  }
+
   render() {
     const { game, whitePlayer, blackPlayer, color } = this.props
     const playerTurnColor = (game.playerTurn === whitePlayer.id ? 'white' : 'black')
@@ -67,7 +75,11 @@ class GamePage extends Component<GameProps, AppState> {
               </List.Item>
               <List.Item>
                 <Header as='h2'>Turn to play</Header>
-                <Container>{playerTurnColor}</Container>
+                <Container>{this.displayOptionValue(playerTurnColor)}</Container>
+              </List.Item>
+              <List.Item>
+                <Header as='h2'>Result</Header>
+                <Container>{this.displayOptionValue(game.result)}</Container>
               </List.Item>
             </List>
           </Grid.Column>
