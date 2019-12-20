@@ -4,17 +4,19 @@ Simple chess application written in Python using Auth0, AWS API Gateway, Lambda 
 
 ## Motivation
 
-This project is part of the Udacity Cloud Developer program, where we are supposed to apply some of the concept we've learned throughout the course.
+This project is part of the Udacity Cloud Developer program, where we have to apply some of the concepts learned throughout the course.
 
 I took this opportunity to build a chess game because despite its apperant simplicity it can bring very interesting design choices and exercise many aspects of the application design, development, testing and deployment. It goes without saying that I'm also a huge fan, although a terrible player!
 
 This is not supposed to be a production ready application, but good enough such that it can be easy to play and develop.
 
+There always space for improvement, which I'll be doing over time, such as adding more tests.
+
 
 ## Features
 
 * Authentication with Auth0
-* Simple chess match with no time or predefined times of 1/5/10 minutes
+* Simple chess match with unlimited or predefined times of 1/5/10 minutes
 * Choose starting color
 * Resign game
 * Real-time experience using WebSockets
@@ -50,7 +52,7 @@ To achieve this, you can setup your AWS CLI on your local machine (see the [offi
 ### Auth0 Account
 
 1. Create an account on Auth0 (free tier)
-2. Create a regular web application
+2. Create a [regular web application](https://auth0.com/docs/dashboard/guides/applications/register-app-regular-web)
 3. Copy your domain and Client ID for later use
 
 ### Backend
