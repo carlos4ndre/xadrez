@@ -59,17 +59,24 @@ To achieve this, you can setup your AWS CLI on your local machine (see the [offi
 
 1. Go into the backend folder
 2. Export your Auth0 settings
+
 `$ export AUTH0_DOMAIN_ID="<Your Auth0 Domain ID>`
+
 `$ export AUTH0_CLIENT_ID="<Your Auth0 Client ID>"`
+
 3. Deploy your lambda functions to AWS
+
 `$ make install`
+
 `$ make deploy`
+
 4. Save the Gateway API endpoints for both HTTP and WSS endpoints.
 
 ### Frontend
 
 1. Go into the frontend folder
 2. Using the information gathered from Auth0 and backend deployments, you should create the `.env` file with the following content:
+
 ```
 # Auth0
 REACT_APP_AUTH0_DOMAIN = 'my-app-domain.auth0.com'
@@ -79,9 +86,13 @@ REACT_APP_API_URL = 'https://234sdfds.execute-api.us-east-1.amazonaws.com/dev'
 REACT_APP_WS_URL = 'wss://sadfasd3d.execute-api.us-east-1.amazonaws.com/dev'
 REACT_APP_WEBSITE_URL = 'http://mywebsite'
 ```
+
 3. Deploy the frontend
+
 `$ make build`
+
 `$ make deploy`
+
 4. Once the deployment is done, you should receive an endpoint to where your website will be served, use that URL and add it to your your allowed Callback and Logout URLs settings in Auth0 (see Applications > settings).
 5. You should now be all setup! Enjoy!
 
@@ -95,20 +106,30 @@ You can reuse the same tenant, otherwise [create a separate one](https://auth0.c
 
 1. Go into the backend folder
 2. Export your Auth0 settings
+
 `$ export AUTH0_DOMAIN_ID="<Your Auth0 Domain ID>`
+
 `$ export AUTH0_CLIENT_ID="<Your Auth0 Client ID>"`
+
 3. Start the API Gateway with both HTTP and Websocket endpoints in offline mode:
+
 `$ make install`
+
 `$ virtualenv -p /usr/bin/python3.7 venv`
+
 `$ source venv/bin/activate`
+
 `$ make dev`
+
 4. Start the DynamoDB in offline mode:
+
 `$ make dynamodb-offline`
 
 ### Frontend
 
 1. Go into the frontend folder
 2. Using the information gathered from Auth0 and backend deployments, you should create the `.env.development` file with the following content:
+
 ```
 # Auth0
 REACT_APP_AUTH0_DOMAIN = 'my-app-domain.auth0.com'
@@ -118,8 +139,12 @@ REACT_APP_API_URL = 'http://localhost:5000'
 REACT_APP_WS_URL = 'ws://localhost:3001'
 REACT_APP_WEBSITE_URL = 'http://localhost:3000'
 ```
+
 3. Run your frontend locally
+
 `$ make build`
+
 `$ make dev`
+
 It will be listening on http://localhost:3000
 4. You should now be all setup! Enjoy!
