@@ -60,15 +60,17 @@ To achieve this, you can setup your AWS CLI on your local machine (see the [offi
 1. Go into the backend folder
 2. Export your Auth0 settings
 
-`$ export AUTH0_DOMAIN_ID="<Your Auth0 Domain ID>`
-
-`$ export AUTH0_CLIENT_ID="<Your Auth0 Client ID>"`
+```
+$ export AUTH0_DOMAIN_ID=<Your Auth0 Domain ID>
+$ export AUTH0_CLIENT_ID=<Your Auth0 Client ID>
+```
 
 3. Deploy your lambda functions to AWS
 
-`$ make install`
-
-`$ make deploy`
+```
+$ make install
+$ make deploy
+```
 
 4. Save the Gateway API endpoints for both HTTP and WSS endpoints.
 
@@ -89,9 +91,10 @@ REACT_APP_WEBSITE_URL = 'http://mywebsite'
 
 3. Deploy the frontend
 
-`$ make build`
-
-`$ make deploy`
+```
+$ make build
+$ make deploy
+```
 
 4. Once the deployment is done, you should receive an endpoint to where your website will be served, use that URL and add it to your your allowed Callback and Logout URLs settings in Auth0 (see Applications > settings).
 5. You should now be all setup! Enjoy!
@@ -107,19 +110,19 @@ You can reuse the same tenant, otherwise [create a separate one](https://auth0.c
 1. Go into the backend folder
 2. Export your Auth0 settings
 
-`$ export AUTH0_DOMAIN_ID="<Your Auth0 Domain ID>`
-
-`$ export AUTH0_CLIENT_ID="<Your Auth0 Client ID>"`
+```
+$ export AUTH0_DOMAIN_ID=<Your Auth0 Domain ID>
+$ export AUTH0_CLIENT_ID="<Your Auth0 Client ID>
+```
 
 3. Start the API Gateway with both HTTP and Websocket endpoints in offline mode:
 
-`$ make install`
-
-`$ virtualenv -p /usr/bin/python3.7 venv`
-
-`$ source venv/bin/activate`
-
-`$ make dev`
+```
+$ make install
+$ virtualenv -p /usr/bin/python3.7 venv
+$ source venv/bin/activate
+$ make dev
+```
 
 4. Start the DynamoDB in offline mode:
 
@@ -142,9 +145,10 @@ REACT_APP_WEBSITE_URL = 'http://localhost:3000'
 
 3. Run your frontend locally
 
-`$ make build`
-
-`$ make dev`
+```
+$ make build
+$ make dev
+```
 
 It will be listening on http://localhost:3000
 4. You should now be all setup! Enjoy!
