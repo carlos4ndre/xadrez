@@ -23,6 +23,9 @@ install: ## Install backend dependencies
 	yarn install
 	sls dynamodb install
 
+dynamodb-offline: ## Start dynamodb offline
+	sls dynamodb start
+
 dev: ## Run backend locally
 	sls offline --verbose
 

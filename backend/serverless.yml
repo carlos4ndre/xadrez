@@ -2,12 +2,11 @@ service: xadrez-backend
 
 frameworkVersion: '>=1.28.0 <2.0.0'
 
-#package:
-#  individually: true
-#  exclude:
-#    - ./**
-#  include:
-#    - ./src/**
+package:
+  exclude:
+    - ./**
+  include:
+    - ./src/**
 
 provider:
   name: aws
@@ -22,8 +21,8 @@ provider:
     apiGateway: true
 
   environment:
-    AUTH0_DOMAIN: dev-embzl7vs.auth0.com
-    AUTH0_CLIENT_ID: brSV94G2uZANc2lmTtZYXUmci2pTdx1H
+    AUTH0_DOMAIN: ${env:AUTH0_DOMAIN}
+    AUTH0_CLIENT_ID: ${env:AUTH0_CLIENT_ID}
     AUTH0_JWKS_URL: https://${self:provider.environment.AUTH0_DOMAIN}/.well-known/jwks.json
     PLAYERS_TABLE: Players-${self:provider.stage}
     GAMES_TABLE: Games-${self:provider.stage}
