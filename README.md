@@ -1,3 +1,6 @@
+![Travis build](https://travis-ci.com/carlos4ndre/xadrez.svg?branch=master)
+
+
 # Xadrez
 
 Simple chess application written in Python using Auth0, AWS API Gateway, Lambda and DynamoDB.
