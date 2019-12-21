@@ -9,6 +9,7 @@ const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID
 export const authConfig: any = {
   domain,
   clientId,
+  websiteEndpoint,
   audience: `https://${domain}/userinfo`,
   callbackUrl: `${websiteEndpoint}/callback`
 }

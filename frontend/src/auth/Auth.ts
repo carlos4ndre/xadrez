@@ -38,7 +38,7 @@ export function login() {
 
 export function logout() {
   auth0Client.logout({
-    returnTo: 'http://localhost:3000',
+    returnTo: authConfig.websiteEndpoint,
     clientID: authConfig.clientId
   })
 }
