@@ -31,8 +31,7 @@ def get_players():
     try:
         players = []
         for player in Player.scan(
-            attributes_to_get=GET_PLAYER_FIELDS,
-            limit=MAX_RECORD_LIMIT
+            attributes_to_get=GET_PLAYER_FIELDS, limit=MAX_RECORD_LIMIT
         ):
             players.append(player.to_dict())
         return players, ""

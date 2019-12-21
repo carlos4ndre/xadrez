@@ -89,15 +89,9 @@ def timeout_game(game, timeout_player_id):
     }
 
     if game.get_current_player_color() == GameColor.WHITE:
-        attributes.update({
-            "whitePlayerTimeLeft": 0,
-            "result": GameResult.BLACK_WINS,
-        })
+        attributes.update({"whitePlayerTimeLeft": 0, "result": GameResult.BLACK_WINS})
     else:
-        attributes.update({
-            "blackPlayerTimeLeft": 0,
-            "result": GameResult.WHITE_WINS,
-        })
+        attributes.update({"blackPlayerTimeLeft": 0, "result": GameResult.WHITE_WINS})
 
     return update_game_state(game, attributes)
 

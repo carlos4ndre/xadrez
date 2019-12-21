@@ -3,7 +3,12 @@ import logging
 
 from src.helpers.aws import create_aws_lambda_response, get_authorizer_principal_id
 from src.bussiness_logic.player import notify_player, notify_players
-from src.bussiness_logic.game import generate_board_from_moves, move_piece, is_game_ended, end_game
+from src.bussiness_logic.game import (
+    generate_board_from_moves,
+    move_piece,
+    is_game_ended,
+    end_game,
+)
 from src.models import Game
 
 logger = logging.getLogger(__name__)
@@ -67,7 +72,7 @@ def parse_event(event):
         data = {
             "game_id": content["game_id"],
             "player_id": get_authorizer_principal_id(event),
-            "move_san": content["move"]["san"]
+            "move_san": content["move"]["san"],
         }
         return data, ""
     except KeyError as e:

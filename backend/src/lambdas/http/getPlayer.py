@@ -23,9 +23,7 @@ def handler(event, context):
 
 def parse_event(event):
     try:
-        data = {
-            "id": event["pathParameters"]["id"]
-        }
+        data = {"id": event["pathParameters"]["id"]}
         return data, ""
     except KeyError as e:
         logger.error(e)
