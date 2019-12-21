@@ -169,3 +169,13 @@ $ make dev
 It will be listening on http://localhost:3000
 
 4. You should now be all setup! Enjoy!
+
+
+## Improvements
+
+* Add python type hints
+* Add docstrings
+* Test frontend
+* Test backend
+* Support Game Stats
+* Join game as spectator
