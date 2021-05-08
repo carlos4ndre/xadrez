@@ -24,8 +24,8 @@ class BaseModel(Model):
     def _attr2obj(self, attr):
         if isinstance(attr, list):
             _list = []
-            for l in attr:
-                _list.append(self._attr2obj(l))
+            for _attr in attr:
+                _list.append(self._attr2obj(_attr))
             return _list
         elif isinstance(attr, MapAttribute):
             _dict = {}
