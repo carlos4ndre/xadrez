@@ -175,8 +175,11 @@ $ make dev
 
 It will be listening on http://localhost:3000
 
-5. You should now be all setup! Enjoy!
+5. You should now be all setup! Enjoy
 
+## Gameplay image
+
+![Game Board](images/game-board.png)
 
 ## Improvements
 
