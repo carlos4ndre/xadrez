@@ -76,7 +76,7 @@ To achieve this, you can setup your AWS CLI on your local machine (see the [offi
 2. Export your Auth0 settings
 
 ```
-$ export AUTH0_DOMAIN_ID=<Your Auth0 Domain ID>
+$ export AUTH0_DOMAIN=<Your Auth0 Domain>
 $ export AUTH0_CLIENT_ID=<Your Auth0 Client ID>
 ```
 
@@ -154,12 +154,19 @@ $ make dev
 REACT_APP_AUTH0_DOMAIN = 'my-app-domain.auth0.com'
 REACT_APP_AUTH0_CLIENT_ID = 'my-client-id'
 # AWS
-REACT_APP_API_URL = 'http://localhost:5000'
+REACT_APP_API_URL = 'http://localhost:5000/dev'
 REACT_APP_WS_URL = 'ws://localhost:3001'
 REACT_APP_WEBSITE_URL = 'http://localhost:3000'
 ```
 
-3. Run your frontend locally
+3. Setup a dev application on Auth0 using the following URLs:
+
+```
+Allowed Callback URLs: http://localhost:3000/callback
+Allowed Logout URLs: http://localhost:3000
+```
+
+4. Run your frontend locally
 
 ```
 $ make build
@@ -168,7 +175,7 @@ $ make dev
 
 It will be listening on http://localhost:3000
 
-4. You should now be all setup! Enjoy!
+5. You should now be all setup! Enjoy!
 
 
 ## Improvements

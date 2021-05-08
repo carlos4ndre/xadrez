@@ -1,6 +1,6 @@
-PyJWT==1.7.1
-boto3==1.10.30
-requests==2.22.0
-cryptography==2.8
-pynamodb==4.2.0
-python-chess==0.29.0
+PyJWT==2.1.0
+boto3==1.17.69
+requests==2.25.1
+cryptography==3.4.7
+pynamodb==5.0.3
+chess==1.5.0

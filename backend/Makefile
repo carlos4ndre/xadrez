@@ -27,10 +27,10 @@ dynamodb-offline: ## Start dynamodb offline
 	sls dynamodb start
 
 dev: ## Run backend locally
-	sls offline --verbose
+	sls offline
 
 deploy: ## Deploy backend to AWS Lambda
-	sls deploy --verbose
+	sls deploy
 
 remove: ## Remove backend from AWS Lambda
-	sls remove --verbose
+	sls remove

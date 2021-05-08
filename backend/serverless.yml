@@ -1,16 +1,17 @@
 service: xadrez-backend
 
-frameworkVersion: '>=1.28.0 <2.0.0'
+frameworkVersion: '2'
+configValidationMode: error
 
 package:
-  exclude:
-    - ./**
-  include:
-    - ./src/**
+  patterns:
+    - "!./**"
+    - "./src/**"
 
 provider:
   name: aws
   runtime: python3.7
+  lambdaHashingVersion: 20201221
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
@@ -30,44 +31,46 @@ provider:
     CONNECTION_ID_INDEX: ConnectionIdIndex
     WEBSOCKET_API_ENDPOINT: !Join ['', ['https://', !Ref WebsocketsApi, '.execute-api.', "${self:provider.region}", '.amazonaws.com/', "${self:provider.stage}/"]]
 
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:BatchGetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PLAYERS_TABLE}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:BatchGetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PLAYERS_TABLE}
 
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PLAYERS_TABLE}/index/${self:provider.environment.CONNECTION_ID_INDEX}
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PLAYERS_TABLE}/index/${self:provider.environment.CONNECTION_ID_INDEX}
 
-    - Effect: Allow
-      Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:BatchGetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.GAMES_TABLE}
+        - Effect: Allow
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:BatchGetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.GAMES_TABLE}
 
-    - Effect: Allow
-      Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:BatchGetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CHAT_ROOM_MESSAGES_TABLE}
+        - Effect: Allow
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:BatchGetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CHAT_ROOM_MESSAGES_TABLE}
 
 plugins:
   - serverless-python-requirements
@@ -81,7 +84,7 @@ custom:
     dockerizePip: true
     slim: true
   serverless-offline:
-    port: 5000
+    httpPort: 5000
   dynamodb:
     stages:
       - dev
@@ -97,7 +100,6 @@ custom:
 functions:
   auth:
     handler: src/lambdas/auth/auth0.handler
-    cors: true
 
   connect:
     handler: src/lambdas/websocket/connect.handler
@@ -105,9 +107,7 @@ functions:
       - websocket:
           authorizer:
             name: auth
-            type: request
-            identitySource:
-              - route.request.querystring.token
+            identitySource: route.request.querystring.token
           route: $connect
 
   disconnect:
